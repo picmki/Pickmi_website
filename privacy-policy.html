@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - Pickmi Cabs &amp; Driver Partner App</title>
+  <meta name="description" content="Pickmi Privacy Policy - Clear information on how we handle user data, location services, background GPS tracking, and security.">
+  <meta name="keywords" content="Pickmi privacy policy, Pickmi cabs privacy, driver GPS tracking disclosure, location permissions, Pickmi data safety">
+  <link rel="canonical" href="https://www.pickmicabs.com/privacy-policy.html">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0043DC;
+      --primary-hover: #0033B3;
+      --primary-light: #EFF6FF;
+      --primary-border: #BFDBFE;
+      --text-main: #0F172A;
+      --text-muted: #475569;
+      --text-sub: #64748B;
+      --bg-body: #FFFFFF;
+      --bg-card: #F8FAFC;
+      --border: #E2E8F0;
+      --border-dark: #CBD5E1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Top Navigation Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      background: #FFFFFF;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+    }
+
+    .header-container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text span {
+      color: var(--primary);
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #F1F5F9;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .header-badge svg {
+      color: var(--primary);
+      width: 14px;
+      height: 14px;
+    }
+
+    .header-right a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .header-right a:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 920px;
+      margin: 36px auto 60px;
+      padding: 0 24px;
+    }
+
+    .doc-meta {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .effective-date {
+      color: var(--text-sub);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Highlight Notice Callout Box */
+    .highlight-box {
+      background-color: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 28px 0;
+      box-shadow: 0 2px 8px rgba(0, 67, 220, 0.05);
+    }
+
+    .highlight-box-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .highlight-box-header svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .highlight-box h3 {
+      color: var(--primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .highlight-box p {
+      color: #1E3A8A;
+      font-size: 14.5px;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    .intro-paragraph {
+      font-size: 15.5px;
+      color: #334155;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    /* Section Headings */
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 21px;
+      font-weight: 700;
+      margin: 36px 0 16px;
+      color: var(--text-main);
+      border-bottom: 1.5px solid var(--border);
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 14px;
+      line-height: 1.65;
+    }
+
+    strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    ul {
+      padding-left: 22px;
+      margin: 12px 0 20px;
+    }
+
+    li {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    li ul {
+      margin: 8px 0 10px;
+      padding-left: 20px;
+    }
+
+    li ul li {
+      margin-bottom: 6px;
+    }
+
+    /* Account Deletion Callout Card */
+    .deletion-card {
+      background-color: #F8FAFC;
+      border: 1px solid var(--primary-border);
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 22px 0;
+    }
+
+    .deletion-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .deletion-card-title svg {
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+    }
+
+    .deletion-card p {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #334155;
+    }
+
+    .deletion-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: underline;
+      transition: color 0.15s ease;
+    }
+
+    .deletion-link:hover {
+      color: var(--primary-hover);
+    }
+
+    /* Contact Card */
+    .contact-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 22px 26px;
+      border-radius: 10px;
+      margin-top: 14px;
+    }
+
+    .contact-card p {
+      margin-bottom: 6px;
+      font-size: 14.5px;
+      color: #334155;
+    }
+
+    .contact-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-card a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .contact-card a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--text-sub);
+      background: #F8FAFC;
+    }
+
+    @media (max-width: 640px) {
+      .header-container {
+        padding: 0 16px;
+      }
+      .container {
+        padding: 0 16px;
+        margin-top: 24px;
+      }
+      h1 {
+        font-size: 28px;
+      }
+      h2 {
+        font-size: 19px;
+      }
+      .highlight-box, .deletion-card, .contact-card {
+        padding: 16px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Header -->
+  <header>
+    <div class="header-container">
+      <div class="header-left">
+        <a href="index.html" class="brand-link" aria-label="Pickmi Home">
+          <img src="assets/logo.png" alt="Pickmi Cabs Logo" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+          <span class="brand-text" style="display:none;">Pick<span>mi</span></span>
+        </a>
+        <span class="header-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          Legal &amp; Privacy Center
+        </span>
+      </div>
+      <div class="header-right">
+        <a href="index.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Document Body Container -->
+  <main class="container">
+    <div class="doc-meta">
+      <h1>Privacy Policy</h1>
+      <p class="effective-date">Last Updated: October 1, 2026</p>
+    </div>
+
+    <!-- Location Disclosure Highlight Callout -->
+    <div class="highlight-box">
+      <div class="highlight-box-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <h3>Important Notice Regarding Location Data Access</h3>
+      </div>
+      <p>
+        Pickmi collects precise <strong>Location Data (Foreground &amp; Background GPS)</strong> from driver partners and riders to enable core features including ride matching, real-time navigation, live trip tracking, and passenger safety. Please review Section 3 below for full details.
+      </p>
+    </div>
+
+    <p class="intro-paragraph">
+      Welcome to <strong>Pickmi Technologies</strong> ("Pickmi", "we", "us", or "our"). We are committed to protecting the privacy and security of your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile applications (Pickmi Driver App &amp; Pickmi Rider App) and our website.
+    </p>
+
+    <!-- SECTION 1 -->
+    <h2>1. Information We Collect</h2>
+    <p>We collect information to provide better services to all our users. This includes:</p>
+    <ul>
+      <li><strong>Personal Information:</strong> Name, phone number, email address, profile picture, vehicle details, and government identification documents (DL, RC, Insurance) for driver verification.</li>
+      <li><strong>Account Credentials:</strong> Mobile numbers and OTP authentication data.</li>
+      <li><strong>Financial &amp; Payment Data:</strong> Transaction history, payout details, and wallet balances.</li>
+      <li><strong>Device &amp; Usage Data:</strong> IP address, device model, operating system version, and app performance logs.</li>
+    </ul>
+
+    <!-- SECTION 2 -->
+    <h2>2. Location Data Collection &amp; Usage (Foreground &amp; Background)</h2>
+    <p><strong>Explicit Disclosure on Location Access:</strong> Pickmi collects precise location data (GPS, network location) from your mobile device to operate our ride-hailing services effectively.</p>
+
+    <ul>
+      <li><strong>Foreground Location Access:</strong> When the Pickmi app is open and visible on your screen, we access your device GPS to display nearby drivers, calculate trip distances, provide turn-by-turn navigation, and estimate trip fares.</li>
+      <li><strong>Background Location Access (Driver App):</strong> When you are logged into the Pickmi Driver App and set your status to "ONLINE", the app collects location data <strong>even when the app is closed, minimized, or running in the background</strong>. This continuous tracking is mandatory for:
+        <ul>
+          <li>Matching incoming ride requests to the closest available driver.</li>
+          <li>Providing live trip progress tracking to riders for emergency safety.</li>
+          <li>Calculating precise trip distance and tolls for fair driver payouts.</li>
+          <li>Enabling safety emergency alerts (SOS button) during active trips.</li>
+        </ul>
+      </li>
+    </ul>
+    <p><em>Note: Background location collection stops immediately when the driver switches their status to "OFFLINE" or logs out of the application.</em></p>
+
+    <!-- SECTION 3 -->
+    <h2>3. How We Use Your Location Data</h2>
+    <p>Your location data is used strictly for operational purposes:</p>
+    <ul>
+      <li>To connect passengers with nearby driver partners.</li>
+      <li>To calculate accurate route distances and estimated arrival times (ETA).</li>
+      <li>To provide live tracking links to passenger emergency contacts.</li>
+      <li>To detect route deviations, safety incidents, or vehicle breakdowns.</li>
+      <li>We <strong>DO NOT</strong> sell, rent, or trade your location data to third-party marketing companies.</li>
+    </ul>
+
+    <!-- SECTION 4 -->
+    <h2>4. Sharing and Disclosure of Information</h2>
+    <p>We only share your information under the following limited circumstances:</p>
+    <ul>
+      <li><strong>With Passengers/Drivers:</strong> When a trip is confirmed, the driver's name, rating, vehicle number, and real-time location are shared with the passenger (and vice versa).</li>
+      <li><strong>With Service Providers:</strong> Secure payment gateways, SMS OTP providers (Twilio / 2Factor), and database hosts (Supabase).</li>
+      <li><strong>For Legal Compliance:</strong> When required by law enforcement or government authorities for safety and emergency investigations.</li>
+    </ul>
+
+    <!-- SECTION 5 -->
+    <h2>5. Data Security &amp; Protection</h2>
+    <p>We implement industry-standard technical measures including HTTPS SSL encryption, Row Level Security (RLS) policies, and secure access controls to protect your data from unauthorized access or disclosure.</p>
+
+    <!-- SECTION 6 -->
+    <h2>6. Your Data Rights &amp; Account Deletion</h2>
+    <ul>
+      <li><strong>Permission Controls:</strong> You can grant or revoke location permissions at any time via your device OS settings. However, disabling location access will prevent ride matching functionality.</li>
+      <li><strong>Account &amp; Data Deletion:</strong> You have the right to request permanent deletion of your Pickmi account (Rider or Driver) and associated personal data at any time. You can submit an account deletion request online without opening the mobile app by visiting our dedicated <a href="account-deletion.html" style="color: var(--primary); font-weight: 600;">Account Deletion Request Page</a>.</li>
+    </ul>
+
+    <div class="deletion-card">
+      <div class="deletion-card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+        How to Delete Your Account
+      </div>
+      <p>You can submit an immediate web request or complete deletion inside the mobile app:</p>
+      <p style="margin-bottom:0;">
+        <a href="account-deletion.html" class="deletion-link">
+          Click here to open the Web Account Deletion Form &amp; View In-App Instructions
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      </p>
+    </div>
+
+    <!-- SECTION 7 -->
+    <h2>7. Contact Us</h2>
+    <p>If you have any questions, concerns, or requests regarding this Privacy Policy or your data privacy, please contact us at:</p>
+
+    <div class="contact-card">
+      <p><strong>Pickmi Technologies Legal Team</strong></p>
+      <p>Email: <a href="mailto:support@pickmicabs.com">support@pickmicabs.com</a> / <a href="mailto:privacy@pickmicabs.com">privacy@pickmicabs.com</a></p>
+      <p>Website: <a href="https://www.pickmicabs.com" target="_blank" rel="noopener">https://www.pickmicabs.com</a></p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Pickmi Technologies. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

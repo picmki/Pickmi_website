@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PickMi Cabs - Fast, Reliable Cab Booking | InCity, Intercity, Airport & Rental</title>
+  <meta name="description" content="Book outstation cabs, airport transfers, city rides and hourly rentals at transparent upfront prices with PickMi. Free cancellation and verified chauffeurs.">
+
+  <!-- Typography System: Inter (Fallback for Helvetica Now Text/Display) & Oswald (Condensed Display fallback for Nike Futura ND) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- OpenStreetMap Leaflet CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="header-left-group" style="display:flex;align-items:center;gap:2rem;">
+        <!-- Brand Logo (Tagline removed) -->
+        <div class="brand-logo-wrap" data-nav="home">
+          <div class="brand-badge-icon">P</div>
+          <div class="brand-text-box">
+            <div class="brand-title">Pick<span>Mi</span></div>
+          </div>
+        </div>
+
+        <!-- Left Desktop Nav: Driver Partner & Help Only -->
+        <nav class="desktop-nav">
+          <a href="#drive" class="nav-link" data-nav="drive" data-view="drive">Driver Partner</a>
+          <a href="#support" class="nav-link" data-nav="support" data-view="support">Help</a>
+        </nav>
+      </div>
+
+      <!-- Account Badge & Dropdown & Mobile Toggle -->
+      <div class="header-actions">
+        <div class="user-profile-wrap" id="header-user-wrap">
+          <div class="user-profile-badge" id="header-user-badge">
+            <div class="user-avatar-circle" id="header-user-avatar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <span class="user-name-text" id="header-user-name">Login / Sign Up</span>
+          </div>
+
+          <!-- User Profile Dropdown Menu (Requested by user) -->
+          <div class="user-profile-dropdown-menu" id="user-profile-dropdown" style="display:none;">
+            <div class="dropdown-user-info">
+              <div class="dropdown-user-name" id="dropdown-user-name">Karthik Prabhu</div>
+              <div class="dropdown-user-phone" id="dropdown-user-phone">+91 98401 23456</div>
+            </div>
+            <div class="dropdown-menu-divider"></div>
+            <a href="#account/profile" class="profile-dropdown-item" id="item-manage-account">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>Manage your account</span>
+            </a>
+            <a href="#account/trips" class="profile-dropdown-item" id="item-my-bookings">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>My bookings</span>
+            </a>
+            <a href="#support" class="profile-dropdown-item" id="item-dropdown-help">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              <span>Help</span>
+            </a>
+            <a href="#business" class="profile-dropdown-item" id="item-pickmi-business">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              <span>PickMi for Business</span>
+            </a>
+          </div>
+        </div>
+
+        <button class="mobile-menu-toggle" id="mobile-menu-btn" aria-label="Toggle navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div id="mobile-nav-drawer" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:150;">
+    <div style="background:#fff;width:280px;height:100%;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:1.5rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong style="color:var(--primary);font-size:1.3rem;">PickMi Menu</strong>
+        <button id="close-drawer-btn" style="background:none;font-size:1.5rem;">&times;</button>
+      </div>
+      <a href="#home" data-nav="home" style="font-weight:600;color:var(--text-main);">🚗 Book Cabs</a>
+      <a href="#trips" data-nav="trips" style="font-weight:600;color:var(--text-main);">📅 My Trips</a>
+      <a href="#account" data-nav="account" style="font-weight:600;color:var(--text-main);">👤 Customer Profile</a>
+      <a href="#offers" data-nav="offers" style="font-weight:600;color:var(--text-main);">🎁 Offers & Deals</a>
+      <a href="#drive" data-nav="drive" style="font-weight:600;color:var(--text-main);">🤝 Drive with PickMi</a>
+      <a href="#support" data-nav="support" style="font-weight:600;color:var(--text-main);">🎧 Help & Safety</a>
+      <a href="#policy" data-nav="policy" style="font-weight:600;color:var(--text-muted);font-size:0.9rem;">📜 Cancellation Policy</a>
+    </div>
+  </div>
+
+  <!-- Main Content Views Container -->
+  <main>
+    <!-- VIEW 1: HOME & BOOKING ENGINE -->
+    <section id="view-home" class="app-view">
+      <div class="hero-wrapper">
+        <div class="hero-container">
+          <!-- Headline Row: Title on Left, My Bookings Button on Right (Login only) -->
+          <div class="hero-headline-row">
+            <h1 class="hero-main-heading" id="hero-dynamic-heading">Book outstation cabs</h1>
+            <button class="btn-my-bookings-pill" id="btn-my-bookings-header" data-nav="account" style="display:none;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>My Bookings</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+
+          <!-- Main White Travel Card (Exact Visual Hierarchy of Screenshot) -->
+          <div class="hero-booking-card">
+            <!-- Row 1: Trip Type Pills (One-way, Round-trip, Rental - Matching Benchmark) -->
+            <div class="booking-card-top-row">
+              <div class="hero-trip-pill-tabs" id="hero-trip-pill-tabs">
+                <button type="button" class="hero-trip-pill active" data-trip-mode="oneway">One-way</button>
+                <button type="button" class="hero-trip-pill" data-trip-mode="round">Round-trip</button>
+                <button type="button" class="hero-trip-pill" data-trip-mode="rental">Rental</button>
+              </div>
+
+              <!-- Rental package dropdown (Revealed only when rental is selected) -->
+              <div id="hero-rental-package-wrap" style="display:none;align-items:center;gap:0.6rem;">
+                <span style="font-size:0.85rem;font-weight:700;color:#64748b;">Package:</span>
+                <select id="hero-rental-package-select" style="padding:0.45rem 0.95rem;border:1.5px solid #cbd5e1;border-radius:10px;font-weight:700;color:#0f172a;background:#fff;cursor:pointer;">
+                  <option value="rent-2h20k">2 Hours / 20 KMs</option>
+                  <option value="rent-4h40k" selected>4 Hours / 40 KMs (Most Popular)</option>
+                  <option value="rent-8h80k">8 Hours / 80 KMs (Full Day)</option>
+                  <option value="rent-12h120k">12 Hours / 120 KMs</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 2: Inputs Grid (From, Swap, To, Departure Date) -->
+            <form id="hero-cab-search-form">
+              <div class="booking-card-inputs-grid">
+                <!-- From -->
+                <div class="location-input-block" id="from-input-wrapper">
+                  <span class="location-sublabel">From</span>
+                  <div class="location-field-wrapper">
+                    <input type="text" class="location-main-input" id="input-pickup" placeholder="Enter pickup city" value="Bengaluru" autocomplete="off" required>
+                    <button type="button" class="btn-clear-input" id="btn-clear-from" title="Clear">&#10005;</button>
+                  </div>
+                  <div id="pickup-autocomplete-list" class="autocomplete-dropdown"></div>
+                </div>
+
+                <!-- Swap Button -->
+                <button type="button" class="btn-swap-locations" id="swap-locations-btn" title="Swap From and To">
+                  &#8644;
+                </button>
+
+                <!-- To -->
+                <div class="location-input-block" id="to-input-wrapper">
+                  <span class="location-sublabel">To</span>
+                  <div class="location-field-wrapper">
+                    <input type="text" class="location-main-input" id="input-drop" placeholder="Enter destination city" value="Chennai" autocomplete="off" required>
+                    <button type="button" class="btn-clear-input" id="btn-clear-to" title="Clear">&#10005;</button>
+                  </div>
+                  <div id="drop-autocomplete-list" class="autocomplete-dropdown"></div>
+                </div>
+
+                <!-- Departure Date (Recent 3 Days + Calendar Display) -->
+                <div class="date-selector-block" id="departure-date-block">
+                  <div class="date-section-label">Departure Date</div>
+                  <div class="quick-dates-row" id="quick-dates-container">
+                    <!-- Dynamic 3-Day Pills populated by JavaScript -->
+                    <div class="date-pill-card" data-day-offset="0">
+                      <span class="date-pill-day">10</span>
+                      <span class="date-pill-sub">Today</span>
+                    </div>
+                    <div class="date-pill-card active" data-day-offset="1">
+                      <span class="date-pill-day">11</span>
+                      <span class="date-pill-sub">Sun</span>
+                    </div>
+                    <div class="date-pill-card" data-day-offset="2">
+                      <span class="date-pill-day">12</span>
+                      <span class="date-pill-sub">Mon</span>
+                    </div>
+                    <!-- Calendar Trigger with Dynamic Selected Date Display -->
+                    <div class="calendar-pill-card" id="btn-calendar-trigger">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                      <span id="calendar-pill-text">Calendar</span>
+                      <input type="date" id="input-date">
+                    </div>
+                  </div>
+                  <!-- Hidden inputs for time -->
+                  <input type="hidden" id="input-time" value="08:00">
+                </div>
+
+                <!-- Return Date Block (Revealed on Round-trip) -->
+                <div class="date-selector-block" id="return-date-wrapper" style="display:none;">
+                  <div class="date-section-label">Return Date</div>
+                  <div class="calendar-pill-card" id="btn-return-calendar-trigger">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span id="return-calendar-pill-text">Select Return Date</span>
+                    <input type="date" id="input-return-date-picker">
+                  </div>
+                  <input type="hidden" id="input-return-date" value="">
+                  <input type="hidden" id="input-return-time" value="18:00">
+                </div>
+              </div>
+
+              <!-- Row 3: Cab Type Chips (Clean text only) & Search Button with generous spacing -->
+              <div class="booking-card-bottom-row" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px dashed #f1f5f9;display:flex;align-items:center;justify-content:space-between;gap:2.5rem;">
+                <div class="cab-types-filter-wrap" style="display:flex;align-items:center;gap:0.75rem;">
+                  <span class="cab-types-label" style="font-weight:600;color:#64748b;margin-right:0.25rem;">Cab Type</span>
+                  <button type="button" class="cab-type-pill" data-cab-type="hatchback">
+                    <span>Hatchback</span>
+                  </button>
+                  <button type="button" class="cab-type-pill active" data-cab-type="sedan">
+                    <span>Sedan</span>
+                  </button>
+                  <button type="button" class="cab-type-pill" data-cab-type="suv">
+                    <span>SUV</span>
+                  </button>
+                </div>
+
+                <button type="submit" class="btn-hero-search-cabs" id="btn-search-cabs" style="min-width:240px;margin-left:auto;">
+                  <span>Search Cabs</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Scenic Skyline & Road Backdrop (Matching User's Screenshot Illustration) -->
+        <div class="hero-cityscape-backdrop">
+          <svg class="cityscape-svg-canvas" viewBox="0 0 1440 110" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <!-- Sky Gradient Ground Plane -->
+            <rect y="82" width="1440" height="28" fill="#d0e8fa" />
+            <line x1="0" y1="82" x2="1440" y2="82" stroke="#90c8f5" stroke-width="2" />
+
+            <!-- Distant City Buildings Left -->
+            <rect x="8" y="24" width="46" height="58" rx="2" fill="#bae0fa" opacity="0.8" />
+            <rect x="16" y="32" width="10" height="8" rx="1" fill="#ffffff" opacity="0.9" />
+            <rect x="32" y="32" width="10" height="8" rx="1" fill="#ffffff" opacity="0.9" />
+            <rect x="16" y="46" width="10" height="8" rx="1" fill="#ffffff" opacity="0.9" />
+            <rect x="32" y="46" width="10" height="8" rx="1" fill="#ffffff" opacity="0.9" />
+            <rect x="16" y="60" width="10" height="8" rx="1" fill="#ffffff" opacity="0.9" />
+            <rect x="32" y="60" width="10" height="8" rx="1" fill="#ffffff" opacity="0.9" />
+
+            <!-- Building 2 Left -->
+            <rect x="68" y="36" width="86" height="46" rx="2" fill="#cbe6fa" />
+            <rect x="76" y="44" width="22" height="12" rx="1" fill="#ffffff" opacity="0.8" />
+            <rect x="106" y="44" width="22" height="12" rx="1" fill="#ffffff" opacity="0.8" />
+            <rect x="76" y="62" width="22" height="12" rx="1" fill="#ffffff" opacity="0.8" />
+            <rect x="106" y="62" width="22" height="12" rx="1" fill="#ffffff" opacity="0.8" />
+
+            <!-- Utility Pole 1 -->
+            <line x1="380" y1="20" x2="380" y2="82" stroke="#7cb2db" stroke-width="3" />
+            <line x1="362" y1="28" x2="398" y2="28" stroke="#7cb2db" stroke-width="3" />
+            <line x1="0" y1="28" x2="380" y2="28" stroke="#97c8ef" stroke-width="1.5" />
+            <line x1="380" y1="28" x2="815" y2="28" stroke="#97c8ef" stroke-width="1.5" />
+
+            <!-- Center Pastel City Building -->
+            <rect x="680" y="28" width="62" height="54" rx="2" fill="#d9edf9" />
+            <rect x="696" y="42" width="8" height="8" rx="1" fill="#ffffff" />
+            <rect x="712" y="42" width="8" height="8" rx="1" fill="#ffffff" />
+            <rect x="696" y="58" width="8" height="8" rx="1" fill="#ffffff" />
+            <rect x="712" y="58" width="8" height="8" rx="1" fill="#ffffff" />
+
+            <!-- Utility Pole 2 -->
+            <line x1="815" y1="20" x2="815" y2="82" stroke="#7cb2db" stroke-width="3" />
+            <line x1="797" y1="28" x2="833" y2="28" stroke="#7cb2db" stroke-width="3" />
+            <line x1="815" y1="28" x2="1245" y2="28" stroke="#97c8ef" stroke-width="1.5" />
+
+            <!-- Utility Pole 3 Right -->
+            <line x1="1245" y1="20" x2="1245" y2="82" stroke="#7cb2db" stroke-width="3" />
+            <line x1="1227" y1="28" x2="1263" y2="28" stroke="#7cb2db" stroke-width="3" />
+            <line x1="1245" y1="28" x2="1440" y2="28" stroke="#97c8ef" stroke-width="1.5" />
+
+            <!-- Trees & Foliage -->
+            <circle cx="280" cy="74" r="22" fill="#b9e7b2" opacity="0.85" />
+            <line x1="280" y1="74" x2="280" y2="82" stroke="#87c77c" stroke-width="3" />
+
+            <circle cx="1160" cy="72" r="24" fill="#b9e7b2" opacity="0.85" />
+            <line x1="1160" y1="72" x2="1160" y2="82" stroke="#87c77c" stroke-width="3" />
+
+            <!-- Park Benches -->
+            <g transform="translate(890, 68)">
+              <rect x="0" y="4" width="36" height="4" rx="2" fill="#6baee2" />
+              <line x1="6" y1="8" x2="6" y2="14" stroke="#4892cc" stroke-width="2.5" />
+              <line x1="30" y1="8" x2="30" y2="14" stroke="#4892cc" stroke-width="2.5" />
+              <line x1="4" y1="1" x2="32" y2="1" stroke="#6baee2" stroke-width="2.5" />
+            </g>
+            <g transform="translate(970, 68)">
+              <rect x="0" y="4" width="36" height="4" rx="2" fill="#6baee2" />
+              <line x1="6" y1="8" x2="6" y2="14" stroke="#4892cc" stroke-width="2.5" />
+              <line x1="30" y1="8" x2="30" y2="14" stroke="#4892cc" stroke-width="2.5" />
+              <line x1="4" y1="1" x2="32" y2="1" stroke="#6baee2" stroke-width="2.5" />
+            </g>
+
+            <!-- Cute Travel Bus / Cab on Road (Matching Screenshot) -->
+            <g transform="translate(440, 56)">
+              <!-- Vehicle Body -->
+              <rect x="0" y="4" width="96" height="26" rx="6" fill="#3b82f6" />
+              <!-- Front Cab Section -->
+              <rect x="70" y="4" width="26" height="26" rx="6" fill="#2563eb" />
+              <!-- Windshield & Windows -->
+              <rect x="74" y="8" width="16" height="12" rx="2" fill="#bfdbfe" />
+              <rect x="52" y="8" width="16" height="10" rx="2" fill="#ffffff" opacity="0.9" />
+              <rect x="30" y="8" width="16" height="10" rx="2" fill="#ffffff" opacity="0.9" />
+              <rect x="8" y="8" width="16" height="10" rx="2" fill="#ffffff" opacity="0.9" />
+              <!-- Wheels -->
+              <circle cx="22" cy="30" r="7" fill="#1e293b" />
+              <circle cx="22" cy="30" r="3" fill="#94a3b8" />
+              <circle cx="76" cy="30" r="7" fill="#1e293b" />
+              <circle cx="76" cy="30" r="3" fill="#94a3b8" />
+              <!-- Headlight -->
+              <rect x="92" y="18" width="4" height="6" rx="1" fill="#fef08a" />
+            </g>
+
+            <!-- Right City Buildings -->
+            <rect x="1380" y="30" width="56" height="52" rx="2" fill="#c4e2f9" />
+            <rect x="1392" y="40" width="12" height="10" rx="1" fill="#ffffff" opacity="0.8" />
+            <rect x="1414" y="40" width="12" height="10" rx="1" fill="#ffffff" opacity="0.8" />
+            <rect x="1392" y="58" width="12" height="10" rx="1" fill="#ffffff" opacity="0.8" />
+            <rect x="1414" y="58" width="12" height="10" rx="1" fill="#ffffff" opacity="0.8" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Benchmark Feature Pillars (Section 2 & 3) -->
+      <section class="features-section">
+        <div class="features-grid">
+          <div class="feature-box">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <div class="feature-title">Search Before Login</div>
+            <div class="feature-desc">Explore routes, vehicle categories, and exact fare breakdowns with complete privacy before entering your mobile number.</div>
+          </div>
+
+          <div class="feature-box">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <div class="feature-title">Reservation Trip OTP</div>
+            <div class="feature-desc">Every scheduled booking is assigned a unique secret trip OTP that the driver must authenticate before ride initiation.</div>
+          </div>
+
+          <div class="feature-box">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <div class="feature-title">100% Price Transparency</div>
+            <div class="feature-desc">Base fare, included kilometers, highway toll estimates, driver night allowance, and GST itemized clearly upfront.</div>
+          </div>
+
+          <div class="feature-box">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <div class="feature-title">Instant Tax Invoices</div>
+            <div class="feature-desc">Download complete GST-compliant receipts and tax invoices directly from your dashboard for corporate reimbursements.</div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- VIEW 2: VEHICLE RESULTS (Paytm Travel Styled Sticky Header) -->
+    <section id="view-results" class="app-view" style="display:none;">
+      <!-- Sticky Top Header Search Bar (Replaces main header on Results page) -->
+      <header class="results-search-header-bar" id="results-search-pill-bar">
+        <!-- Dynamically populated in js/app.js -->
+      </header>
+
+      <!-- Sticky Breadcrumbs Bar (Fixed when scrolling) -->
+      <div class="results-breadcrumb-bar" id="results-breadcrumb-bar">
+        <div class="results-breadcrumb-inner">
+          <a href="#" id="breadcrumb-home-link">Home</a>
+          <span class="breadcrumb-separator">&gt;</span>
+          <span class="breadcrumb-current">Search</span>
+        </div>
+      </div>
+
+      <div class="results-split-wrapper">
+        <!-- LEFT: Fixed Map Panel -->
+        <div class="results-map-panel" id="results-map-panel">
+          <div id="osm-route-card-container"></div>
+        </div>
+
+        <!-- RIGHT: Scrollable Cabs Panel -->
+        <div class="results-cabs-panel">
+          <!-- Sticky Breadcrumb inside cabs panel -->
+          <div class="cabs-panel-breadcrumb">
+            <a href="#" id="breadcrumb-home-link2" class="breadcrumb-home-link">Home</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-current">Search</span>
+          </div>
+
+          <div class="results-count-sort-row">
+            <h2 class="results-count-title" id="results-count-heading" style="margin:0;">Available Cabs</h2>
+          </div>
+          <!-- Cabs List Container (Vehicle cards injected here) -->
+          <div id="cabs-list-container" class="cabs-list-flow" style="display:flex;flex-direction:column;gap:1.25rem;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: CHECKOUT & REVIEW -->
+    <section id="view-checkout" class="app-view" style="display:none;">
+
+      <!-- Inline (non-sticky) page header -->
+      <div class="checkout-inline-header">
+        <button type="button" class="btn-checkout-back" id="btn-checkout-back" title="Go back to cab selection" aria-label="Back to available cabs">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <h2 class="checkout-inline-title">Review Booking &amp; Passenger Details</h2>
+      </div>
+
+      <div class="checkout-simple-body">
+
+        <!-- Card 1: Vehicle & Route Summary -->
+        <div class="checkout-section-card" id="checkout-vehicle-summary"></div>
+
+        <!-- Card 2: Passenger Contact Details -->
+        <div class="checkout-section-card" id="checkout-passenger-section">
+          <h4 class="card-heading">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Passenger Contact Details
+          </h4>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Primary Traveler Name</label>
+              <input type="text" id="checkout-passenger-name" placeholder="Full name">
+            </div>
+            <div class="input-group">
+              <label>Mobile Number (For Driver SMS/Call)</label>
+              <input type="tel" id="checkout-passenger-phone" placeholder="+91 98765 43210">
+            </div>
+          </div>
+          <div class="input-group" style="margin-bottom:1rem;">
+            <label>Email Address (For Tax Invoice)</label>
+            <input type="email" id="checkout-passenger-email" placeholder="name@domain.com">
+          </div>
+          <div class="input-group">
+            <label>Special Instructions for Pickup (Optional)</label>
+            <textarea id="checkout-pickup-notes" rows="2" placeholder="e.g. Near main entrance gate, please call upon arrival"></textarea>
+          </div>
+        </div>
+
+        <!-- Card 3: Price Breakdown -->
+        <div class="checkout-section-card">
+          <h4 class="card-heading" style="margin-bottom:1rem;">Price Breakdown</h4>
+          <div id="checkout-fare-summary-table" class="fare-summary-table"></div>
+          <div class="price-breakdown-divider"></div>
+          <!-- Cancellation Policy Notice -->
+          <div style="margin-top:1.25rem;padding:0.85rem;background:#f8fafc;border-radius:8px;font-size:0.78rem;color:var(--text-muted);border:1px solid var(--border-light);">
+            🛡️ <strong>Cancellation Policy:</strong> Free cancellation up to 2 hours prior to scheduled pickup. Full refund will be automatically processed.
+          </div>
+        </div>
+
+        <!-- Fixed Bottom Bar for Confirmation -->
+        <div class="checkout-fixed-bottom-bar" id="checkout-fixed-bar">
+          <div class="checkout-bottom-inner">
+            <div class="checkout-bottom-left">
+              <div class="checkout-bottom-title">Confirm Your Trip</div>
+              <div class="checkout-bottom-sub" id="checkout-bottom-sub">Instant reservation · Zero hidden charges</div>
+            </div>
+
+            <div class="checkout-bottom-right">
+              <div class="checkout-bottom-select-wrap">
+                <select id="checkout-payment-dropdown" class="checkout-bottom-dropdown" aria-label="Select Payment Option">
+                  <option value="advance_100" selected>Pay ₹100 to confirm your trip</option>
+                  <option value="pay_full_driver">Pay full on driver</option>
+                </select>
+              </div>
+
+              <button type="button" class="btn-confirm-trip-action" id="btn-fixed-confirm-trip">
+                Confirm Your Trip
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- VIEW 4: BOOKING CONFIRMATION (Split Screen Matching Benchmark) -->
+
+    <section id="view-confirmation" class="app-view" style="display:none;">
+      <div class="confirmation-page-wrapper">
+        <div id="confirmation-details-box"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 5: MY TRIPS (Section 10) -->
+    <section id="view-trips" class="app-view" style="display:none;">
+      <div class="view-container">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+          <div>
+            <h2 class="section-heading">My Bookings & Trips</h2>
+            <p style="color:var(--text-muted);font-size:0.9rem;">View upcoming schedules, driver details, and past ride invoices.</p>
+          </div>
+          <button class="btn-primary-search" style="padding:0.6rem 1.4rem;font-size:0.9rem;" data-nav="home">Book New Cab</button>
+        </div>
+
+        <!-- Filter tabs: Upcoming, Ongoing, Completed, Cancelled -->
+        <div class="trips-filter-tabs">
+          <button class="trip-tab-btn active" data-status="all">All Trips</button>
+          <button class="trip-tab-btn" data-status="upcoming">Upcoming</button>
+          <button class="trip-tab-btn" data-status="ongoing">Ongoing</button>
+          <button class="trip-tab-btn" data-status="completed">Completed</button>
+          <button class="trip-tab-btn" data-status="cancelled">Cancelled</button>
+        </div>
+
+        <div id="trips-list-container"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 6: TRIP DETAIL PAGE (Section 11) -->
+    <section id="view-trip-detail" class="app-view" style="display:none;">
+      <div class="view-container" id="trip-detail-content"></div>
+    </section>
+
+    <!-- VIEW 7: CUSTOMER ACCOUNT, PROFILE & TRIP MANAGEMENT -->
+    <section id="view-account" class="app-view" style="display:none;">
+      <div class="view-container" style="max-width:1120px;padding-top:2rem;padding-bottom:4rem;">
+        <div class="account-dashboard-layout">
+          <!-- Left Side: User Profile Overview Card -->
+          <aside class="account-sidebar-card">
+            <div class="account-sidebar-avatar-wrap">
+              <div class="profile-avatar-circle" id="profile-display-avatar">KP</div>
+              <h3 class="account-sidebar-name" id="profile-display-name">Karthik Prabhu</h3>
+              <div class="account-sidebar-contact">
+                <span id="profile-display-phone">+91 98401 23456</span>
+                <span class="account-verified-tag">🔒 Fixed & Verified</span>
+              </div>
+              <div class="account-sidebar-email" id="profile-display-email">karthik.prabhu@example.com</div>
+            </div>
+
+            <div class="account-sidebar-stats-row">
+              <div class="account-sidebar-stat-box">
+                <span class="account-sidebar-stat-num" id="profile-stat-upcoming">2</span>
+                <span class="account-sidebar-stat-lbl">Upcoming</span>
+              </div>
+              <div class="account-sidebar-stat-box">
+                <span class="account-sidebar-stat-num" id="profile-stat-history">2</span>
+                <span class="account-sidebar-stat-lbl">Past Rides</span>
+              </div>
+              <div class="account-sidebar-stat-box">
+                <span class="account-sidebar-stat-num">₹650</span>
+                <span class="account-sidebar-stat-lbl">Saved</span>
+              </div>
+            </div>
+
+            <div class="account-sidebar-divider"></div>
+
+            <button type="button" class="btn-sidebar-signout" id="btn-account-logout">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Sign Out</span>
+            </button>
+          </aside>
+
+          <!-- Right Side: Tabs (Profile | My Bookings | Support) and Active Content -->
+          <div class="account-main-content">
+            <!-- Right side tabs header -->
+            <div class="profile-main-tabs">
+              <button class="profile-main-tab-btn active" data-profile-tab="profile" id="tab-btn-profile">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Profile</span>
+              </button>
+              <button class="profile-main-tab-btn" data-profile-tab="trips" id="tab-btn-trips">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span>My Bookings</span>
+              </button>
+              <button class="profile-main-tab-btn" data-profile-tab="support" id="tab-btn-support">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span>Support</span>
+              </button>
+            </div>
+
+            <!-- TAB 1: PROFILE CONTENT -->
+            <div id="profile-tab-profile-content" class="profile-tab-section">
+              <div class="profile-clean-details-box">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+                  <div>
+                    <h3 style="font-size:1.25rem;font-weight:700;color:var(--text-main);margin:0;">Personal Profile Details</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.2rem;">Your verified account information with PickMi</p>
+                  </div>
+                  <button type="button" class="btn-modify-search" id="btn-toggle-profile-edit" style="padding:0.5rem 1.25rem;font-weight:700;font-size:0.88rem;">
+                    ✏️ Edit Profile
+                  </button>
+                </div>
+
+                <!-- Read-only Display Mode (Default - NO inputs) -->
+                <div id="profile-readonly-view">
+                  <div class="profile-info-grid">
+                    <div class="profile-info-item">
+                      <span class="profile-info-label">Full Name</span>
+                      <strong class="profile-info-value" id="disp-profile-name">Karthik Prabhu</strong>
+                    </div>
+                    <div class="profile-info-item">
+                      <span class="profile-info-label">Mobile Number (Fixed & Verified)</span>
+                      <div style="display:flex;align-items:center;gap:0.4rem;">
+                        <strong class="profile-info-value" id="disp-profile-phone">+91 98401 23456</strong>
+                        <span class="badge-verified-phone">🔒 Fixed</span>
+                      </div>
+                    </div>
+                    <div class="profile-info-item">
+                      <span class="profile-info-label">Email Address</span>
+                      <strong class="profile-info-value" id="disp-profile-email">karthik.prabhu@example.com</strong>
+                    </div>
+                    <div class="profile-info-item">
+                      <span class="profile-info-label">City of Residence</span>
+                      <strong class="profile-info-value" id="disp-profile-city">Chennai, Tamil Nadu</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Editable Form Mode (Hidden by default, shown only when Edit is clicked) -->
+                <form id="profile-edit-form" style="display:none;" onsubmit="event.preventDefault();">
+                  <div class="form-row">
+                    <div class="input-group">
+                      <label>Full Name</label>
+                      <input type="text" id="profile-name-input" value="Karthik Prabhu" required>
+                    </div>
+                    <div class="input-group">
+                      <label>Mobile Number (Fixed - Cannot be changed)</label>
+                      <input type="tel" id="profile-phone-input" value="+91 98401 23456" disabled readonly style="background:#f1f5f9;color:#64748b;font-weight:700;cursor:not-allowed;">
+                      <span style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem;">🔒 Mobile number is permanently linked to your verified OTP account.</span>
+                    </div>
+                  </div>
+                  <div class="form-row" style="margin-bottom:1.5rem;">
+                    <div class="input-group">
+                      <label>Email Address</label>
+                      <input type="email" id="profile-email-input" value="karthik.prabhu@example.com" required>
+                    </div>
+                    <div class="input-group">
+                      <label>City of Residence</label>
+                      <input type="text" id="profile-city-input" value="Chennai">
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:0.75rem;align-items:center;">
+                    <button type="submit" class="btn-primary-search" id="btn-save-profile" style="padding:0.65rem 1.75rem;">Save Changes</button>
+                    <button type="button" class="btn-modify-search" id="btn-cancel-profile-edit" style="padding:0.65rem 1.25rem;">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- TAB 2: MY BOOKINGS (Clean card list) -->
+            <div id="profile-tab-trips-content" class="profile-tab-section" style="display:none;">
+              <div id="account-trips-list-container" class="profile-trips-clean-list"></div>
+            </div>
+
+            <!-- TAB 3: SUPPORT (JUST THE LIST OF SUPPORT, THAT'S IT) -->
+            <div id="profile-tab-support-content" class="profile-tab-section" style="display:none;">
+              <div class="support-list-wrapper">
+                <div class="support-list-header">
+                  <h3 style="font-size:1.25rem;font-weight:700;color:var(--text-main);margin:0;">PickMi Support Directory</h3>
+                  <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.25rem;">Select any support channel below for direct help with your bookings, fares, or drivers.</p>
+                </div>
+
+                <div class="support-channel-list">
+                  <!-- Channel 1: 24/7 Helpline -->
+                  <div class="support-channel-card">
+                    <div class="support-channel-icon-wrap" style="background:#eff6ff;color:#0056d6;">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </div>
+                    <div class="support-channel-details">
+                      <div class="support-channel-title-row">
+                        <strong class="support-channel-title">24/7 Customer Care Helpline</strong>
+                        <span class="support-status-badge badge-green">Toll-Free</span>
+                      </div>
+                      <p class="support-channel-desc">Immediate phone support for active bookings, driver delays, or urgent trip queries.</p>
+                      <span class="support-channel-val">1800-209-7425</span>
+                    </div>
+                    <div class="support-channel-btn-wrap">
+                      <a href="tel:18002097425" class="btn-support-call">Call Helpline</a>
+                    </div>
+                  </div>
+
+                  <!-- Channel 2: WhatsApp Chat -->
+                  <div class="support-channel-card">
+                    <div class="support-channel-icon-wrap" style="background:#ecfdf5;color:#059669;">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.586 1.761.88 2.791.88 3.181 0 5.767-2.586 5.767-5.766.001-3.18-2.585-5.766-5.767-5.766zm9.969 5.766c0 5.514-4.486 10-10 10-1.823 0-3.539-.493-5.029-1.353l-6.971 1.825 1.854-6.776c-.958-1.558-1.512-3.385-1.512-5.342 0-5.514 4.486-10 10-10 5.514 0 10 4.486 10 10z"/></svg>
+                    </div>
+                    <div class="support-channel-details">
+                      <div class="support-channel-title-row">
+                        <strong class="support-channel-title">Official WhatsApp Support</strong>
+                        <span class="support-status-badge badge-green">Instant Chat</span>
+                      </div>
+                      <p class="support-channel-desc">Chat directly with a support agent for fast driver details, receipts, and live trip status.</p>
+                      <span class="support-channel-val">+91 98401 23456</span>
+                    </div>
+                    <div class="support-channel-btn-wrap">
+                      <a href="https://wa.me/919840123456?text=Hi%20PickMi%20Support,%20I%20need%20assistance%20with%20my%20cab%20booking" target="_blank" rel="noopener" class="btn-support-whatsapp">Open WhatsApp</a>
+                    </div>
+                  </div>
+
+                  <!-- Channel 3: Email Desk -->
+                  <div class="support-channel-card">
+                    <div class="support-channel-icon-wrap" style="background:#fef3c7;color:#d97706;">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </div>
+                    <div class="support-channel-details">
+                      <div class="support-channel-title-row">
+                        <strong class="support-channel-title">Customer Care Email Desk</strong>
+                        <span class="support-status-badge badge-blue">Response in 2h</span>
+                      </div>
+                      <p class="support-channel-desc">For GST invoices, trip receipts, detailed complaints, or general service inquiries.</p>
+                      <span class="support-channel-val">support@pickmi.com</span>
+                    </div>
+                    <div class="support-channel-btn-wrap">
+                      <a href="mailto:support@pickmi.com?subject=PickMi%20Cab%20Support%20Enquiry" class="btn-support-email">Send Email</a>
+                    </div>
+                  </div>
+
+                  <!-- Channel 4: Cancellation & Refund Assistance -->
+                  <div class="support-channel-card">
+                    <div class="support-channel-icon-wrap" style="background:#fef2f2;color:#ef4444;">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                    </div>
+                    <div class="support-channel-details">
+                      <div class="support-channel-title-row">
+                        <strong class="support-channel-title">Trip Cancellation & Refund Desk</strong>
+                        <span class="support-status-badge badge-orange">Free Cancellation</span>
+                      </div>
+                      <p class="support-channel-desc">Cancel rides free of charge up to 6 hours before pickup with 100% automated refund.</p>
+                      <span class="support-channel-val">Policy: Zero cancellation fee before 6h</span>
+                    </div>
+                    <div class="support-channel-btn-wrap">
+                      <a href="#trips" class="btn-support-outline" id="support-link-to-trips">View My Bookings</a>
+                    </div>
+                  </div>
+
+                  <!-- Channel 5: 24/7 Safety & SOS -->
+                  <div class="support-channel-card">
+                    <div class="support-channel-icon-wrap" style="background:#f5f3ff;color:#7c3aed;">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div class="support-channel-details">
+                      <div class="support-channel-title-row">
+                        <strong class="support-channel-title">Passenger Safety & Emergency SOS</strong>
+                        <span class="support-status-badge badge-purple">High Priority</span>
+                      </div>
+                      <p class="support-channel-desc">Real-time GPS tracking assistance, verified driver database, and emergency response desk.</p>
+                      <span class="support-channel-val">National Helpline: 112</span>
+                    </div>
+                    <div class="support-channel-btn-wrap">
+                      <a href="tel:112" class="btn-support-danger">Emergency 112</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 8: OFFERS & DEALS -->
+    <section id="view-offers" class="app-view" style="display:none;">
+      <div class="view-container">
+        <h2 class="section-heading" style="margin-bottom:0.5rem;">Exclusive Cab Offers & Promo Coupons</h2>
+        <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:2rem;">Use these verified discount codes at checkout to save on your rides.</p>
+        <div class="features-grid" id="offers-cards-grid"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 9: HELP & SUPPORT (WhatsApp Integration & FAQs) -->
+    <section id="view-support" class="app-view" style="display:none;">
+      <div class="view-container" style="max-width:900px;">
+        <h2 class="section-heading" style="margin-bottom:0.4rem;">PickMi Customer Care & Support</h2>
+        <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:1.75rem;">Need assistance with a booking, refund, or driver? We are here 24/7 to help.</p>
+
+        <!-- Direct WhatsApp & Phone Helpline Banner (Requested by user) -->
+        <div style="background:linear-gradient(135deg, #128c7e 0%, #075e54 100%);color:#fff;border-radius:18px;padding:1.75rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:2.5rem;box-shadow:0 8px 24px rgba(18,140,126,0.25);">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.2);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.78rem;font-weight:700;letter-spacing:0.5px;margin-bottom:0.5rem;">
+              <span>●</span> LIVE 24/7 CHAT
+            </div>
+            <h3 style="font-size:1.45rem;font-weight:800;margin-bottom:0.35rem;">Chat with us on WhatsApp</h3>
+            <p style="font-size:0.9rem;opacity:0.9;max-width:480px;">Connect instantly with our dedicated support executive for fast booking help, ride tracking, and immediate assistance.</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;min-width:240px;">
+            <a href="https://wa.me/919840123456?text=Hi%20PickMi%20Support,%20I%20need%20assistance%20with%20my%20cab%20booking" target="_blank" class="btn-whatsapp-connect" style="display:inline-flex;align-items:center;justify-content:center;gap:0.6rem;background:#25d366;color:#ffffff;padding:0.85rem 1.6rem;border-radius:9999px;font-weight:700;font-size:1rem;box-shadow:0 4px 14px rgba(0,0,0,0.2);text-decoration:none;transition:all 0.2s ease;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.586 1.761.88 2.791.88 3.181 0 5.767-2.586 5.767-5.766.001-3.18-2.585-5.766-5.767-5.766zm9.969 5.766c0 5.514-4.486 10-10 10-1.823 0-3.539-.493-5.029-1.353l-6.971 1.825 1.854-6.776c-.958-1.558-1.512-3.385-1.512-5.342 0-5.514 4.486-10 10-10 5.514 0 10 4.486 10 10z"/></svg>
+              <span>Open WhatsApp Chat</span>
+            </a>
+            <div style="text-align:center;font-size:0.82rem;opacity:0.85;">
+              Toll-Free Helpline: <strong>1800-209-7425</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQs Accordion -->
+        <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Frequently Asked Questions</h3>
+        <div id="faq-accordion-container" style="margin-bottom:3rem;"></div>
+
+        <!-- Report Issue Form -->
+        <div class="checkout-card">
+          <h4 class="card-heading">Raise a Support Ticket</h4>
+          <form id="support-case-form">
+            <div class="form-row">
+              <div class="input-group">
+                <label>Booking ID (Optional)</label>
+                <input type="text" id="support-booking-ref" placeholder="e.g. PKM-88219">
+              </div>
+              <div class="input-group">
+                <label>Issue Category</label>
+                <select id="support-category">
+                  <option>Driver / Cab Issue</option>
+                  <option>Payment / Refund Status</option>
+                  <option>Cancellation / Reschedule</option>
+                  <option>Invoice / Billing Request</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-group" style="margin-bottom:1.25rem;">
+              <label>Message / Description</label>
+              <textarea id="support-message-text" rows="3" placeholder="Please describe how we can assist you..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary-search" style="padding:0.75rem 1.8rem;font-size:0.95rem;">Submit Ticket</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 10: DRIVER PARTNER (Rebuilt to exact order from user's uploaded sections) -->
+    <section id="view-drive" class="app-view" style="display:none;">
+
+      <!-- SECTION 1: HERO SECTION -->
+      <div class="driver-hero-section">
+        <div class="view-container driver-hero-container">
+          <div class="driver-hero-left">
+            <div class="driver-kicker-text">
+              Drive. <span class="highlight-blue">Earn.</span> Repeat.
+            </div>
+            <h1 class="driver-hero-heading">
+              Join the Pickmi Driver Network<br>
+              Let's Get You Signed Up!<br>
+              <span class="driver-angel-emoji">😇</span>
+            </h1>
+            <div class="driver-hero-actions">
+              <button class="btn-driver-signup" id="btn-open-driver-signup">
+                <span>Sign Up Pickmi Driver</span>
+                <span class="btn-arrow">&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="driver-hero-right">
+            <div class="driver-phone-circle-backdrop"></div>
+            <div class="driver-phone-mockup-wrap">
+              <img src="assets/driver_hero_phone.png" alt="Pickmi Driver App" class="driver-phone-img">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: 3 SIMPLE STEPS -->
+      <div class="driver-steps-section">
+        <div class="view-container">
+          <h2 class="driver-section-title text-center">Drive with Pickmi in 3 Simple Steps</h2>
+
+          <div class="driver-steps-grid">
+            <!-- Step 1 -->
+            <div class="driver-step-card">
+              <div class="driver-step-badge">1</div>
+              <h3 class="driver-step-title">Sign Up Online</h3>
+              <p class="driver-step-desc">Fill out the application form with your driving license, national ID, and vehicle registration documents.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="driver-step-card">
+              <div class="driver-step-badge">2</div>
+              <h3 class="driver-step-title">Get Verified</h3>
+              <p class="driver-step-desc">Our verification team will review your application and documents to ensure a safe community standard.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="driver-step-card">
+              <div class="driver-step-badge">3</div>
+              <h3 class="driver-step-title">Start Earning</h3>
+              <p class="driver-step-desc">Download the Pickmi Driver partner app, go online, accept rides, and watch your earnings grow!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: VEHICLE CATEGORIES YOU CAN DRIVE -->
+      <div class="driver-categories-section">
+        <div class="view-container">
+          <div class="driver-categories-card">
+            <h2 class="driver-categories-main-title">Vehicle Categories You Can Drive</h2>
+
+            <!-- Vehicle Icon Switcher Tabs -->
+            <div class="driver-vehicle-tabs" id="driver-vehicle-tabs">
+              <button class="driver-veh-tab-btn active" data-vtype="hatchback">
+                <img src="assets/car_hatchback.png" alt="Hatchback" class="veh-tab-car-img">
+              </button>
+              <button class="driver-veh-tab-btn" data-vtype="sedan">
+                <img src="assets/car_sedan.png" alt="Sedan" class="veh-tab-car-img">
+              </button>
+              <button class="driver-veh-tab-btn" data-vtype="suv">
+                <img src="assets/car_suv.png" alt="SUV" class="veh-tab-car-img">
+              </button>
+            </div>
+
+            <div class="driver-vehicle-detail-grid">
+              <!-- Left Details -->
+              <div class="driver-veh-left">
+                <h3 class="driver-veh-name" id="driver-veh-name">Hatchback</h3>
+                <p class="driver-veh-subtitle" id="driver-veh-sub">Daily city commutes and affordable rides</p>
+
+                <div class="driver-spec-group">
+                  <div class="driver-spec-label">Models</div>
+                  <div class="driver-pill-list" id="driver-models-list">
+                    <span class="driver-spec-pill">• Swift</span>
+                    <span class="driver-spec-pill">• WagonR</span>
+                    <span class="driver-spec-pill">• Celerio</span>
+                    <span class="driver-spec-pill">• Hyundai i10</span>
+                    <span class="driver-spec-pill">• Tata Tiago</span>
+                  </div>
+                </div>
+
+                <div class="driver-spec-group">
+                  <div class="driver-spec-label">Mandatory</div>
+                  <div class="driver-pill-list">
+                    <span class="driver-spec-pill">• T-Board Vehicle</span>
+                    <span class="driver-spec-pill">• Vehicle Insurance</span>
+                    <span class="driver-spec-pill">• Vehicle Fitness Certificate</span>
+                    <span class="driver-spec-pill">• Pollution Certificate (PUC)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Basic Price Card -->
+              <div class="driver-veh-right">
+                <div class="driver-price-box-title">Basic Price</div>
+                <div class="driver-pricing-card">
+                  <div class="driver-rates-row">
+                    <div class="driver-rate-item">
+                      <div class="driver-rate-value" id="driver-rate-incity">₹12/km</div>
+                      <div class="driver-rate-label">In-City</div>
+                    </div>
+                    <div class="driver-rate-divider"></div>
+                    <div class="driver-rate-item">
+                      <div class="driver-rate-value" id="driver-rate-outstation">₹10/km</div>
+                      <div class="driver-rate-label">Outstation<br>Extra KM</div>
+                    </div>
+                    <div class="driver-rate-divider"></div>
+                    <div class="driver-rate-item">
+                      <div class="driver-rate-value" id="driver-rate-rental">₹200/hr</div>
+                      <div class="driver-rate-label">Hourly Rental</div>
+                    </div>
+                  </div>
+                  <div class="driver-price-note">
+                    <span class="note-info-icon">ⓘ</span>
+                    <span>Night charges, driver allocation, tolls, and interstate charges extra.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: WHY PARTNER WITH PICKMI? -->
+      <div class="driver-why-section">
+        <div class="view-container">
+          <div class="driver-why-card">
+            <h2 class="driver-why-title">Why Partner with Pickmi?</h2>
+
+            <div class="driver-why-grid">
+              <!-- Feature 1 -->
+              <div class="driver-why-item">
+                <div class="driver-why-icon-box">
+                  <span class="driver-why-icon-currency">$</span>
+                </div>
+                <div>
+                  <h3 class="driver-why-item-title">Higher Take-Home Payouts</h3>
+                  <p class="driver-why-item-desc">Our industry-low commissions mean you keep the vast majority of every fare. No hidden platform cuts.</p>
+                </div>
+              </div>
+
+              <!-- Feature 2 -->
+              <div class="driver-why-item">
+                <div class="driver-why-icon-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
+                <div>
+                  <h3 class="driver-why-item-title">Set Your Own Hours</h3>
+                  <p class="driver-why-item-desc">Drive whenever it suits you. Full time, part time, or just a few hours on weekends. You are in control.</p>
+                </div>
+              </div>
+
+              <!-- Feature 3 -->
+              <div class="driver-why-item">
+                <div class="driver-why-icon-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <div>
+                  <h3 class="driver-why-item-title">Safety First Mindset</h3>
+                  <p class="driver-why-item-desc">Rider verification, real-time trip sharing, and a 24/7 dedicated driver support hotline to keep you safe.</p>
+                </div>
+              </div>
+
+              <!-- Feature 4 -->
+              <div class="driver-why-item">
+                <div class="driver-why-icon-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                </div>
+                <div>
+                  <h3 class="driver-why-item-title">Fleet Owner Programs</h3>
+                  <p class="driver-why-item-desc">Manage multiple cars, track driver performance, and optimize your business from our centralized partner panel.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: APP DOWNLOAD BANNER -->
+      <div class="driver-download-section">
+        <div class="view-container">
+          <div class="driver-download-banner">
+            <div class="driver-dl-left">
+              <div class="driver-dl-circle-backdrop"></div>
+              <img src="assets/driver_hero_phone.png" alt="Pickmi Driver App" class="driver-dl-phone-img">
+            </div>
+
+            <div class="driver-dl-right">
+              <h2 class="driver-dl-heading">
+                Globally top-rated and MENA's #1 travel app, with 83M+ downloads
+              </h2>
+
+              <div class="driver-dl-checklist">
+                <div class="driver-check-pill">
+                  <span class="check-mark">✔</span>
+                  <span>App-only deals</span>
+                </div>
+                <div class="driver-check-pill">
+                  <span class="check-mark">✔</span>
+                  <span>700+ sites in one search</span>
+                </div>
+                <div class="driver-check-pill">
+                  <span class="check-mark">✔</span>
+                  <span>Safe, secure bookings</span>
+                </div>
+              </div>
+
+              <div class="driver-dl-actions-row">
+                <!-- QR Code Box -->
+                <div class="driver-qr-box">
+                  <svg width="68" height="68" viewBox="0 0 100 100" fill="#111111">
+                    <rect x="5" y="5" width="30" height="30" rx="3" fill="#111" />
+                    <rect x="10" y="10" width="20" height="20" fill="#fff" />
+                    <rect x="15" y="15" width="10" height="10" fill="#111" />
+
+                    <rect x="65" y="5" width="30" height="30" rx="3" fill="#111" />
+                    <rect x="70" y="10" width="20" height="20" fill="#fff" />
+                    <rect x="75" y="15" width="10" height="10" fill="#111" />
+
+                    <rect x="5" y="65" width="30" height="30" rx="3" fill="#111" />
+                    <rect x="10" y="70" width="20" height="20" fill="#fff" />
+                    <rect x="15" y="75" width="10" height="10" fill="#111" />
+
+                    <rect x="45" y="10" width="8" height="8" fill="#111" />
+                    <rect x="42" y="25" width="10" height="8" fill="#111" />
+                    <rect x="45" y="45" width="10" height="10" fill="#111" />
+                    <rect x="15" y="45" width="8" height="8" fill="#111" />
+                    <rect x="65" y="45" width="8" height="15" fill="#111" />
+                    <rect x="80" y="45" width="12" height="8" fill="#111" />
+                    <rect x="45" y="65" width="10" height="10" fill="#111" />
+                    <rect x="45" y="80" width="8" height="12" fill="#111" />
+                    <rect x="65" y="70" width="8" height="8" fill="#111" />
+                    <rect x="78" y="65" width="15" height="8" fill="#111" />
+                    <rect x="70" y="80" width="22" height="12" fill="#111" />
+                  </svg>
+                </div>
+
+                <!-- Google Play Badge -->
+                <a href="https://play.google.com" target="_blank" rel="noopener" class="btn-google-play">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M3.6 1.8L13.8 12 3.6 22.2c-.4-.4-.6-1-.6-1.7V3.5c0-.7.2-1.3.6-1.7z" fill="#00e5ff"/>
+                    <path d="M17.3 8.5l-3.5 3.5 3.5 3.5 3.9-2.2c1.1-.6 1.1-1.6 0-2.3l-3.9-2.5z" fill="#ffb300"/>
+                    <path d="M3.6 1.8l10.2 10.2 3.5-3.5-12-6.7c-.6-.4-1.3-.3-1.7 0z" fill="#00e676"/>
+                    <path d="M13.8 12L3.6 22.2c.4.3 1.1.4 1.7 0l12-6.7-3.5-3.5z" fill="#e53935"/>
+                  </svg>
+                  <div class="google-play-text">
+                    <span class="gp-small">GET IT ON</span>
+                    <span class="gp-large">Google Play</span>
+                  </div>
+                </a>
+
+                <!-- Rating -->
+                <div class="driver-dl-rating-wrap">
+                  <div class="driver-rating-score">
+                    <strong>4.6</strong>
+                    <span class="rating-stars">★★★★★</span>
+                  </div>
+                  <div class="driver-reviews-count">193,524+ reviews</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating chat / assistant badge from screenshot -->
+      <div class="driver-floating-badge" id="driver-chat-pill">
+        Hi, I am Eyes Ah
+      </div>
+
+    </section>
+
+    <!-- VIEW 11: CANCELLATION POLICY -->
+    <section id="view-policy" class="app-view" style="display:none;">
+      <div class="view-container" style="max-width:850px;">
+        <h2 style="font-size:1.8rem;font-weight:800;color:var(--text-main);margin-bottom:1.5rem;">Transparent Cancellation & Refund Policy</h2>
+        <div class="checkout-card" style="line-height:1.7;font-size:0.92rem;color:var(--text-muted);">
+          <h4 style="color:var(--text-main);font-size:1.15rem;margin-bottom:0.75rem;">1. Free Cancellation Window</h4>
+          <p>For all InCity, Intercity, Airport, and Rental bookings, cancellation initiated at least <strong>2 hours prior to scheduled pickup time</strong> attracts ZERO penalty. 100% of advance paid amount is refunded immediately to the original payment source.</p>
+
+          <h4 style="color:var(--text-main);font-size:1.15rem;margin:1.5rem 0 0.75rem;">2. Late Cancellation</h4>
+          <p>If cancellation is requested within 2 hours of scheduled pickup and a chauffeur has already been dispatched, a nominal dispatch allowance of ₹250 is deducted, and the balance amount is refunded.</p>
+
+          <h4 style="color:var(--text-main);font-size:1.15rem;margin:1.5rem 0 0.75rem;">3. Refund Processing Timeline</h4>
+          <p>UPI and Debit card refunds reflect instantaneously or within 2 hours. Credit card and NetBanking refunds typically reflect within 2 to 4 banking working days depending on issuing bank.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modals & Drawers -->
+  <!-- 1. Login & OTP Modal (Section 8) -->
+  <div class="modal-overlay" id="login-otp-modal">
+    <div class="modal-content-box">
+      <button class="modal-close-btn">&times;</button>
+      
+      <!-- Phone Step -->
+      <div id="otp-step-phone">
+        <h3 style="font-size:1.35rem;font-weight:800;color:var(--text-main);margin-bottom:0.4rem;">Login / Create Account</h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.5rem;">Enter your 10-digit mobile number to receive a secure OTP.</p>
+        <div class="input-group" style="margin-bottom:1.5rem;">
+          <label>Mobile Number</label>
+          <div style="display:flex;align-items:center;border:1.5px solid var(--border-light);border-radius:var(--border-radius-md);padding:0.2rem 0.75rem;">
+            <span style="font-weight:600;color:var(--text-muted);margin-right:0.5rem;">+91</span>
+            <input type="tel" id="login-phone-input" placeholder="98401 23456" maxlength="10" value="9840123456" style="border:none;padding:0.55rem 0;font-weight:600;width:100%;">
+          </div>
+        </div>
+        <button class="btn-primary-search" id="btn-send-otp" style="width:100%;">Send Verification Code</button>
+      </div>
+
+      <!-- OTP Verify Step -->
+      <div id="otp-step-verify" style="display:none;">
+        <h3 style="font-size:1.35rem;font-weight:800;color:var(--text-main);margin-bottom:0.4rem;">Verify 4-Digit OTP</h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.5rem;">Enter the code sent to your mobile via SMS / WhatsApp.</p>
+        <div class="input-group" style="margin-bottom:1.25rem;">
+          <label>4-Digit Code</label>
+          <input type="text" id="login-otp-input" placeholder="e.g. 4829" maxlength="4" style="text-align:center;font-size:1.5rem;font-weight:800;letter-spacing:6px;">
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;font-size:0.82rem;">
+          <span style="color:var(--text-muted);">Resend in <span id="otp-timer-count">30s</span></span>
+          <button id="btn-resend-otp" disabled style="background:none;color:var(--primary);font-weight:600;cursor:pointer;">Resend Code</button>
+        </div>
+        <button class="btn-primary-search" id="btn-verify-otp" style="width:100%;">Verify & Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Fare Breakdown Modal -->
+  <div class="modal-overlay" id="fare-breakdown-modal">
+    <div class="modal-content-box">
+      <button class="modal-close-btn">&times;</button>
+      <div id="fare-breakdown-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- 3. Tax Invoice Print Modal -->
+  <div class="modal-overlay" id="invoice-modal">
+    <div class="modal-content-box" style="max-width:680px;">
+      <button class="modal-close-btn">&times;</button>
+      <div id="invoice-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- 4. Cancel Booking Modal -->
+  <div class="modal-overlay" id="cancel-trip-modal">
+    <div class="modal-content-box">
+      <button class="modal-close-btn">&times;</button>
+      <div id="cancel-trip-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- 5. Reschedule Booking Modal -->
+  <div class="modal-overlay" id="reschedule-trip-modal">
+    <div class="modal-content-box">
+      <button class="modal-close-btn">&times;</button>
+      <div id="reschedule-trip-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- 6. PickMi for Business Modal (Requested by user) -->
+  <div class="modal-overlay" id="business-modal">
+    <div class="modal-content-box" style="max-width:540px;">
+      <button class="modal-close-btn" id="btn-close-business">&times;</button>
+      <div style="margin-bottom:1.25rem;">
+        <span style="font-size:0.75rem;font-weight:800;letter-spacing:1px;color:var(--primary);text-transform:uppercase;background:var(--primary-light);padding:0.25rem 0.65rem;border-radius:9999px;">CORPORATE MOBILITY</span>
+        <h3 style="font-size:1.45rem;font-weight:800;margin-top:0.4rem;color:var(--text-main);">PickMi for Business</h3>
+        <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.25rem;">Reliable corporate mobility solutions for companies, executives, and employee ground transit across India.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;">
+        <div style="display:flex;gap:0.75rem;align-items:flex-start;background:#f8fafc;padding:0.85rem;border-radius:var(--border-radius-md);border:1px solid var(--border-light);">
+          <span style="font-size:1.25rem;">🏢</span>
+          <div>
+            <strong style="font-size:0.9rem;color:var(--text-main);display:block;margin-bottom:0.15rem;">Centralized GST Billing & Invoicing</strong>
+            <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.4;">Consolidated monthly tax invoices with 100% compliant input tax credit for your corporate finance team.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;align-items:flex-start;background:#f8fafc;padding:0.85rem;border-radius:var(--border-radius-md);border:1px solid var(--border-light);">
+          <span style="font-size:1.25rem;">⚡</span>
+          <div>
+            <strong style="font-size:0.9rem;color:var(--text-main);display:block;margin-bottom:0.15rem;">Fixed Negotiated Rates & Zero Surge</strong>
+            <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.4;">Guaranteed flat rates for airport transfers, city rentals, and intercity trips even during peak traffic hours.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;align-items:flex-start;background:#f8fafc;padding:0.85rem;border-radius:var(--border-radius-md);border:1px solid var(--border-light);">
+          <span style="font-size:1.25rem;">👔</span>
+          <div>
+            <strong style="font-size:0.9rem;color:var(--text-main);display:block;margin-bottom:0.15rem;">24/7 Priority Relationship Desk</strong>
+            <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.4;">Direct account manager assigned for immediate chauffeur dispatch and tailored corporate requirements.</div>
+          </div>
+        </div>
+      </div>
+
+      <form id="form-business-inquiry" onsubmit="event.preventDefault();">
+        <div class="form-row">
+          <div class="input-group">
+            <label>Company / Organization Name</label>
+            <input type="text" id="biz-company-name" placeholder="Acme Technologies" required>
+          </div>
+          <div class="input-group">
+            <label>Official Work Email</label>
+            <input type="email" id="biz-work-email" placeholder="corp@acme.com" required>
+          </div>
+        </div>
+        <div class="input-group" style="margin-bottom:1rem;">
+          <label>Estimated Monthly Trips</label>
+          <select id="biz-trip-volume" style="padding:0.75rem;border:1.5px solid var(--border-light);border-radius:var(--border-radius-md);">
+            <option value="10-50">10 - 50 trips / month</option>
+            <option value="50-200">50 - 200 trips / month</option>
+            <option value="200+">200+ enterprise trips / month</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary-search" id="btn-submit-biz-inquiry" style="width:100%;padding:0.85rem;font-size:0.95rem;">Request Corporate Account Setup</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Driver Partner Registration Modal -->
+  <div class="modal-overlay" id="driver-signup-modal">
+    <div class="modal-content-box" style="max-width:540px;">
+      <button class="modal-close-btn" id="btn-close-driver-modal">&times;</button>
+      <div style="margin-bottom:1.25rem;">
+        <span style="font-size:0.75rem;font-weight:800;letter-spacing:1px;color:#0066f6;text-transform:uppercase;background:#eff6ff;padding:0.25rem 0.65rem;border-radius:9999px;">DRIVER ONBOARDING</span>
+        <h3 style="font-size:1.45rem;font-weight:800;margin-top:0.4rem;color:var(--text-main);">Sign Up as PickMi Driver</h3>
+        <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.25rem;">Join thousands of partner chauffeurs earning higher take-home payouts with transparent daily settlements.</p>
+      </div>
+
+      <form id="form-driver-signup" onsubmit="event.preventDefault();">
+        <div class="form-row">
+          <div class="input-group">
+            <label>Full Name *</label>
+            <input type="text" id="driver-name-input" placeholder="e.g. Ramesh Kumar" required>
+          </div>
+          <div class="input-group">
+            <label>Mobile Number *</label>
+            <input type="tel" id="driver-phone-input" placeholder="+91 98400 12345" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="input-group">
+            <label>Vehicle Category *</label>
+            <select id="driver-cat-select" required>
+              <option value="Hatchback">Hatchback (Swift, WagonR, Tiago)</option>
+              <option value="Sedan" selected>Sedan (Dzire, Etios, Aura)</option>
+              <option value="SUV">SUV (Ertiga, Carens, Innova)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Vehicle Number (T-Board) *</label>
+            <input type="text" id="driver-veh-num" placeholder="e.g. TN 09 BX 7421" style="text-transform:uppercase;" required>
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:1.5rem;">
+          <div class="input-group">
+            <label>Operating City *</label>
+            <select id="driver-city-select" required>
+              <option>Chennai, Tamil Nadu</option>
+              <option>Coimbatore, Tamil Nadu</option>
+              <option>Madurai, Tamil Nadu</option>
+              <option>Bengaluru, Karnataka</option>
+              <option>Hyderabad, Telangana</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Driving License (DL) *</label>
+            <input type="text" id="driver-dl-num" placeholder="e.g. TN09201900123" style="text-transform:uppercase;" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary-search" id="btn-submit-driver-app" style="width:100%;padding:0.85rem;font-size:0.95rem;">Submit Driver Partner Application</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Alerts Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Mobile Bottom Sticky Navigation -->
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-btn active" data-nav="home" data-view="home">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+      <span>Book</span>
+    </button>
+    <button class="mobile-nav-btn" data-nav="trips" data-view="trips">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      <span>My Trips</span>
+    </button>
+    <button class="mobile-nav-btn" data-nav="offers" data-view="offers">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+      <span>Offers</span>
+    </button>
+    <button class="mobile-nav-btn" data-nav="account" data-view="account">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+  <!-- App Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div class="brand-logo-wrap" style="margin-bottom:1rem;">
+          <div class="brand-badge-icon">P</div>
+          <div class="brand-text-box">
+            <div class="brand-title" style="color:#111111;">Pick<span>Mi</span></div>
+            <div class="brand-tagline" style="color:#64748b;">Reliable Cabs</div>
+          </div>
+        </div>
+        <p style="font-size:0.88rem;color:#64748b;line-height:1.6;margin-bottom:1.5rem;">
+          India's premium customer cab booking platform. Built according to high UX standards with upfront pricing, verified chauffeurs, and real-time Reservation Trip OTP safety.
+        </p>
+        <div style="font-size:0.82rem;color:#64748b;">
+          24/7 Helpline: <strong style="color:#111111;">1800-209-PICK (7425)</strong> &bull; support@pickmi.com
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Our Services</h4>
+        <ul>
+          <li><a href="#home" data-nav="home">InCity Daily Rides</a></li>
+          <li><a href="#home" data-nav="home">Intercity One-Way Cabs</a></li>
+          <li><a href="#home" data-nav="home">Intercity Round Trips</a></li>
+          <li><a href="#home" data-nav="home">Airport Transfers (MAA/BLR/BOM)</a></li>
+          <li><a href="#home" data-nav="home">Hourly Local Rentals</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Customer Care</h4>
+        <ul>
+          <li><a href="#trips" data-nav="trips">My Bookings</a></li>
+          <li><a href="#support" data-nav="support">Help Centre & FAQs</a></li>
+          <li><a href="#policy" data-nav="policy">Cancellation & Refunds</a></li>
+          <li><a href="#offers" data-nav="offers">Promotions & Coupons</a></li>
+          <li><a href="#support" data-nav="support">Safety Guidelines</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Partner & Legal</h4>
+        <ul>
+          <li><a href="#drive" data-nav="drive">Drive with PickMi</a></li>
+          <li><a href="#policy" data-nav="policy">Terms & Conditions</a></li>
+          <li><a href="#policy" data-nav="policy">Privacy Notice</a></li>
+          <li><a href="#drive" data-nav="drive">Fleet Attachment</a></li>
+          <li><a href="#support" data-nav="support">Corporate Travel Desk</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 PickMi Mobility Technologies Private Limited. All rights reserved.</div>
+      <div>Crafted for high performance & responsive mobile web experience.</div>
+    </div>
+  </footer>
+
+  <!-- App Logic Scripts -->
+  <script type="module" src="js/data.js?v=2"></script>
+  <script type="module" src="js/store.js?v=2"></script>
+  <script type="module" src="js/app.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delete Your PickMi Account | Pickmi Cabs</title>
+  <meta name="description" content="Submit an account deletion request for your PickMi account and associated personal data. Compliant with Google Play &amp; App Store Data Safety policy requirements.">
+  <meta name="keywords" content="PickMi delete account, PickMi account deletion request, PickMi privacy, remove account data">
+  <link rel="canonical" href="https://www.pickmicabs.com/account-deletion.html">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0043DC;
+      --primary-hover: #0033B3;
+      --success: #10B981;
+      --danger: #EF4444;
+      --text-main: #0F172A;
+      --text-muted: #475569;
+      --bg-body: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --border: #E2E8F0;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      background: #FFFFFF;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0F172A;
+    }
+
+    .brand-text span { color: var(--primary); }
+
+    .nav-back {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-back:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 900px;
+      margin: 36px auto 70px;
+      padding: 0 20px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #EFF6FF;
+      color: var(--primary);
+      border: 1px solid #BFDBFE;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .hero-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 15.5px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+      margin-bottom: 32px;
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 21px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--text-main);
+    }
+
+    .instructions-list {
+      margin-bottom: 22px;
+      padding-left: 20px;
+    }
+
+    .instructions-list li {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      margin-bottom: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text-main);
+      background-color: #FFFFFF;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 67, 220, 0.15);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background-color: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 13px 24px;
+      border-radius: 8px;
+      font-size: 15.5px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .contact-box {
+      background-color: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-top: 22px;
+      font-size: 14px;
+    }
+
+    .contact-box a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .contact-box a:hover {
+      text-decoration: underline;
+    }
+
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 21px;
+      font-weight: 700;
+      margin: 30px 0 14px;
+      color: var(--text-main);
+      border-bottom: 1.5px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    p, li {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 18px;
+    }
+
+    .important-box {
+      background-color: #FEF2F2;
+      border-left: 4px solid var(--danger);
+      padding: 18px 22px;
+      border-radius: 8px;
+      margin: 24px 0;
+    }
+
+    .important-box h3 {
+      color: #991B1B;
+      font-size: 16px;
+      margin-bottom: 6px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .important-box p {
+      color: #7F1D1D;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .important-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .help-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 22px 24px;
+      border-radius: var(--radius);
+      margin-top: 32px;
+    }
+
+    .help-section h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 19px;
+      margin-bottom: 8px;
+    }
+
+    .success-card {
+      display: none;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .success-icon {
+      width: 44px;
+      height: 44px;
+      background: #D1FAE5;
+      color: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      background: #FFFFFF;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="brand-link" aria-label="Pickmi Home">
+        <img src="assets/logo.png" alt="Pickmi Cabs Logo" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';">
+        <span class="brand-text" style="display:none;">Pick<span>mi</span></span>
+      </a>
+      <a href="privacy-policy.html" class="nav-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Privacy Policy
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+      Data Privacy &amp; Safety Compliance
+    </div>
+
+    <h1>Delete Your PickMi Account</h1>
+    <p class="subtitle">
+      If you would like to delete your PickMi account and associated personal data, you can submit an account deletion request using the form or contact details below.
+    </p>
+
+    <!-- FORM CARD -->
+    <div class="card">
+      <div class="card-title">How to Request Account Deletion</div>
+      <p style="margin-bottom: 12px;">To request deletion of your PickMi account:</p>
+      <ol class="instructions-list">
+        <li>Enter the phone number registered with your PickMi account.</li>
+        <li>Provide your registered email address, if applicable.</li>
+        <li>Submit your account deletion request.</li>
+        <li>Our team will verify the request and process the deletion.</li>
+      </ol>
+
+      <!-- Success Notification -->
+      <div id="successCard" class="success-card">
+        <div class="success-icon">&#10003;</div>
+        <h3 style="font-family:'Outfit', sans-serif; font-size:20px; color:#065F46; margin-bottom:8px;">Account Deletion Request Submitted</h3>
+        <p style="font-size:14px; color:#047857; margin-bottom:16px;">
+          Your request has been received. Our team will verify your details and process the deletion request.
+        </p>
+        <button type="button" class="btn-submit" style="background:#059669; max-width:260px; margin:0 auto;" onclick="resetForm()">Submit Another Request</button>
+      </div>
+
+      <!-- Deletion Form -->
+      <form id="deletionForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label class="form-label" for="phone">Registered Phone Number</label>
+          <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Registered Email Address</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter your email address">
+        </div>
+
+        <button type="submit" class="btn-submit">Request Account Deletion</button>
+      </form>
+
+      <div class="contact-box">
+        <p style="margin-bottom: 4px; font-weight: 600; color: var(--text-main);">You may also contact us directly at:</p>
+        <p style="margin-bottom: 2px;">Email: <a href="mailto:info@pickmicabs.com">info@pickmicabs.com</a></p>
+        <p style="margin-bottom: 0;">Phone: <a href="tel:+918867791805">+91 88677 91805</a></p>
+      </div>
+    </div>
+
+    <!-- WHAT DATA WILL BE DELETED -->
+    <h2>What Data Will Be Deleted</h2>
+    <p>When your account deletion request is processed, PickMi will delete or anonymize personal information associated with your account where applicable, including:</p>
+    <ul>
+      <li>Account and profile information</li>
+      <li>Registered phone number and email address</li>
+      <li>Saved personal information</li>
+      <li>Account-related preferences</li>
+      <li>Other personal data that is no longer required for legitimate business or legal purposes</li>
+    </ul>
+
+    <!-- TRIP AND BOOKING INFORMATION -->
+    <h2>Trip and Booking Information</h2>
+    <p>Some information related to completed trips, bookings, payments, invoices, transactions, or other records may need to be retained for a limited period where required for:</p>
+    <ul>
+      <li>Legal or regulatory compliance</li>
+      <li>Tax and accounting requirements</li>
+      <li>Fraud prevention and security</li>
+      <li>Dispute resolution</li>
+      <li>Financial record keeping</li>
+    </ul>
+    <p>Such information will be retained only for the period required for the applicable purpose and will not be retained longer than necessary.</p>
+
+    <!-- PROCESSING TIME -->
+    <h2>Processing Time</h2>
+    <p>After receiving and verifying your request, PickMi will process the account deletion request within a reasonable period.</p>
+    <p>If certain information must be retained for legal, regulatory, accounting, security, or dispute-resolution purposes, that information will be retained for the applicable retention period and deleted or anonymized afterward.</p>
+
+    <!-- IMPORTANT -->
+    <div class="important-box">
+      <h3>Important</h3>
+      <p>Deleting your PickMi account may permanently remove access to your account, profile, saved information, and other associated services. Account deletion may not be reversible.</p>
+      <p>If you have an active booking or unresolved payment, refund, or dispute, we may need to resolve the matter before completing deletion of certain associated records.</p>
+    </div>
+
+    <!-- NEED HELP -->
+    <div class="help-section">
+      <h3>Need Help?</h3>
+      <p style="margin-bottom: 12px;">If you have questions about account deletion or your personal data, contact us:</p>
+      <p style="margin-bottom: 4px; font-weight: 700; color: var(--text-main);">PickMi Cabs</p>
+      <p style="margin-bottom: 4px;">Email: <a href="mailto:info@pickmicabs.com" style="color: var(--primary); font-weight: 600;">info@pickmicabs.com</a></p>
+      <p style="margin-bottom: 4px;">Phone: <a href="tel:+918867791805" style="color: var(--primary); font-weight: 600;">+91 88677 91805</a></p>
+      <p style="margin-bottom: 0;">Website: <a href="https://www.pickmicabs.com" target="_blank" style="color: var(--primary); font-weight: 600;">https://www.pickmicabs.com</a></p>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="max-width:900px; margin:0 auto; padding:0 20px;">
+      <p>&copy; 2026 PickMi Cabs. All rights reserved.</p>
+      <p style="margin-top:6px; font-size:13px;">
+        <a href="index.html">Home</a> &nbsp;|&nbsp;
+        <a href="privacy-policy.html">Privacy Policy</a> &nbsp;|&nbsp;
+        <a href="account-deletion.html">Delete Account</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      const phone = document.getElementById("phone").value.trim();
+      if (!phone) {
+        alert("Please enter your registered phone number.");
+        return;
+      }
+      document.getElementById("deletionForm").style.display = "none";
+      document.getElementById("successCard").style.display = "block";
+    }
+
+    function resetForm() {
+      document.getElementById("deletionForm").reset();
+      document.getElementById("deletionForm").style.display = "block";
+      document.getElementById("successCard").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>

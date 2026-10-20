@@ -1,0 +1,207 @@
+{
+  "fleet": [
+    {
+      "id": "hatchback",
+      "categoryName": "Hatchback",
+      "models": "Swift, Indica or similar",
+      "seats": 4,
+      "luggage": 2,
+      "hasAc": true,
+      "tag": "Budget & Compact",
+      "badge": "Popular",
+      "ratingScore": 4.6,
+      "reviewCount": "2,350",
+      "isActive": true,
+      "minKmOneWay": 130,
+      "minKmPerDayRound": 300,
+      "driverAllowanceRound": 300,
+      "driverAllowanceOneway": 300,
+      "interstateCharge": 400,
+      "rentalExtraKmRate": 14,
+      "rentalExtraHrRate": 120,
+      "rentalPackageFares": {
+        "rent-2h20k": 799,
+        "rent-4h40k": 1399,
+        "rent-8h80k": 2399,
+        "rent-12h120k": 3299
+      },
+      "baseRatePerKm": {
+        "incity": 15,
+        "intercity_oneway": 14,
+        "intercity_round": 13,
+        "airport": 18,
+        "rental_extra_km": 14
+      },
+      "baseFareMin": {
+        "incity": 220,
+        "intercity_oneway": 1820,
+        "intercity_round": 3900,
+        "airport": 650
+      }
+    },
+    {
+      "id": "sedan",
+      "categoryName": "Sedan",
+      "models": "Dzire, Etios or similar",
+      "seats": 4,
+      "luggage": 3,
+      "hasAc": true,
+      "tag": "Spacious & Comfortable",
+      "badge": "Best Value",
+      "ratingScore": 4.8,
+      "reviewCount": "4,820",
+      "isActive": true,
+      "minKmOneWay": 130,
+      "minKmPerDayRound": 300,
+      "driverAllowanceRound": 400,
+      "driverAllowanceOneway": 400,
+      "interstateCharge": 500,
+      "rentalExtraKmRate": 16,
+      "rentalExtraHrRate": 150,
+      "rentalPackageFares": {
+        "rent-2h20k": 949,
+        "rent-4h40k": 1649,
+        "rent-8h80k": 2799,
+        "rent-12h120k": 3899
+      },
+      "baseRatePerKm": {
+        "incity": 18,
+        "intercity_oneway": 15,
+        "intercity_round": 14,
+        "airport": 21,
+        "rental_extra_km": 16
+      },
+      "baseFareMin": {
+        "incity": 290,
+        "intercity_oneway": 1950,
+        "intercity_round": 4200,
+        "airport": 820
+      }
+    },
+    {
+      "id": "suv",
+      "categoryName": "SUV",
+      "models": "Ertiga, Innova or similar",
+      "seats": 6,
+      "luggage": 4,
+      "hasAc": true,
+      "tag": "Extra Space for Families",
+      "badge": "Family Favorite",
+      "ratingScore": 4.7,
+      "reviewCount": "1,950",
+      "isActive": true,
+      "minKmOneWay": 130,
+      "minKmPerDayRound": 300,
+      "driverAllowanceRound": 500,
+      "driverAllowanceOneway": 500,
+      "interstateCharge": 1000,
+      "rentalExtraKmRate": 20,
+      "rentalExtraHrRate": 200,
+      "rentalPackageFares": {
+        "rent-2h20k": 1499,
+        "rent-4h40k": 2499,
+        "rent-8h80k": 4199,
+        "rent-12h120k": 5699
+      },
+      "baseRatePerKm": {
+        "incity": 24,
+        "intercity_oneway": 20,
+        "intercity_round": 19,
+        "airport": 28,
+        "rental_extra_km": 20
+      },
+      "baseFareMin": {
+        "incity": 440,
+        "intercity_oneway": 2600,
+        "intercity_round": 5700,
+        "airport": 1180
+      }
+    },
+    {
+      "id": "innova_crysta",
+      "categoryName": "Luxury",
+      "models": "Innova Crysta Executive",
+      "seats": 7,
+      "luggage": 5,
+      "hasAc": true,
+      "tag": "Ultimate Highway Luxury & Captain Seats",
+      "badge": "Executive Class",
+      "ratingScore": 4.95,
+      "reviewCount": "860",
+      "isActive": true,
+      "minKmOneWay": 130,
+      "minKmPerDayRound": 300,
+      "driverAllowanceRound": 700,
+      "driverAllowanceOneway": 700,
+      "interstateCharge": 1500,
+      "rentalExtraKmRate": 27,
+      "rentalExtraHrRate": 300,
+      "rentalPackageFares": {
+        "rent-2h20k": 2399,
+        "rent-4h40k": 3799,
+        "rent-8h80k": 6399,
+        "rent-12h120k": 8699
+      },
+      "baseRatePerKm": {
+        "incity": 34,
+        "intercity_oneway": 22,
+        "intercity_round": 21,
+        "airport": 38,
+        "rental_extra_km": 27
+      },
+      "baseFareMin": {
+        "incity": 690,
+        "intercity_oneway": 2860,
+        "intercity_round": 6300,
+        "airport": 1750
+      }
+    }
+  ],
+  "rentalPackages": [
+    {
+      "id": "rent-2h20k",
+      "hours": 2,
+      "km": 20,
+      "label": "2 Hours / 20 KMs",
+      "description": "Quick city chores & short meetings",
+      "popular": false
+    },
+    {
+      "id": "rent-4h40k",
+      "hours": 4,
+      "km": 40,
+      "label": "4 Hours / 40 KMs",
+      "description": "Half day city shopping & multiple stops",
+      "popular": true
+    },
+    {
+      "id": "rent-8h80k",
+      "hours": 8,
+      "km": 80,
+      "label": "8 Hours / 80 KMs (Full Day)",
+      "description": "Full day business meetings & city tour",
+      "popular": true
+    },
+    {
+      "id": "rent-12h120k",
+      "hours": 12,
+      "km": 120,
+      "label": "12 Hours / 120 KMs",
+      "description": "Extended day out & late night corporate trips",
+      "popular": false
+    }
+  ],
+  "pricing": {
+    "interstateMode": "auto",
+    "interstateFee": 500,
+    "tollOneway": 0,
+    "tollRound": 0,
+    "tollAirport": 0,
+    "tollIncity": 0,
+    "driverOneway": 300,
+    "driverRound": 400,
+    "driverAirport": 0,
+    "driverIncity": 0,
+    "gstRate": 5
+  }
+}

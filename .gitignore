@@ -1,0 +1,15 @@
+# Environment variables (API keys, credentials)
+.env
+.env.local
+.env.*.local
+
+# Sent emails log/mock storage
+sent_emails/
+
+# Temporary / scratch files
+scratch/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
