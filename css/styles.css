@@ -15021,3 +15021,45 @@ th {
   -webkit-border-radius: 0px !important;
   -moz-border-radius: 0px !important;
 }
+
+/* ============================================================
+   MOBILE HIDDEN SECTIONS (max-width: 767px)
+   Hide content-heavy sections on small screens for a cleaner
+   mobile booking experience.
+   ============================================================ */
+@media (max-width: 767px) {
+  /* 1. Popular Domestic Destinations Carousel */
+  .popular-destinations-section,
+  #popular-destinations-section {
+    display: none !important;
+  }
+
+  /* 2. Bringing Smart City Rides to Every Town */
+  .smart-city-routes-section,
+  #smart-city-routes-section {
+    display: none !important;
+  }
+
+  /* 3. Interactive Vehicle Pricing Showcase (Rs. X / Per km) */
+  .interactive-pricing-showcase-section,
+  #interactive-pricing-showcase-section {
+    display: none !important;
+  }
+
+  /* 4. App Download & Trust Showcase Banner */
+  .home-app-download-section,
+  #home-app-download-section {
+    display: none !important;
+  }
+
+  /* 5. 2x2 Editorial Content Grid (Online Cab Booking Made Easy, etc.) */
+  .home-editorial-grid-section {
+    display: none !important;
+  }
+
+  /* 6. SEO Keyword Directory / Tag Cloud */
+  .home-seo-directory-section {
+    display: none !important;
+  }
+}
+
