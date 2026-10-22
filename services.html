@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Services - PickMi Cabs</title>
+  <meta name="description" content="Explore PickMi services: Airport, Rental, Reserve, Intercity, and Parcel.">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+  <!-- Desktop Redirection: Services page is mobile-only -->
+  <script>
+    if (window.innerWidth >= 769) {
+      window.location.replace('index.html');
+    }
+    window.addEventListener('resize', function() {
+      if (window.innerWidth >= 769) {
+        window.location.replace('index.html');
+      }
+    });
+  </script>
+
+  <!-- Typography: Inter / System UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css?v=47">
+
+  <style>
+    /* Full Application: Strict 0px border-radius */
+    *, *::before, *::after, html, body {
+      border-radius: 0px !important;
+      -webkit-border-radius: 0px !important;
+      -moz-border-radius: 0px !important;
+    }
+
+    /* Mobile: Completely Hide Scrollbars */
+    html, body, * {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    ::-webkit-scrollbar, *::-webkit-scrollbar, html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      background: transparent !important;
+      -webkit-appearance: none !important;
+    }
+
+    /* Desktop Guard: completely invisible on desktop */
+    @media (min-width: 769px) {
+      body {
+        display: none !important;
+      }
+    }
+
+    /* Mobile Services App Shell */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #F5F7FA !important;
+      background-color: #F5F7FA !important;
+      color: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    /* Main Container with Notch Safe-Area Breathing Room (No top header) */
+    .services-screen-container {
+      padding: max(1.5rem, env(safe-area-inset-top, 1.5rem)) 1.15rem calc(7.5rem + env(safe-area-inset-bottom, 0px)) 1.15rem;
+      max-width: 520px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .services-heading-wrap {
+      margin-bottom: 1.35rem;
+    }
+
+    .services-heading-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #000000;
+      margin: 0 0 0.25rem 0;
+      letter-spacing: -0.6px;
+      line-height: 1.15;
+    }
+
+    .services-heading-sub {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #64748b;
+      margin: 0;
+      letter-spacing: -0.2px;
+    }
+
+    /* 3-Column Custom Service Grid */
+    .services-custom-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-custom-card {
+      display: block;
+      position: relative;
+      background: #ffffff;
+      border-radius: 0px !important;
+      overflow: hidden;
+      text-decoration: none;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+      transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    .service-custom-card:active {
+      transform: scale(0.96);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+      background: #f8fafc;
+    }
+
+    .service-custom-card.card-wide {
+      grid-column: span 2;
+    }
+
+    .service-custom-card.card-single {
+      grid-column: span 1;
+    }
+
+    .service-custom-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 0px !important;
+      pointer-events: none;
+    }
+
+    /* Guest / Not Logged In Prompt Card */
+    .services-auth-lock-card {
+      background: #ffffff;
+      border-radius: 0px !important;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      padding: 2rem 1.4rem;
+      text-align: center;
+      margin-top: 0.5rem;
+      box-sizing: border-box;
+    }
+
+    .auth-lock-icon-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 0px !important;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+
+    .auth-lock-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 0.5rem 0;
+      letter-spacing: -0.3px;
+    }
+
+    .auth-lock-desc {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #64748b;
+      margin: 0 0 1.5rem 0;
+    }
+
+    .btn-services-signin {
+      display: block;
+      width: 100%;
+      background: #0056d6;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: 0px !important;
+      text-decoration: none;
+      box-sizing: border-box;
+      box-shadow: 0 4px 14px rgba(0, 86, 214, 0.28);
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .btn-services-signin:active {
+      transform: scale(0.98);
+      background: #0043a8;
+    }
+
+    .auth-lock-benefits {
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      text-align: left;
+    }
+
+    .auth-benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.85rem;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    .auth-benefit-check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 0px !important;
+      background: #ecfdf5;
+      color: #059669;
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Services Screen Content (Header removed as requested) -->
+  <main class="services-screen-container">
+    <div class="services-heading-wrap">
+      <h1 class="services-heading-title">Services</h1>
+      <p class="services-heading-sub">Go anywhere, get anything</p>
+    </div>
+
+    <!-- LOGGED IN VIEW: 5 Service Cards matching user screenshot benchmark -->
+    <div id="services-logged-in-view" style="display:none;">
+      <div class="services-custom-grid">
+        <!-- Row 1: Airport (Single) -->
+        <a href="index.html?service=airport#home" class="service-custom-card card-single" aria-label="Airport Taxi">
+          <img src="assets/service_card_airport.png" alt="Airport">
+        </a>
+
+        <!-- Row 1: Rental (Single) -->
+        <a href="index.html?service=rental#home" class="service-custom-card card-single" aria-label="Hourly Rental Cabs">
+          <img src="assets/service_card_rental.png" alt="Rental">
+        </a>
+
+        <!-- Row 1: Reserve (Single) -->
+        <a href="index.html?service=reserve#home" class="service-custom-card card-single" aria-label="Reserve Ride Ahead">
+          <img src="assets/service_card_reserve_v2.png" alt="Reserve">
+        </a>
+
+        <!-- Row 2: Intercity (Wide, spans 2 columns) -->
+        <a href="index.html?service=oneway#home" class="service-custom-card card-wide" aria-label="Intercity Outstation Cabs">
+          <img src="assets/service_card_intercity_wide.png" alt="Intercity Starting at 12 Per kms">
+        </a>
+
+        <!-- Row 2: Parcel (Single) -->
+        <a href="index.html?service=parcel#home" class="service-custom-card card-single" aria-label="Parcel Courier Delivery">
+          <img src="assets/service_card_parcel_box.png" alt="Parcel">
+        </a>
+      </div>
+    </div>
+
+    <!-- GUEST / UNLOGGED VIEW: Clean prompt card -->
+    <div id="services-guest-view" style="display:none;">
+      <div class="services-auth-lock-card">
+        <div class="auth-lock-icon-circle">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0056d6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h2 class="auth-lock-title">Sign in to unlock PickMi Services</h2>
+        <p class="auth-lock-desc">Log in or create your PickMi account to book Airport transfers, Intercity outstation cabs, hourly rentals, and courier parcels.</p>
+        <a href="index.html#login" class="btn-services-signin">Sign In / Register</a>
+
+        <div class="auth-lock-benefits">
+          <div class="auth-benefit-item">
+            <span class="auth-benefit-check">✓</span>
+            <span>Instant cab confirmation & chauffeur details</span>
+          </div>
+          <div class="auth-benefit-item">
+            <span class="auth-benefit-check">✓</span>
+            <span>Save your favorite locations & corporate invoices</span>
+          </div>
+          <div class="auth-benefit-item">
+            <span class="auth-benefit-check">✓</span>
+            <span>Exclusive member discounts & offers</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Floating Bottom Dock (2-Box Format: 4-Item Nav Pill + Standalone AI Circle) -->
+  <div class="mobile-dock-wrapper" id="mobile-dock-wrapper">
+    <!-- Box 1: Navigation Pill (Explore, Services [ACTIVE], Activity, Profile) -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
+      <!-- 1. Explore (Home) -->
+      <a href="index.html#home" class="mobile-nav-btn" data-nav="home" id="btn-dock-explore" aria-label="Explore Home">
+        <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10.5L12 3l9 7.5v8.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/>
+        </svg>
+        <span class="mobile-nav-label">Explore</span>
+      </a>
+
+      <!-- 2. Services (ACTIVE with blue pill and text right) -->
+      <a href="services.html" class="mobile-nav-btn active" data-nav="services" id="btn-dock-services" aria-label="Services">
+        <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7.5" height="7.5" rx="2.5"/>
+          <rect x="13.5" y="3" width="7.5" height="7.5" rx="2.5"/>
+          <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2.5"/>
+          <rect x="3" y="13.5" width="7.5" height="7.5" rx="2.5"/>
+        </svg>
+        <span class="mobile-nav-label">Services</span>
+      </a>
+
+      <!-- 3. Activity (Trips) -->
+      <a href="index.html#trips" class="mobile-nav-btn" data-nav="trips" id="btn-dock-activity" aria-label="Activity">
+        <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="17" rx="3.5"/>
+          <path d="M16 2v4M8 2v4M3 9.5h18"/>
+          <circle cx="8" cy="14.5" r="1" fill="currentColor"/>
+          <circle cx="12" cy="14.5" r="1" fill="currentColor"/>
+          <circle cx="16" cy="14.5" r="1" fill="currentColor"/>
+        </svg>
+        <span class="mobile-nav-label">Activity</span>
+      </a>
+
+      <!-- 4. Profile (Account) -->
+      <a href="index.html#account" class="mobile-nav-btn" data-nav="account" id="btn-dock-profile" aria-label="Profile">
+        <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4.25"/>
+          <path d="M5.5 20.5a6.5 6.5 0 0 1 13 0"/>
+        </svg>
+        <span class="mobile-nav-label">Profile</span>
+      </a>
+    </nav>
+
+    <!-- Box 2: Eyes Ah AI Assistant Floating Circle -->
+    <a href="index.html#ai-chat" class="mobile-dock-ai-circle" id="mobile-dock-ai-btn" aria-label="Open Eyeah AI Assistant">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0056d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2.5C12 7.7 7.7 12 2.5 12c5.2 0 9.5 4.3 9.5 9.5 0-5.2 4.3-9.5 9.5-9.5-5.2 0-9.5-4.3-9.5-9.5Z"/>
+        <path d="M18.5 2.5v3M17 4h3" stroke-width="1.8"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Dynamic Authentication State Handler -->
+  <script>
+    function isUserLoggedIn() {
+      try {
+        const raw = localStorage.getItem('pickmi_user_v2');
+        if (raw) {
+          const u = JSON.parse(raw);
+          if (u && (u.isLoggedIn === true || u.isProfileComplete === true)) {
+            return true;
+          }
+        }
+      } catch (e) {}
+      return false;
+    }
+
+    function updateServicesAuth() {
+      const loggedIn = isUserLoggedIn();
+      const loggedInView = document.getElementById('services-logged-in-view');
+      const guestView = document.getElementById('services-guest-view');
+      if (loggedIn) {
+        if (loggedInView) loggedInView.style.display = 'block';
+        if (guestView) guestView.style.display = 'none';
+      } else {
+        if (loggedInView) loggedInView.style.display = 'none';
+        if (guestView) guestView.style.display = 'block';
+      }
+    }
+
+    updateServicesAuth();
+    window.addEventListener('storage', updateServicesAuth);
+  </script>
+
+</body>
+</html>

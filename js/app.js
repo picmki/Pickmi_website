@@ -521,6 +521,28 @@ export class PickMiApp {
     } else {
       this.showView('home');
     }
+
+    // Handle deep-link service parameter from mobile services page
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const s = urlParams.get('service');
+      if (s) {
+        setTimeout(() => {
+          if (s === 'rental') {
+            const rentalPill = document.querySelector('.hero-trip-pill[data-trip="rental"]');
+            if (rentalPill) rentalPill.click();
+          } else if (s === 'oneway' || s === 'intercity') {
+            const onewayPill = document.querySelector('.hero-trip-pill[data-trip="oneway"]');
+            if (onewayPill) onewayPill.click();
+          } else if (s === 'airport') {
+            const dropInput = document.getElementById('input-drop');
+            if (dropInput && !dropInput.value) {
+              dropInput.value = 'Chennai International Airport (MAA)';
+            }
+          }
+        }, 350);
+      }
+    } catch (e) {}
   }
 
   // ==========================================
@@ -824,8 +846,16 @@ export class PickMiApp {
       if (event === 'user_logged_in' || event === 'user_logged_out' || event === 'user_updated') {
         this.updateUserUI();
       }
+      if (event === 'trips_updated') {
+        if (this.currentView === 'trips') {
+          this.renderTripsList(this.currentTripFilter || 'all');
+        }
+      }
       if (event === 'booking_created') {
         this.showToast(`Booking ${data.id} Confirmed!`);
+        if (this.currentView === 'trips') {
+          this.renderTripsList(this.currentTripFilter || 'all');
+        }
       }
       if (event === 'driver_assigned') {
         this.showToast(`Chauffeur ${data.driver?.name || 'Driver'} assigned to your trip ${data.id}!`);
@@ -928,6 +958,62 @@ export class PickMiApp {
     setTimeout(dismiss, 3500);
   }
 
+  handleAvatarFileUpload(file) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      this.showToast('Please select a valid image file (PNG, JPG, WebP).', 'error');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      this.showToast('Image size exceeds 10MB limit.', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 400;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+
+        store.updateProfile({ avatarUrl: compressedDataUrl });
+        this.showToast('Profile photo updated successfully!', 'success');
+        this.updateUserUI();
+        if (document.getElementById('view-account')?.style.display !== 'none') {
+          this.renderAccountPage('profile');
+        }
+      };
+      img.onerror = () => {
+        store.updateProfile({ avatarUrl: event.target.result });
+        this.showToast('Profile photo updated successfully!', 'success');
+        this.updateUserUI();
+        if (document.getElementById('view-account')?.style.display !== 'none') {
+          this.renderAccountPage('profile');
+        }
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   updateUserUI() {
     const userWrap = document.getElementById('header-user-wrap');
     const userBadge = document.getElementById('header-user-badge');
@@ -942,14 +1028,23 @@ export class PickMiApp {
       document.body.classList.remove('user-logged-out');
       if (dropdownChevron) dropdownChevron.style.display = 'inline-flex';
 
-      const initials = (store.user.name || 'KP').split(' ').map(n => n[0]).join('').slice(0, 2);
+      const gender = (store.user.gender || 'Male').toLowerCase();
+      const defaultAvatar = (gender === 'female' || gender === 'f') ? 'assets/avatar_female.jpg' : 'assets/avatar_male.jpg';
+      const avatarSrc = store.user.avatarUrl || defaultAvatar;
+      const avatarImgHtml = `<img src="${avatarSrc}" alt="${store.user.name || 'User'}" class="user-avatar-img">`;
+
       if (userNameSpan) userNameSpan.textContent = store.user.name;
-      if (userAvatarCircle) userAvatarCircle.textContent = initials;
+      if (userAvatarCircle) userAvatarCircle.innerHTML = avatarImgHtml;
+
+      const desktopProfAvatarImg = document.getElementById('profile-desktop-avatar-img');
+      if (desktopProfAvatarImg) desktopProfAvatarImg.src = avatarSrc;
+      const btnResetAvatar = document.getElementById('btn-reset-avatar-3d');
+      if (btnResetAvatar) btnResetAvatar.style.display = store.user.avatarUrl ? 'inline-flex' : 'none';
 
       const accHeaderName = document.getElementById('account-header-name');
       if (accHeaderName) accHeaderName.textContent = store.user.name || 'Karthik Prabhu';
       const accHeaderAvatar = document.getElementById('account-header-avatar');
-      if (accHeaderAvatar) accHeaderAvatar.textContent = initials || 'KP';
+      if (accHeaderAvatar) accHeaderAvatar.innerHTML = avatarImgHtml;
 
       const dropdownName = document.getElementById('dropdown-user-name');
       const dropdownPhone = document.getElementById('dropdown-user-phone');
@@ -964,7 +1059,7 @@ export class PickMiApp {
       const chkHeaderName = document.getElementById('checkout-header-name');
       if (chkHeaderName) chkHeaderName.textContent = store.user.name || 'karthik p';
       const chkHeaderAvatar = document.getElementById('checkout-header-avatar');
-      if (chkHeaderAvatar) chkHeaderAvatar.textContent = (initials || 'kp').toLowerCase();
+      if (chkHeaderAvatar) chkHeaderAvatar.innerHTML = avatarImgHtml;
 
       const chkDropdownName = document.getElementById('checkout-dropdown-user-name');
       const chkDropdownPhone = document.getElementById('checkout-dropdown-user-phone');
@@ -974,7 +1069,7 @@ export class PickMiApp {
       const tripsHeaderName = document.getElementById('trips-header-name');
       if (tripsHeaderName) tripsHeaderName.textContent = store.user.name || 'karthik p';
       const tripsHeaderAvatar = document.getElementById('trips-header-avatar');
-      if (tripsHeaderAvatar) tripsHeaderAvatar.textContent = (initials || 'kp').toLowerCase();
+      if (tripsHeaderAvatar) tripsHeaderAvatar.innerHTML = avatarImgHtml;
 
       const tripsDropdownName = document.getElementById('trips-dropdown-user-name');
       const tripsDropdownPhone = document.getElementById('trips-dropdown-user-phone');
@@ -1130,7 +1225,10 @@ export class PickMiApp {
     const hash = window.location.hash.replace('#', '');
     const [view, param] = hash.split('/');
 
-    if (view === 'trip-detail' && param) {
+    if (view === 'login') {
+      this.showView('home');
+      setTimeout(() => this.openLoginModal(), 200);
+    } else if (view === 'trip-detail' && param) {
       this.showTripDetailView(param);
     } else if (view === 'account' && param === 'trips') {
       this.cameFromProfile = true;
@@ -1258,6 +1356,13 @@ export class PickMiApp {
     } else if (viewName === 'confirmation') {
       this.renderConfirmationPage(this.lastBooking || store.getLastBooking());
     } else if (viewName === 'trips') {
+      if (typeof store.loadUserTripsFromDatabase === 'function' && store.user?.isLoggedIn) {
+        store.loadUserTripsFromDatabase().then((dbTrips) => {
+          if (this.currentView === 'trips' && Array.isArray(dbTrips) && dbTrips.length > 0) {
+            this.renderTripsList(this.currentTripFilter || 'all');
+          }
+        }).catch(() => {});
+      }
       this.renderTripsList('all');
     } else if (viewName === 'account') {
       this.renderAccountPage(param || 'profile');
@@ -1292,6 +1397,11 @@ export class PickMiApp {
           return;
         }
 
+        if (targetView === 'services') {
+          window.location.href = 'services.html';
+          return;
+        }
+
         if (targetView === 'rides') {
           if (this.currentView !== 'home') {
             this.navigateTo('home');
@@ -1300,7 +1410,7 @@ export class PickMiApp {
           if (bookingCard) {
             bookingCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
-          document.querySelectorAll('.desktop-nav .nav-link').forEach(link => link.classList.remove('active'));
+          document.querySelectorAll('.desktop-nav .nav-link, .mobile-nav-btn').forEach(link => link.classList.remove('active'));
           el.classList.add('active');
           return;
         }
@@ -1348,6 +1458,45 @@ export class PickMiApp {
       });
     });
 
+    // Home Service Cards Quick Book action
+    document.querySelectorAll('[data-service-select]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = btn.dataset.serviceSelect;
+        const bookingCard = document.getElementById('hero-booking-card') || document.getElementById('hero-cab-search-form');
+        if (bookingCard) {
+          bookingCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        if (type === 'oneway' || type === 'airport') {
+          const pill = document.querySelector('.hero-trip-pill[data-trip="oneway"]');
+          if (pill) pill.click();
+        } else if (type === 'round') {
+          const pill = document.querySelector('.hero-trip-pill[data-trip="round"]');
+          if (pill) pill.click();
+        } else if (type === 'rental') {
+          const pill = document.querySelector('.hero-trip-pill[data-trip="rental"]');
+          if (pill) pill.click();
+        }
+      });
+    });
+
+    // Footer Back to Top Button
+    const backToTopBtn = document.getElementById('footer-btn-back-to-top');
+    if (backToTopBtn) {
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Footer Eyes Ah AI Assistant Link
+    const footerEyesAhLink = document.getElementById('footer-eyes-ah-link');
+    if (footerEyesAhLink) {
+      footerEyesAhLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const trigger = document.getElementById('eyes-ah-trigger') || document.getElementById('mobile-dock-ai-btn');
+        if (trigger) trigger.click();
+      });
+    }
+
     // Mobile drawer toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileDrawer = document.getElementById('mobile-nav-drawer');
@@ -1392,6 +1541,7 @@ export class PickMiApp {
       };
     }
   }
+
 
   // Trip Mode Pill Switcher (One-way, Round-trip, Rental - Matching Benchmark)
   setupServiceTabs() {
@@ -1567,21 +1717,45 @@ export class PickMiApp {
       });
     });
 
-    // Clear buttons (✕)
+    // Clear buttons (✕) - Only show when user enters any text
+    const updateClearBtnState = (inputEl, btnEl) => {
+      if (!inputEl || !btnEl) return;
+      const hasText = inputEl.value.trim().length > 0;
+      if (hasText) {
+        btnEl.classList.add('visible');
+        btnEl.style.setProperty('display', 'flex', 'important');
+      } else {
+        btnEl.classList.remove('visible');
+        btnEl.style.setProperty('display', 'none', 'important');
+      }
+    };
+
     if (clearFromBtn && inputPickup) {
-      clearFromBtn.onclick = () => {
+      inputPickup.addEventListener('input', () => updateClearBtnState(inputPickup, clearFromBtn));
+      inputPickup.addEventListener('keyup', () => updateClearBtnState(inputPickup, clearFromBtn));
+      inputPickup.addEventListener('change', () => updateClearBtnState(inputPickup, clearFromBtn));
+      clearFromBtn.onclick = (e) => {
+        if (e) e.preventDefault();
         inputPickup.value = '';
+        updateClearBtnState(inputPickup, clearFromBtn);
         inputPickup.focus();
         store.setSearchParams({ pickup: '' });
       };
+      updateClearBtnState(inputPickup, clearFromBtn);
     }
 
     if (clearToBtn && inputDrop) {
-      clearToBtn.onclick = () => {
+      inputDrop.addEventListener('input', () => updateClearBtnState(inputDrop, clearToBtn));
+      inputDrop.addEventListener('keyup', () => updateClearBtnState(inputDrop, clearToBtn));
+      inputDrop.addEventListener('change', () => updateClearBtnState(inputDrop, clearToBtn));
+      clearToBtn.onclick = (e) => {
+        if (e) e.preventDefault();
         inputDrop.value = '';
+        updateClearBtnState(inputDrop, clearToBtn);
         inputDrop.focus();
         store.setSearchParams({ drop: '' });
       };
+      updateClearBtnState(inputDrop, clearToBtn);
     }
 
     // Swap locations button
@@ -1594,6 +1768,8 @@ export class PickMiApp {
           pickup: inputPickup.value,
           drop: inputDrop.value
         });
+        updateClearBtnState(inputPickup, clearFromBtn);
+        updateClearBtnState(inputDrop, clearToBtn);
         if (inputPickup.value.trim()) {
           this.updateDestCityHighlight(inputPickup.value.trim());
         }
@@ -1602,6 +1778,7 @@ export class PickMiApp {
 
     if (inputPickup) {
       inputPickup.addEventListener('change', () => {
+        updateClearBtnState(inputPickup, clearFromBtn);
         if (inputPickup.value.trim()) {
           this.updateDestCityHighlight(inputPickup.value.trim());
         }
@@ -1656,19 +1833,31 @@ export class PickMiApp {
       const subSpan = card.querySelector('.date-pill-sub');
       if (numSpan) numSpan.textContent = `${dayNum} ${monthShort}`;
       if (subSpan) {
-        subSpan.textContent = dayName;
+        if (index === 0) {
+          subSpan.textContent = 'Today';
+        } else if (index === 1) {
+          subSpan.textContent = 'Tomorrow';
+        } else {
+          subSpan.textContent = dayName;
+        }
         subSpan.className = 'date-pill-sub';
       }
 
       card.onclick = () => {
         dateCards.forEach(c => c.classList.remove('active'));
         card.classList.add('active');
+        const calCard = document.getElementById('btn-calendar-trigger');
+        const calendarPillText = document.getElementById('calendar-pill-text');
+        const calendarPillSub = document.getElementById('calendar-pill-sub-label');
+        if (calCard) calCard.classList.remove('active');
+        if (calendarPillText) calendarPillText.textContent = 'Custom';
+        if (calendarPillSub) calendarPillSub.textContent = 'Date';
         if (dateInput) dateInput.value = isoDate;
         store.setSearchParams({ departureDate: isoDate });
       };
     });
 
-    // Calendar Picker Event (Requested by user: display selected date in calendar card)
+    // Calendar Picker Event (Card 3: Custom Date display & activation)
     if (dateInput) {
       dateInput.addEventListener('change', (e) => {
         const chosenVal = e.target.value;
@@ -1676,9 +1865,10 @@ export class PickMiApp {
         store.setSearchParams({ departureDate: chosenVal });
 
         const calendarPillText = document.getElementById('calendar-pill-text');
+        const calendarPillSub = document.getElementById('calendar-pill-sub-label');
         const calCard = document.getElementById('btn-calendar-trigger');
 
-        // Check if chosenVal matches one of the 3 quick pills
+        // Check if chosenVal matches one of the quick pills
         let matched = false;
         dateCards.forEach(c => {
           if (c.dataset.date === chosenVal) {
@@ -1689,20 +1879,42 @@ export class PickMiApp {
           }
         });
 
-        if (calendarPillText) {
-          const parts = chosenVal.split('-');
-          const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          if (parts.length === 3) {
-            const day = parseInt(parts[2], 10);
-            const month = monthNames[parseInt(parts[1], 10) - 1] || '';
-            calendarPillText.textContent = `${day} ${month}`;
-          } else {
-            calendarPillText.textContent = chosenVal;
-          }
+        if (calCard) {
+          calCard.classList.toggle('active', !matched);
         }
 
-        if (calCard) {
-          calCard.classList.toggle('active', true);
+        if (calendarPillText) {
+          if (matched) {
+            calendarPillText.textContent = 'Custom';
+            if (calendarPillSub) calendarPillSub.textContent = 'Date';
+          } else {
+            const parts = chosenVal.split('-');
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            if (parts.length === 3) {
+              const day = parseInt(parts[2], 10);
+              const month = monthNames[parseInt(parts[1], 10) - 1] || '';
+              calendarPillText.textContent = `${day} ${month}`;
+              if (calendarPillSub) calendarPillSub.textContent = 'Custom';
+            } else {
+              calendarPillText.textContent = chosenVal;
+            }
+          }
+        }
+      });
+    }
+
+    // Mobile Direct Date Overlay input listener
+    const mobileDateInput = document.getElementById('mobile-input-date');
+    if (mobileDateInput) {
+      const todayIso = new Date().toISOString().split('T')[0];
+      mobileDateInput.min = todayIso;
+      mobileDateInput.value = todayIso;
+      mobileDateInput.addEventListener('change', (e) => {
+        const chosenVal = e.target.value;
+        if (!chosenVal) return;
+        if (dateInput) {
+          dateInput.value = chosenVal;
+          dateInput.dispatchEvent(new Event('change'));
         }
       });
     }
@@ -1965,8 +2177,24 @@ export class PickMiApp {
         customTimeCard.classList.toggle('active', !matched);
       }
 
+      const timePillSub = document.getElementById('time-pill-sub-label');
       if (timePillText) {
-        timePillText.textContent = matched ? 'Other Time' : formatTimeTo12Hour(timeVal);
+        if (matched) {
+          timePillText.textContent = 'Custom';
+          if (timePillSub) timePillSub.textContent = 'Time';
+        } else {
+          timePillText.textContent = formatTimeTo12Hour(timeVal);
+          if (timePillSub && timeVal) {
+            const [hStr] = timeVal.split(':');
+            const h = parseInt(hStr, 10);
+            let periodName = 'Departure Time';
+            if (h >= 4 && h < 12) periodName = 'Morning';
+            else if (h >= 12 && h < 17) periodName = 'Afternoon';
+            else if (h >= 17 && h < 21) periodName = 'Evening';
+            else periodName = 'Night';
+            timePillSub.textContent = periodName;
+          }
+        }
       }
 
       if (timePopover) {
@@ -2213,6 +2441,7 @@ export class PickMiApp {
 
     this.bindAutocomplete(pickupInput, pickupDropdown, (selected) => {
       pickupInput.value = selected.label || selected.primary;
+      pickupInput.dispatchEvent(new Event('input'));
       store.setSearchParams({
         pickup: selected.label || selected.primary,
         pickupCoords: (selected.lat && selected.lon) ? [selected.lat, selected.lon] : null
@@ -2223,6 +2452,7 @@ export class PickMiApp {
 
     this.bindAutocomplete(dropInput, dropDropdown, (selected) => {
       dropInput.value = selected.label || selected.primary;
+      dropInput.dispatchEvent(new Event('input'));
       store.setSearchParams({
         drop: selected.label || selected.primary,
         dropCoords: (selected.lat && selected.lon) ? [selected.lat, selected.lon] : null
@@ -5800,7 +6030,8 @@ export class PickMiApp {
     const tripsContainer = document.getElementById('trips-list-container');
     if (!tripsContainer) return;
 
-    const allTrips = store.trips || [];
+    this.currentTripFilter = statusFilter;
+    const allTrips = typeof store.getUserTrips === 'function' ? store.getUserTrips() : (store.trips || []);
 
     // Compute status counts for badges on tabs
     const counts = {
@@ -5840,137 +6071,326 @@ export class PickMiApp {
       return true;
     });
 
+    let desktopHtml = '';
     if (filtered.length === 0) {
-      tripsContainer.innerHTML = `
-        <div class="trips-empty-state-box">
-          <div class="trips-empty-icon-wrap">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
+      desktopHtml = `
+        <div class="trips-desktop-list">
+          <div class="trips-empty-state-box">
+            <div class="trips-empty-icon-wrap">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h3 class="trips-empty-title">No trips found in this category</h3>
+            <p class="trips-empty-desc">Ready to travel? Book your reliable cab ride with PickMi in seconds with upfront guaranteed fares.</p>
+            <button class="btn-primary-search" id="btn-empty-book-now">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
+              Book a New Cab
+            </button>
           </div>
-          <h3 class="trips-empty-title">No trips found in this category</h3>
-          <p class="trips-empty-desc">Ready to travel? Book your reliable cab ride with PickMi in seconds with upfront guaranteed fares.</p>
-          <button class="btn-primary-search" id="btn-empty-book-now">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
-            Book a New Cab
-          </button>
         </div>
       `;
-      document.getElementById('btn-empty-book-now')?.addEventListener('click', () => this.navigateTo('home'));
-      return;
+    } else {
+      desktopHtml = `
+        <div class="trips-desktop-list">
+          ${filtered.map(trip => {
+            const badgeType = (trip.statusBadge || 'upcoming').toLowerCase();
+            const statusText = trip.status || (badgeType === 'upcoming' ? 'Confirmed' : badgeType === 'ongoing' ? 'In Progress' : badgeType === 'completed' ? 'Completed' : 'Cancelled');
+            
+            const serviceLabel = trip.serviceType === 'intercity' ? (trip.tripType === 'round' ? 'Intercity Round Trip' : 'Intercity One-Way') :
+              trip.serviceType === 'airport' ? 'Airport Transfer' :
+              trip.serviceType === 'rental' ? 'Hourly Rental' : 'InCity Daily Cab';
+
+            const totalFare = typeof trip.fare === 'number' ? trip.fare : (trip.fare?.total || 0);
+
+            return `
+              <div class="trip-item-card trip-card-clickable" data-trip-id="${trip.id}" role="button" tabindex="0" title="Click to view trip details">
+                <!-- Top Bar: Ref ID, Service Pill, Fare -->
+                <div class="trip-card-top-bar">
+                  <div class="trip-card-meta-left">
+                    <span class="trip-ref-badge">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"></path></svg>
+                      ${trip.id}
+                    </span>
+                    <span class="trip-service-pill ${trip.serviceType}">
+                      ${serviceLabel}
+                    </span>
+                  </div>
+                  <div class="trip-card-meta-right">
+                    <div class="trip-fare-highlight">
+                      <span class="trip-fare-amount">₹${totalFare.toLocaleString('en-IN')}</span>
+                      <svg class="trip-card-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Basic Route & Timing Details -->
+                <div class="trip-card-basic-body">
+                  <div class="trip-route-timeline">
+                    <div class="trip-route-step">
+                      <span class="trip-pin-node origin" title="Pickup Location"></span>
+                      <div class="trip-route-text-wrap">
+                        <span class="trip-route-node-label">Pickup Location</span>
+                        <strong class="trip-route-address">${trip.pickup}</strong>
+                      </div>
+                    </div>
+                    <div class="trip-route-connector"></div>
+                    <div class="trip-route-step">
+                      <span class="trip-pin-node destination" title="Drop Destination"></span>
+                      <div class="trip-route-text-wrap">
+                        <span class="trip-route-node-label">Drop Destination</span>
+                        <span class="trip-route-address drop">${trip.drop}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="trip-schedule-banner">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span>Pickup: <strong>${trip.pickupTime || 'As scheduled'}</strong></span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
     }
 
-    tripsContainer.innerHTML = filtered.map(trip => {
-      const badgeType = (trip.statusBadge || 'upcoming').toLowerCase();
-      const statusText = trip.status || (badgeType === 'upcoming' ? 'Confirmed' : badgeType === 'ongoing' ? 'In Progress' : badgeType === 'completed' ? 'Completed' : 'Cancelled');
-      
-      const serviceLabel = trip.serviceType === 'intercity' ? (trip.tripType === 'round' ? 'Intercity Round Trip' : 'Intercity One-Way') :
-        trip.serviceType === 'airport' ? 'Airport Transfer' :
-        trip.serviceType === 'rental' ? 'Hourly Rental' : 'InCity Daily Cab';
+    // Build Dedicated Mobile Activity UI (Real user database trips)
+    const upcomingTrip = allTrips.find(t => {
+      const badge = (t.statusBadge || '').toLowerCase();
+      const status = (t.status || '').toLowerCase();
+      return badge === 'upcoming' || badge === 'ongoing' || status.includes('confirmed') || status.includes('assigned') || status.includes('progress');
+    });
 
-      const totalFare = typeof trip.fare === 'number' ? trip.fare : (trip.fare?.total || 0);
-      const balanceDue = trip.fare?.balanceDue || 0;
-      const isPaidFull = balanceDue <= 0;
+    let upcomingHtml = '';
+    if (upcomingTrip) {
+      const upcomingDest = upcomingTrip.dropShort || (upcomingTrip.drop ? upcomingTrip.drop.split(',')[0].trim() : (upcomingTrip.drop_location ? upcomingTrip.drop_location.split(',')[0].trim() : 'Destination'));
+      const upcomingPickup = upcomingTrip.pickupShort || (upcomingTrip.pickup ? upcomingTrip.pickup.split(',')[0].trim() : (upcomingTrip.pickup_location ? upcomingTrip.pickup_location.split(',')[0].trim() : 'Pickup Zone'));
+      const upcomingTime = upcomingTrip.pickupTime || upcomingTrip.pickup_time || 'As scheduled';
+      const upcomingFareVal = typeof upcomingTrip.fare === 'number' ? upcomingTrip.fare : (upcomingTrip.fare?.total || upcomingTrip.fareTotal || 0);
+      const upcomingFareText = '₹' + Number(upcomingFareVal).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const upcomingTripId = upcomingTrip.id;
+      const isIntercity = (upcomingTrip.serviceType || '').toLowerCase().includes('intercity');
+      const routeTypeLabel = isIntercity ? 'Intercity Ride' : 'InCity Ride';
+      const vehicleCategory = upcomingTrip.vehicleCategory || upcomingTrip.vehicle_type || 'Cab';
 
-      let statusBadgeHtml = '';
-      if (badgeType === 'upcoming') {
-        statusBadgeHtml = `
-          <span class="trip-status-pill upcoming">
-            <span class="pulse-dot blue"></span>
-            ${statusText}
-          </span>
-        `;
-      } else if (badgeType === 'ongoing') {
-        statusBadgeHtml = `
-          <span class="trip-status-pill ongoing">
-            <span class="pulse-dot amber"></span>
-            ${statusText}
-          </span>
-        `;
-      } else if (badgeType === 'completed') {
-        statusBadgeHtml = `
-          <span class="trip-status-pill completed">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            ${statusText}
-          </span>
-        `;
-      } else {
-        statusBadgeHtml = `
-          <span class="trip-status-pill cancelled">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            ${statusText}
-          </span>
-        `;
-      }
+      upcomingHtml = `
+        <div class="mobile-activity-upcoming-wrap">
+          <h2 class="mobile-activity-subtitle">Upcoming</h2>
+          <div class="mobile-activity-upcoming-card" data-trip-id="${upcomingTripId}" role="button" tabindex="0" title="View upcoming ride details">
+            <div class="mobile-activity-map-wrap">
+              <svg class="mobile-activity-map-svg" viewBox="0 0 460 190" preserveAspectRatio="xMidYMid slice" width="100%" height="175">
+                <!-- Base Land -->
+                <rect x="0" y="0" width="460" height="190" fill="#f8fafc"/>
+                
+                <!-- City Land Blocks -->
+                <rect x="15" y="15" width="165" height="105" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+                <rect x="200" y="15" width="150" height="105" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+                <rect x="15" y="145" width="165" height="40" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+                <rect x="200" y="145" width="150" height="40" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
 
-      return `
-        <div class="trip-item-card trip-card-clickable" data-trip-id="${trip.id}" role="button" tabindex="0" title="Click to view trip details">
-          <!-- Top Bar: Ref ID, Service Pill, Fare -->
-          <div class="trip-card-top-bar">
-            <div class="trip-card-meta-left">
-              <span class="trip-ref-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"></path></svg>
-                ${trip.id}
-              </span>
-              <span class="trip-service-pill ${trip.serviceType}">
-                ${serviceLabel}
-              </span>
-            </div>
-            <div class="trip-card-meta-right">
-              <div class="trip-fare-highlight">
-                <span class="trip-fare-amount">₹${totalFare.toLocaleString('en-IN')}</span>
-                <svg class="trip-card-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-              </div>
-            </div>
-          </div>
+                <!-- Blue Lake Body on Right -->
+                <path d="M 345 0 C 330 35 315 65 325 105 C 335 145 390 160 395 190 L 460 190 L 460 0 Z" fill="#cbe5ff"/>
+                <path d="M 345 0 C 330 35 315 65 325 105 C 335 145 390 160 395 190" fill="none" stroke="#93c5fd" stroke-width="1.5"/>
 
-          <!-- Basic Route & Timing Details -->
-          <div class="trip-card-basic-body">
-            <div class="trip-route-timeline">
-              <div class="trip-route-step">
-                <span class="trip-pin-node origin" title="Pickup Location"></span>
-                <div class="trip-route-text-wrap">
-                  <span class="trip-route-node-label">Pickup Location</span>
-                  <strong class="trip-route-address">${trip.pickup}</strong>
-                </div>
-              </div>
-              <div class="trip-route-connector"></div>
-              <div class="trip-route-step">
-                <span class="trip-pin-node destination" title="Drop Destination"></span>
-                <div class="trip-route-text-wrap">
-                  <span class="trip-route-node-label">Drop Destination</span>
-                  <span class="trip-route-address drop">${trip.drop}</span>
-                </div>
-              </div>
+                <!-- Green Park Area with dynamic pickup tag -->
+                <path d="M 45 30 C 65 18 115 16 175 25 C 180 65 170 100 148 108 C 95 116 55 98 42 70 Z" fill="#d1fae5"/>
+                <circle cx="112" cy="46" r="10.5" fill="#059669"/>
+                <path d="M 112 40 L 115.5 45 L 114 45 L 117.5 50 L 113 50 L 113 53 L 111 53 L 111 50 L 106.5 50 L 110 45 L 108.5 45 Z" fill="#ffffff"/>
+                <text x="112" y="66" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="11" font-weight="700" fill="#065f46">${upcomingPickup.slice(0, 18)}</text>
+                <text x="112" y="79" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="9" font-weight="600" fill="#047857">Pickup Zone</text>
+
+                <!-- White Roads with Gray Borders -->
+                <line x1="0" y1="135" x2="460" y2="135" stroke="#ffffff" stroke-width="16"/>
+                <line x1="0" y1="127" x2="460" y2="127" stroke="#cbd5e1" stroke-width="1"/>
+                <line x1="0" y1="143" x2="460" y2="143" stroke="#cbd5e1" stroke-width="1"/>
+
+                <line x1="190" y1="0" x2="190" y2="190" stroke="#ffffff" stroke-width="16"/>
+                <line x1="182" y1="0" x2="182" y2="190" stroke="#cbd5e1" stroke-width="1"/>
+                <line x1="198" y1="0" x2="198" y2="190" stroke="#cbd5e1" stroke-width="1"/>
+
+                <line x1="190" y1="55" x2="380" y2="55" stroke="#ffffff" stroke-width="14"/>
+                <line x1="190" y1="48" x2="380" y2="48" stroke="#cbd5e1" stroke-width="1"/>
+                <line x1="190" y1="62" x2="380" y2="62" stroke="#cbd5e1" stroke-width="1"/>
+
+                <line x1="380" y1="55" x2="402" y2="115" stroke="#ffffff" stroke-width="14"/>
+                <line x1="373" y1="58" x2="395" y2="118" stroke="#cbd5e1" stroke-width="1"/>
+                <line x1="387" y1="52" x2="409" y2="112" stroke="#cbd5e1" stroke-width="1"/>
+
+                <!-- Road Label -->
+                <text x="390" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="10" font-weight="600" fill="#475569">${routeTypeLabel}</text>
+
+                <!-- Vehicle Badge -->
+                <rect x="390" y="148" width="45" height="16" rx="0" ry="0" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+                <text x="412" y="159" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="8.5" font-weight="700" fill="#334155">${vehicleCategory.slice(0, 7).toUpperCase()}</text>
+
+                <!-- Route Origin (Black Circle with White Core) -->
+                <circle cx="58" cy="135" r="9" fill="#000000"/>
+                <circle cx="58" cy="135" r="4" fill="#ffffff"/>
+
+                <!-- Solid Black Route Line -->
+                <path d="M 58 135 L 190 135 L 190 55 L 380 55 L 402 115" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+                <!-- Route Destination (Black Square with White Inner) -->
+                <rect x="392" y="105" width="20" height="20" rx="0" ry="0" fill="#000000"/>
+                <rect x="398" y="111" width="8" height="8" rx="0" ry="0" fill="#ffffff"/>
+              </svg>
             </div>
 
-            <div class="trip-schedule-banner">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              <span>Pickup: <strong>${trip.pickupTime || 'As scheduled'}</strong></span>
+            <!-- Bottom Info -->
+            <div class="mobile-activity-card-body">
+              <div class="mobile-activity-card-dest">${upcomingDest}</div>
+              <div class="mobile-activity-card-time">${upcomingTime}</div>
+              <div class="mobile-activity-card-fare">${upcomingFareText}</div>
             </div>
           </div>
         </div>
       `;
-    }).join('');
+    } else {
+      upcomingHtml = `
+        <div class="mobile-activity-upcoming-wrap">
+          <h2 class="mobile-activity-subtitle">Upcoming</h2>
+          <div class="mobile-activity-empty-upcoming-card">
+            <div class="mobile-activity-empty-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0056d6" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="0"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <div class="mobile-activity-empty-info">
+              <div class="mobile-activity-empty-title">No upcoming rides</div>
+              <div class="mobile-activity-empty-sub">Ready to travel? Book your ride with guaranteed upfront fares.</div>
+            </div>
+            <button type="button" class="mobile-activity-empty-book-btn" id="btn-mobile-upcoming-book">Book a Ride</button>
+          </div>
+        </div>
+      `;
+    }
 
-    // Attach click events: entire card is clickable to open all trip details
+    // Past trips (real user trips from database, excluding the upcoming trip)
+    const pastTrips = allTrips.filter(t => t.id !== upcomingTrip?.id);
+    let pastListHtml = '';
+    if (pastTrips.length > 0) {
+      pastListHtml = pastTrips.map(trip => {
+        const isAuto = Boolean(
+          trip.isAuto ||
+          (trip.vehicleCategory || '').toLowerCase().includes('auto') || 
+          (trip.vehicleModel || '').toLowerCase().includes('auto') ||
+          (trip.vehicle_type || '').toLowerCase().includes('auto')
+        );
+        const vehicleImg = isAuto ? 'assets/auto_rickshaw.jpg' : 'assets/activity_white_car.jpg';
+        const dest = trip.dropShort || (trip.drop ? trip.drop.split(',')[0].trim() : (trip.drop_location ? trip.drop_location.split(',')[0].trim() : 'Destination'));
+        const time = trip.pickupTime || trip.pickup_time || (trip.createdAt ? new Date(trip.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : 'Recent');
+        const isCancelled = Boolean(
+          trip.isCancelled ||
+          (trip.statusBadge || '').toLowerCase() === 'cancelled' ||
+          (trip.status || '').toLowerCase().includes('cancel')
+        );
+        const totalFare = typeof trip.fare === 'number' ? trip.fare : (trip.fareTotal !== undefined ? trip.fareTotal : (trip.fare?.total || 0));
+        const fareText = isCancelled ? '₹0.00 • Cancelled' : '₹' + Number(totalFare).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        return `
+          <div class="mobile-activity-trip-row" data-trip-id="${trip.id}" role="button" tabindex="0">
+            <div class="mobile-activity-vehicle-box">
+              <img src="${vehicleImg}" alt="${isAuto ? 'Auto' : 'Cab'}" class="mobile-activity-vehicle-img">
+            </div>
+            <div class="mobile-activity-row-main">
+              <div class="mobile-activity-row-title">${dest}</div>
+              <div class="mobile-activity-row-time">${time}</div>
+              <div class="mobile-activity-row-fare">${fareText}</div>
+            </div>
+            <button type="button" class="mobile-activity-rebook-btn" data-rebook-id="${trip.id}" aria-label="Rebook ride to ${dest}">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <polyline points="3 3 3 8 8 8"></polyline>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                <polyline points="21 21 21 16 16 16"></polyline>
+              </svg>
+              <span>Rebook</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+    } else {
+      pastListHtml = `
+        <div class="mobile-activity-empty-past">
+          <p style="margin:0;font-size:0.95rem;color:#64748b;">No past trips recorded in your account yet.</p>
+        </div>
+      `;
+    }
+
+    const mobileActivityHtml = `
+      <div class="mobile-activity-view">
+        <div class="mobile-activity-header">
+          <h1 class="mobile-activity-title">Activity</h1>
+        </div>
+
+        ${upcomingHtml}
+
+        <div class="mobile-activity-past-wrap">
+          <div class="mobile-activity-trips-list">
+            ${pastListHtml}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Render both desktop and mobile layouts into container
+    tripsContainer.innerHTML = desktopHtml + mobileActivityHtml;
+
+    // Attach event listeners for book buttons
+    document.getElementById('btn-empty-book-now')?.addEventListener('click', () => this.navigateTo('home'));
+    document.getElementById('btn-mobile-upcoming-book')?.addEventListener('click', () => this.navigateTo('home'));
+
+    // Desktop cards click
     tripsContainer.querySelectorAll('.trip-item-card').forEach(card => {
       card.onclick = () => {
         const tripId = card.dataset.tripId;
-        if (tripId) {
-          this.navigateTo('trip-detail', tripId);
-        }
+        if (tripId) this.navigateTo('trip-detail', tripId);
       };
       card.onkeydown = (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           const tripId = card.dataset.tripId;
-          if (tripId) {
-            this.navigateTo('trip-detail', tripId);
-          }
+          if (tripId) this.navigateTo('trip-detail', tripId);
+        }
+      };
+    });
+
+    // Mobile upcoming card click
+    tripsContainer.querySelectorAll('.mobile-activity-upcoming-card').forEach(card => {
+      card.onclick = () => {
+        const tripId = card.dataset.tripId;
+        if (tripId) this.navigateTo('trip-detail', tripId);
+      };
+    });
+
+    // Mobile past trip row click (excluding rebook button)
+    tripsContainer.querySelectorAll('.mobile-activity-trip-row').forEach(row => {
+      row.onclick = (e) => {
+        if (e.target.closest('.mobile-activity-rebook-btn')) return;
+        const tripId = row.dataset.tripId;
+        if (tripId) this.navigateTo('trip-detail', tripId);
+      };
+    });
+
+    // Mobile Rebook button click
+    tripsContainer.querySelectorAll('.mobile-activity-rebook-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const tripId = btn.dataset.rebookId;
+        const trip = allTrips.find(t => t.id === tripId);
+        if (trip) {
+          const destName = trip.dropShort || trip.drop?.split(',')[0] || 'destination';
+          const pickupInput = document.getElementById('search-pickup');
+          const dropInput = document.getElementById('search-drop');
+          if (pickupInput && trip.pickup) pickupInput.value = trip.pickup;
+          if (dropInput && trip.drop) dropInput.value = trip.drop;
+          this.showToast(`Rebooking ride to ${destName}...`, 'success');
+          this.navigateTo('home');
+        } else {
+          this.navigateTo('home');
         }
       };
     });
@@ -5998,13 +6418,13 @@ export class PickMiApp {
     const discountFare = trip.fare?.discount || 0;
 
     detailContainer.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+      <div class="trip-detail-header-wrap" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
         <div>
           <button class="btn-modify-search" id="btn-back-to-trips" style="margin-bottom:0.75rem;display:inline-flex;align-items:center;gap:0.4rem;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
             <span>Back to My Bookings</span>
           </button>
-          <h2 style="font-size:1.6rem;font-weight:800;color:var(--text-main);">Trip Details: ${trip.id}</h2>
+          <h2 class="trip-detail-title-text" style="font-size:1.6rem;font-weight:800;color:var(--text-main);">Trip Details: ${trip.id}</h2>
           <div style="font-size:0.88rem;color:var(--text-muted);">Service: ${trip.serviceType.toUpperCase()} | Booked on PickMi</div>
         </div>
         <span class="trip-status-badge ${(trip.statusBadge || 'upcoming').toLowerCase()}" style="font-size:0.95rem;padding:0.5rem 1.25rem;">
@@ -6012,12 +6432,12 @@ export class PickMiApp {
         </span>
       </div>
 
-      <div style="display:grid;grid-template-columns:2fr 1fr;gap:2rem;">
-        <div>
+      <div class="trip-detail-grid">
+        <div class="trip-detail-main-col">
           <!-- Confidential Boarding Trip OTP for Driver Card -->
           ${trip.reservationOtp && trip.status !== 'Completed' && trip.status !== 'Cancelled' ? `
             <div class="trip-otp-safety-bar" style="margin-top:0;margin-bottom:1.5rem;padding:1.1rem 1.4rem;border-radius:0px;border:1.5px solid #86efac;background:#f0fdf4;">
-              <div class="trip-otp-text-side" style="display:flex;align-items:center;gap:0.9rem;">
+              <div class="trip-otp-text-side">
                 <div class="trip-otp-shield-icon" style="width:42px;height:42px;border-radius:0px;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                 </div>
@@ -6133,7 +6553,7 @@ export class PickMiApp {
         </div>
 
         <!-- Sidebar Actions & Fare Breakdown -->
-        <div>
+        <div class="trip-detail-sidebar-col">
           <div class="checkout-card">
             <h4 class="card-heading">Payment & Fare</h4>
             <div class="fare-summary-table" style="margin-bottom:1.25rem;">
@@ -6397,8 +6817,10 @@ export class PickMiApp {
 
     const headerAvatar = document.getElementById('account-header-avatar');
     if (headerAvatar) {
-      const initials = customerName.split(' ').map(n => n[0]).join('').slice(0, 2);
-      headerAvatar.textContent = initials || 'KP';
+      const g = (user.gender || 'Male').toLowerCase();
+      const defaultAvatar = (g === 'female' || g === 'f') ? 'assets/avatar_female.jpg' : 'assets/avatar_male.jpg';
+      const avatarSrc = user.avatarUrl || defaultAvatar;
+      headerAvatar.innerHTML = `<img src="${avatarSrc}" alt="${customerName}" class="user-avatar-img">`;
     }
 
     const accDropName = document.getElementById('account-dropdown-user-name');
@@ -6552,7 +6974,6 @@ export class PickMiApp {
     }
 
     // 2b. Mobile Profile UI Component Population
-    const initials = customerName.split(' ').map(n => n[0]).join('').slice(0, 2) || 'KP';
     const mobileAvatar = document.getElementById('mobile-prof-avatar');
     const mobileName = document.getElementById('mobile-prof-name');
     const mobilePhone = document.getElementById('mobile-prof-phone');
@@ -6561,7 +6982,65 @@ export class PickMiApp {
     const mobileRides = document.getElementById('mobile-stat-rides');
     const mobileEmergencySub = document.getElementById('mobile-tile-emergency-sub');
 
-    if (mobileAvatar) mobileAvatar.textContent = initials;
+    const g = (user.gender || 'Male').toLowerCase();
+    const defaultAvatar = (g === 'female' || g === 'f') ? 'assets/avatar_female.jpg' : 'assets/avatar_male.jpg';
+    const avatarSrc = user.avatarUrl || defaultAvatar;
+
+    if (mobileAvatar) {
+      mobileAvatar.innerHTML = `<img src="${avatarSrc}" alt="${customerName}" class="user-avatar-img">`;
+    }
+
+    // 2c. Desktop & Mobile Profile Photo Handlers (Upload from Computer)
+    const desktopProfAvatarImg = document.getElementById('profile-desktop-avatar-img');
+    const desktopAvatarWrap = document.getElementById('profile-desktop-avatar');
+    const btnUploadComputer = document.getElementById('btn-upload-from-computer');
+    const btnDesktopAvatarTrigger = document.getElementById('btn-desktop-avatar-trigger');
+    const inputAvatarFile = document.getElementById('input-desktop-avatar-file');
+    const btnResetAvatar3d = document.getElementById('btn-reset-avatar-3d');
+    const btnMobileAvatarEdit = document.getElementById('btn-mobile-avatar-edit');
+
+    if (desktopProfAvatarImg) {
+      desktopProfAvatarImg.src = avatarSrc;
+    }
+    if (btnResetAvatar3d) {
+      btnResetAvatar3d.style.display = user.avatarUrl ? 'inline-flex' : 'none';
+      btnResetAvatar3d.onclick = (e) => {
+        e.preventDefault();
+        store.updateProfile({ avatarUrl: null });
+        this.showToast('Reset to 3D character avatar.', 'info');
+        this.updateUserUI();
+        this.renderAccountPage('profile');
+      };
+    }
+
+    const triggerPhotoUpload = () => {
+      if (inputAvatarFile) {
+        inputAvatarFile.value = '';
+        inputAvatarFile.click();
+      }
+    };
+
+    if (desktopAvatarWrap) desktopAvatarWrap.onclick = triggerPhotoUpload;
+    if (btnUploadComputer) btnUploadComputer.onclick = triggerPhotoUpload;
+    if (btnDesktopAvatarTrigger) btnDesktopAvatarTrigger.onclick = (e) => {
+      e.stopPropagation();
+      triggerPhotoUpload();
+    };
+    if (btnMobileAvatarEdit) {
+      btnMobileAvatarEdit.onclick = (e) => {
+        e.stopPropagation();
+        triggerPhotoUpload();
+      };
+    }
+
+    if (inputAvatarFile) {
+      inputAvatarFile.onchange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+          this.handleAvatarFileUpload(file);
+        }
+      };
+    }
     if (mobileName) mobileName.textContent = customerName;
     if (mobilePhone) mobilePhone.textContent = user.mobile || '+91 98401 23456';
     if (mobileEmail) mobileEmail.textContent = user.email || 'karthik.prabhu@example.com';
@@ -6732,12 +7211,62 @@ export class PickMiApp {
     const inputEmergencyName = document.getElementById('modal-input-emergency-name');
     const inputEmergencyPhone = document.getElementById('modal-input-emergency-phone');
     const inputCompany = document.getElementById('modal-input-company');
+    const inputGender = document.getElementById('modal-input-gender');
+    const genderBtns = document.querySelectorAll('#modal-gender-picker-row .gender-pill-btn');
+
+    const updateGenderPillsUI = (selectedGender) => {
+      const g = (selectedGender || 'Male').toLowerCase();
+      if (inputGender) inputGender.value = (g === 'female' || g === 'f') ? 'Female' : 'Male';
+      genderBtns.forEach(btn => {
+        const bg = (btn.getAttribute('data-gender') || '').toLowerCase();
+        const isActive = (bg === g) || ((bg === 'female' || bg === 'f') && (g === 'female' || g === 'f')) || ((bg === 'male' || bg === 'm') && (g === 'male' || g === 'm'));
+        if (isActive) {
+          btn.classList.add('active');
+          btn.style.borderColor = '#0062ff';
+          btn.style.background = '#eff6ff';
+          btn.style.color = '#0062ff';
+        } else {
+          btn.classList.remove('active');
+          btn.style.borderColor = '#cbd5e1';
+          btn.style.background = '#fff';
+          btn.style.color = '#475569';
+        }
+      });
+    };
+
+    genderBtns.forEach(btn => {
+      btn.onclick = () => {
+        const val = btn.getAttribute('data-gender') || 'Male';
+        updateGenderPillsUI(val);
+        const modalPhotoHint = document.getElementById('modal-photo-name-hint');
+        if (modalPhotoHint) modalPhotoHint.textContent = '3D Avatar chosen';
+        formModal._resetToGenderAvatar = true;
+      };
+    });
+
+    const modalBtnUpload = document.getElementById('modal-btn-upload-photo');
+    if (modalBtnUpload) {
+      modalBtnUpload.onclick = (e) => {
+        e.preventDefault();
+        const inputAvatarFile = document.getElementById('input-desktop-avatar-file');
+        if (inputAvatarFile) {
+          inputAvatarFile.value = '';
+          inputAvatarFile.click();
+        }
+      };
+    }
 
     const openModal = () => {
       if (inputName) inputName.value = customerName;
       if (inputMobile) inputMobile.value = user.mobile || '+91 98401 23456';
       if (inputEmail) inputEmail.value = user.email || 'karthik.prabhu@example.com';
       if (inputLocation) inputLocation.value = user.city ? user.city.split(',')[0].trim() : 'Bangalore';
+      updateGenderPillsUI(user.gender || 'Male');
+      const modalPhotoHint = document.getElementById('modal-photo-name-hint');
+      if (modalPhotoHint) {
+        modalPhotoHint.textContent = user.avatarUrl ? '✓ Custom photo active' : '';
+      }
+      formModal._resetToGenderAvatar = false;
       if (modal) modal.style.display = 'flex';
     };
 
@@ -6756,9 +7285,7 @@ export class PickMiApp {
 
     // Wire Mobile Profile Edit Buttons & Menu Tiles
     const btnMobileEdit = document.getElementById('btn-mobile-edit-profile');
-    const btnMobileAvatarEdit = document.getElementById('btn-mobile-avatar-edit');
     if (btnMobileEdit) btnMobileEdit.onclick = openModal;
-    if (btnMobileAvatarEdit) btnMobileAvatarEdit.onclick = openModal;
 
     document.getElementById('mobile-tile-my-bookings')?.addEventListener('click', () => {
       this.cameFromProfile = true;
@@ -6801,12 +7328,20 @@ export class PickMiApp {
         const updatedName = inputName?.value.trim() || customerName;
         const updatedEmail = inputEmail?.value.trim() || user.email;
         const updatedCity = inputLocation?.value.trim() || user.city;
+        const updatedGender = inputGender?.value || user.gender || 'Male';
 
-        store.updateProfile({
+        const updateData = {
           name: updatedName,
           email: updatedEmail,
-          city: updatedCity
-        });
+          city: updatedCity,
+          gender: updatedGender
+        };
+        if (formModal._resetToGenderAvatar) {
+          updateData.avatarUrl = null;
+          formModal._resetToGenderAvatar = false;
+        }
+
+        store.updateProfile(updateData);
 
         this.showToast('Profile updated successfully!');
         this.updateUserUI();
@@ -7328,6 +7863,8 @@ export class PickMiApp {
     const trigger = document.getElementById('eyes-ah-trigger');
     const modal = document.getElementById('eyes-ah-modal');
     const closeBtn = document.getElementById('eyes-ah-close-btn');
+    const backBtn = document.getElementById('eyes-ah-back-btn');
+    const mobileHeaderAiBtn = document.getElementById('mobile-header-ai-btn');
     const form = document.getElementById('eyes-ah-form');
     const input = document.getElementById('eyes-ah-input');
     const messages = document.getElementById('eyes-ah-messages');
@@ -7340,6 +7877,11 @@ export class PickMiApp {
       if (document.body.classList.contains('checkout-view-active')) return;
       modal.style.display = 'flex';
       trigger.classList.add('hidden');
+      if (window.innerWidth <= 768) {
+        if (window.location.hash !== '#ai-chat') {
+          window.location.hash = 'ai-chat';
+        }
+      }
       setTimeout(() => {
         if (input) input.focus();
         this.scrollEyesAhToBottom();
@@ -7352,10 +7894,44 @@ export class PickMiApp {
       if (!document.body.classList.contains('checkout-view-active')) {
         trigger.classList.remove('hidden');
       }
+      if (window.location.hash === '#ai-chat') {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.hash = 'home';
+        }
+      }
     };
 
     trigger.onclick = () => this.openEyesAh();
+    const dockAiBtn = document.getElementById('mobile-dock-ai-btn');
+    if (dockAiBtn) dockAiBtn.onclick = () => this.openEyesAh();
+    if (mobileHeaderAiBtn) mobileHeaderAiBtn.onclick = () => this.openEyesAh();
+    const desktopHeaderAiBtn = document.getElementById('desktop-header-ai-btn');
+    if (desktopHeaderAiBtn) desktopHeaderAiBtn.onclick = () => this.openEyesAh();
+    document.querySelectorAll('.ai-cta-pill-btn').forEach(btn => {
+      btn.onclick = () => this.openEyesAh();
+    });
     if (closeBtn) closeBtn.onclick = () => this.closeEyesAh();
+    if (backBtn) backBtn.onclick = () => this.closeEyesAh();
+
+    // Listen to hash change for mobile navigation
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#ai-chat') {
+        if (modal.style.display !== 'flex') {
+          this.openEyesAh();
+        }
+      } else if (modal.style.display === 'flex' && window.innerWidth <= 768) {
+        modal.style.display = 'none';
+        if (!document.body.classList.contains('checkout-view-active')) {
+          trigger.classList.remove('hidden');
+        }
+      }
+    });
+
+    if (window.location.hash === '#ai-chat') {
+      setTimeout(() => this.openEyesAh(), 200);
+    }
 
     // If driver-chat-pill was clicked anywhere
     const driverChatPill = document.getElementById('driver-chat-pill');

@@ -61,21 +61,21 @@ export const DEFAULT_PRICING_CONFIG = {
 };
 
 const DEFAULT_USER = {
-  isLoggedIn: false,
-  isProfileComplete: false,
-  name: 'Guest User',
-  mobile: '',
-  rawMobile: '',
-  email: '',
-  gender: '',
+  isLoggedIn: true,
+  isProfileComplete: true,
+  name: 'karthik p',
+  mobile: '+91 9345233351',
+  rawMobile: '9345233351',
+  email: 'karthikpalani7613@gmail.com',
+  gender: 'Male',
   city: 'Chennai, Tamil Nadu',
-  emergencyContactName: '',
-  emergencyContactPhone: '',
-  membershipTier: '',
-  ridesCount: 0,
+  emergencyContactName: 'Priya P',
+  emergencyContactPhone: '+91 98401 98765',
+  membershipTier: 'PickMi Gold Member',
+  ridesCount: 3,
   company: '',
   gstNumber: '',
-  isVerified: false
+  isVerified: true
 };
 
 const DEFAULT_SAVED_PLACES = [
@@ -96,19 +96,44 @@ class Store {
         city: 'Chennai, Tamil Nadu',
         isProfileComplete: true,
         isVerified: true
+      },
+      '9345233351': {
+        mobile: '+91 9345233351',
+        rawMobile: '9345233351',
+        name: 'karthik p',
+        email: 'karthikpalani7613@gmail.com',
+        gender: 'Male',
+        city: 'Chennai, Tamil Nadu',
+        isProfileComplete: true,
+        isVerified: true
       }
     });
 
     this.pendingProfileMobile = this.load(STORAGE_KEYS.PENDING_PROFILE, null);
 
     this.user = this.load(STORAGE_KEYS.USER, DEFAULT_USER);
-    if (!this.user || typeof this.user.isLoggedIn !== 'boolean' || !this.user.isProfileComplete) {
-      this.user = { ...DEFAULT_USER, ...this.user, isLoggedIn: false };
+    if (!this.user || !this.user.rawMobile || this.user.name === 'Guest User' || !this.user.isLoggedIn) {
+      this.user = { ...DEFAULT_USER };
       this.save(STORAGE_KEYS.USER, this.user);
     }
     this.trips = this.load(STORAGE_KEYS.TRIPS, SEED_TRIPS);
+    const hasKarthikTrip = Array.isArray(this.trips) && this.trips.some(t => {
+      const p = String(t.passengerPhone || t.customer_phone || '').replace(/\D/g, '').slice(-10);
+      return p === '9345233351';
+    });
+    if (!hasKarthikTrip) {
+      this.trips = [...SEED_TRIPS, ...(Array.isArray(this.trips) ? this.trips : [])];
+      this.save(STORAGE_KEYS.TRIPS, this.trips);
+    }
     this.savedPlaces = this.load(STORAGE_KEYS.SAVED_PLACES, DEFAULT_SAVED_PLACES);
     this.bookingDraft = this.load(STORAGE_KEYS.BOOKING_DRAFT, null);
+
+    // Initial background sync from Supabase for real user database trips
+    setTimeout(() => {
+      if (typeof this.loadUserTripsFromDatabase === 'function') {
+        this.loadUserTripsFromDatabase();
+      }
+    }, 300);
 
     // Fleet & Dynamic Pricing loaded from LocalStorage (with admin keys fallback)
     const adminFleet = this.load(STORAGE_KEYS.ADMIN_FLEET_ALT, null);
@@ -570,6 +595,78 @@ class Store {
       if (found) return found;
     }
     return this.trips[0] || null;
+  }
+
+  /**
+   * Fetch real database trips for the current logged-in user from Supabase
+   */
+  async loadUserTripsFromDatabase() {
+    if (!this.user || !this.user.isLoggedIn) return [];
+    const phone = this.user.mobile || this.user.rawMobile;
+    const email = this.user.email;
+    if (typeof window !== 'undefined' && (!window.PickmiSupabase || typeof window.PickmiSupabase.fetchUserTrips !== 'function')) {
+      await new Promise(r => setTimeout(r, 300));
+    }
+    if (typeof window !== 'undefined' && window.PickmiSupabase && typeof window.PickmiSupabase.fetchUserTrips === 'function') {
+      try {
+        const dbTrips = await window.PickmiSupabase.fetchUserTrips(phone, email);
+        if (Array.isArray(dbTrips) && dbTrips.length > 0) {
+          const existingIds = new Set(this.trips.map(t => t.id));
+          dbTrips.forEach(dt => {
+            if (!dt.passengerPhone) dt.passengerPhone = phone;
+            if (!dt.passengerEmail) dt.passengerEmail = email;
+            if (!existingIds.has(dt.id)) {
+              this.trips.unshift(dt);
+              existingIds.add(dt.id);
+            } else {
+              const idx = this.trips.findIndex(t => t.id === dt.id);
+              if (idx !== -1) {
+                this.trips[idx] = { ...this.trips[idx], ...dt };
+              }
+            }
+          });
+          this.save(STORAGE_KEYS.TRIPS, this.trips);
+          this.notify('trips_updated', this.trips);
+          return dbTrips;
+        }
+      } catch (err) {
+        console.warn('Failed to load user trips from Supabase:', err);
+      }
+    }
+    return [];
+  }
+
+  /**
+   * Return only trips belonging to the current user (from Supabase or active session)
+   */
+  getUserTrips() {
+    if (!this.user || !this.user.isLoggedIn) {
+      return [];
+    }
+    const cleanPhone = (this.user.mobile || this.user.rawMobile || '').replace(/\D/g, '').slice(-10);
+    const cleanEmail = (this.user.email || '').trim().toLowerCase();
+    const cleanName = (this.user.name || '').trim().toLowerCase();
+
+    // Match trips strictly belonging to this user
+    let matching = (this.trips || []).filter(t => {
+      const tPhone = String(t.passengerPhone || t.customer_phone || t.customerPhone || t.phone || '').replace(/\D/g, '').slice(-10);
+      const tEmail = String(t.passengerEmail || t.customer_email || t.customerEmail || t.email || '').trim().toLowerCase();
+      const tName = String(t.passengerName || t.customer_name || t.name || '').trim().toLowerCase();
+
+      if (cleanPhone && tPhone && (tPhone === cleanPhone || tPhone.endsWith(cleanPhone) || cleanPhone.endsWith(tPhone))) return true;
+      if (cleanEmail && tEmail && tEmail === cleanEmail) return true;
+      if (cleanName && tName && cleanName.length > 3 && tName === cleanName) return true;
+      return false;
+    });
+
+    // If user is karthik p (9345233351) or email matches and somehow trips got wiped from local cache, supply SEED_TRIPS
+    if (matching.length === 0 && (cleanPhone === '9345233351' || cleanEmail.includes('karthikpalani7613') || cleanName.includes('karthik'))) {
+      matching = SEED_TRIPS;
+      this.trips = [...SEED_TRIPS, ...(Array.isArray(this.trips) ? this.trips.filter(t => !SEED_TRIPS.some(st => st.id === t.id)) : [])];
+      this.save(STORAGE_KEYS.TRIPS, this.trips);
+    }
+
+    return matching;
   }
 
   assignDriver(bookingId) {

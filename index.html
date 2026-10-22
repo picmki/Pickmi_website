@@ -11,8 +11,76 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=59">
+  <style>
+    *, *::before, *::after, html, body,
+    #hero-floating-header,
+    #hero-floating-header.header-scrolled,
+    .app-header,
+    .app-header.header-scrolled,
+    .header-scrolled {
+      border-radius: 0px !important;
+      -webkit-border-radius: 0px !important;
+      -moz-border-radius: 0px !important;
+    }
+    @media (max-width: 1024px) {
+      html, body, main, #main-content, #view-home, .hero-wrapper, #view-trips, #view-account {
+        background-color: #F5F7FA !important;
+      }
+      .hero-wrapper {
+        background-image: none !important;
+        background: #F5F7FA !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+      }
+      .hero-container {
+        width: 100% !important;
+        max-width: 540px !important;
+        margin: 0 auto !important;
+      }
+      .hero-booking-card {
+        width: calc(100% - 24px) !important;
+        max-width: 540px !important;
+        margin: 0.5rem auto 1rem !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
+      }
+      .popular-destinations-section,
+      #popular-destinations-section {
+        display: block !important;
+      }
+      /* Mobile View Only: Avatar 100% circular radius & no border line */
+      .mobile-profile-avatar,
+      .mobile-profile-avatar img,
+      .mobile-profile-avatar .user-avatar-img,
+      #mobile-prof-avatar,
+      #mobile-prof-avatar img,
+      .user-avatar-circle,
+      .user-avatar-circle img {
+        border-radius: 50% !important;
+        -webkit-border-radius: 50% !important;
+        -moz-border-radius: 50% !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
+      }
+      html, body, * {
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
+      }
+      ::-webkit-scrollbar, *::-webkit-scrollbar, html::-webkit-scrollbar, body::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+        -webkit-appearance: none !important;
+      }
+    }
+  </style>
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
@@ -33,6 +101,9 @@
 
       <!-- Page Menus (20px after logo) -->
       <nav class="desktop-nav">
+        <a href="#home" class="nav-link active" data-nav="home" data-view="home">Explore</a>
+        <a href="#trips" class="nav-link" data-nav="trips" data-view="trips">Activity</a>
+        <a href="#pricing" class="nav-link" data-nav="pricing">Pricing</a>
         <a href="#drive" class="nav-link" data-nav="drive" data-view="drive">Drive</a>
         <a href="#partner" class="nav-link" data-nav="partner" data-view="partner">Partner</a>
         <a href="#support" class="nav-link" data-nav="support" data-view="support">Help</a>
@@ -67,6 +138,15 @@
 
         <!-- Sign Up CTA button -->
         <button type="button" class="btn-header-cta btn-header-signup" id="header-signup-btn">Sign Up</button>
+
+        <!-- Desktop Header Eyesah AI CTA -->
+        <button type="button" class="desktop-header-ai-btn ai-cta-pill-btn" id="desktop-header-ai-btn" aria-label="Open Eyesah AI Assistant">
+          <span>Eyesah AI</span>
+          <svg class="ai-cta-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
 
         <div class="user-profile-wrap" id="header-user-wrap">
           <div class="user-profile-badge" id="header-user-badge">
@@ -109,6 +189,15 @@
             </button>
           </div>
         </div>
+
+        <!-- Mobile Logged-in Header Eyesah AI CTA (Shown only on mobile after login) -->
+        <button type="button" class="mobile-header-ai-btn ai-cta-pill-btn" id="mobile-header-ai-btn" aria-label="Open Eyesah AI Assistant">
+          <span>Eyesah AI</span>
+          <svg class="ai-cta-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
 
         <button class="mobile-menu-toggle" id="mobile-menu-btn" aria-label="Toggle navigation menu">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -254,7 +343,7 @@
           </div>
 
           <!-- Main White Travel Card (Exact Visual Hierarchy of Screenshot) -->
-          <div class="hero-booking-card">
+          <div class="hero-booking-card" id="hero-booking-card">
             <!-- Mobile Travel Mode Tabs Bar (Top Section of Single Card) -->
             <div class="mobile-travel-tabs-bar" id="mobile-travel-tabs-bar">
               <button type="button" class="mobile-travel-tab active" data-trip-mode="oneway">
@@ -532,12 +621,6 @@
             </div>
           </div>
 
-          <!-- Mobile Only Now Serving Section (After Booking Card) -->
-          <div class="mobile-now-serving-wrapper" id="mobile-now-serving-section">
-            <div class="mobile-now-serving-card">
-              <img src="assets/now_serving_map.png" alt="Now Serving - All nearby urban areas as well. Karnataka, Andhra Pradesh, Kerala, Tamil Nadu, Puducherry" class="mobile-now-serving-img" loading="lazy">
-            </div>
-          </div>
         </div>
       </div>
 
@@ -614,9 +697,12 @@
         </div>
       </section>
 
-
-
-      <!-- 1C. BRINGING SMART CITY RIDES TO EVERY TOWN (Exact Visual Match to User Screenshot) -->
+      <!-- Mobile Only Now Serving Section (After Popular Domestic Destinations) -->
+      <div class="mobile-now-serving-wrapper" id="mobile-now-serving-section">
+        <div class="mobile-now-serving-card">
+          <img src="assets/now_serving_map.png" alt="Now Serving - All nearby urban areas as well. Karnataka, Andhra Pradesh, Kerala, Tamil Nadu, Puducherry" class="mobile-now-serving-img" loading="lazy">
+        </div>
+      </div>
       <section class="smart-city-routes-section" id="smart-city-routes-section">
         <div class="smart-city-box">
           <div class="smart-city-header-row">
@@ -961,7 +1047,7 @@
 
             <!-- User Pill -->
             <div class="checkout-header-user-pill" id="checkout-header-user-pill" title="Account Menu">
-              <div class="checkout-header-avatar" id="checkout-header-avatar">kp</div>
+              <div class="checkout-header-avatar" id="checkout-header-avatar"><img src="assets/avatar_male.jpg" alt="User" class="user-avatar-img"></div>
               <span class="user-pill-divider" aria-hidden="true"></span>
               <span class="checkout-header-name" id="checkout-header-name">karthik p</span>
               <!-- Dropdown Chevron -->
@@ -1216,7 +1302,7 @@
 
             <!-- User Pill -->
             <div class="trips-header-user-pill" id="trips-header-user-pill" title="Account Menu">
-              <div class="trips-header-avatar" id="trips-header-avatar">kp</div>
+              <div class="trips-header-avatar" id="trips-header-avatar"><img src="assets/avatar_male.jpg" alt="User" class="user-avatar-img"></div>
               <span class="user-pill-divider" aria-hidden="true"></span>
               <span class="trips-header-name" id="trips-header-name">karthik p</span>
               <!-- Dropdown Chevron -->
@@ -1314,7 +1400,7 @@
             </button>
 
             <div class="account-header-user-pill" id="account-header-user-pill" title="Account Menu">
-              <div class="account-header-avatar" id="account-header-avatar">KP</div>
+              <div class="account-header-avatar" id="account-header-avatar"><img src="assets/avatar_male.jpg" alt="User" class="user-avatar-img"></div>
               <span class="user-pill-divider" aria-hidden="true"></span>
               <span class="account-header-name" id="account-header-name">Karthik Prabhu</span>
               <!-- Dropdown Chevron -->
@@ -1387,7 +1473,7 @@
         </aside>
 
         <!-- Right Main Panel -->
-        <main class="account-main-panel">
+        <div class="account-main-panel">
           <!-- TAB 1: PROFILE VIEW (Authentic Customer Details) -->
           <div class="account-panel-tab-content" id="acc-tab-content-profile">
             <!-- Optional Deletion Request In-Review Banner -->
@@ -1409,6 +1495,34 @@
 
             <!-- Desktop Profile View (Hidden on mobile via CSS) -->
             <div class="desktop-profile-wrapper">
+              <!-- Profile Avatar & Photo Upload Section -->
+              <div class="account-profile-photo-section">
+                <div class="account-profile-avatar-wrap">
+                  <div class="account-profile-avatar-large" id="profile-desktop-avatar" title="Click to upload new photo">
+                    <img src="assets/avatar_male.jpg" alt="User Profile Photo" class="user-avatar-img" id="profile-desktop-avatar-img">
+                    <div class="avatar-hover-overlay">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      <span>Upload</span>
+                    </div>
+                  </div>
+                  <button type="button" class="avatar-camera-fab" id="btn-desktop-avatar-trigger" title="Upload photo from computer" aria-label="Upload photo from computer">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  </button>
+                </div>
+                <div class="account-profile-photo-actions">
+                  <button type="button" class="btn-avatar-upload" id="btn-upload-from-computer">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span>Upload photo from computer</span>
+                  </button>
+                  <button type="button" class="btn-avatar-reset" id="btn-reset-avatar-3d" style="display:none;" title="Revert to 3D character avatar">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                    <span>Reset to 3D Avatar</span>
+                  </button>
+                  <p class="avatar-hint-text">JPG, PNG, GIF or WebP. Max 10MB.</p>
+                </div>
+                <input type="file" id="input-desktop-avatar-file" accept="image/png, image/jpeg, image/webp, image/gif" style="display:none;">
+              </div>
+
               <h1 class="account-profile-name-heading" id="profile-heading-name">Karthik Prabhu</h1>
 
               <div class="account-profile-meta-list">
@@ -1448,10 +1562,7 @@
               <div class="mobile-profile-hero-card">
                 <div class="mobile-profile-avatar-row">
                   <div class="mobile-profile-avatar-wrap">
-                    <div class="mobile-profile-avatar" id="mobile-prof-avatar">KP</div>
-                    <button type="button" class="mobile-profile-avatar-badge" id="btn-mobile-avatar-edit" title="Change Photo" aria-label="Change photo">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                    </button>
+                    <div class="mobile-profile-avatar" id="mobile-prof-avatar"><img src="assets/avatar_male.jpg" alt="User" class="user-avatar-img"></div>
                   </div>
                   <div class="mobile-profile-user-info">
                     <h2 class="mobile-profile-name" id="mobile-prof-name">Karthik Prabhu</h2>
@@ -1506,51 +1617,7 @@
                 </div>
               </div>
 
-              <!-- 3. App-Style Navigation Menu Tiles Group 1: Rides & Saved -->
-              <div class="mobile-menu-card-group">
-                <div class="mobile-menu-group-header">My Activity</div>
-
-                <button type="button" class="mobile-menu-tile" id="mobile-tile-my-bookings">
-                  <div class="mobile-tile-icon-wrap" style="background:#eff6ff;color:#0056d6;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="0" ry="0"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                  </div>
-                  <div class="mobile-tile-text-wrap">
-                    <span class="mobile-tile-title">My Bookings &amp; Trips</span>
-                    <span class="mobile-tile-sub">Active, upcoming &amp; past ride receipts</span>
-                  </div>
-                  <div class="mobile-tile-arrow">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                  </div>
-                </button>
-
-                <button type="button" class="mobile-menu-tile" id="mobile-tile-saved-places">
-                  <div class="mobile-tile-icon-wrap" style="background:#f0fdf4;color:#16a34a;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                  </div>
-                  <div class="mobile-tile-text-wrap">
-                    <span class="mobile-tile-title">Saved Places</span>
-                    <span class="mobile-tile-sub">Home, Work, Airport &amp; favorites</span>
-                  </div>
-                  <div class="mobile-tile-arrow">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                  </div>
-                </button>
-
-                <button type="button" class="mobile-menu-tile" id="mobile-tile-offers">
-                  <div class="mobile-tile-icon-wrap" style="background:#fef3c7;color:#d97706;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-                  </div>
-                  <div class="mobile-tile-text-wrap">
-                    <span class="mobile-tile-title">Offers &amp; Promo Codes</span>
-                    <span class="mobile-tile-sub">Seasonal discounts &amp; coupons</span>
-                  </div>
-                  <div class="mobile-tile-arrow">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                  </div>
-                </button>
-              </div>
-
-              <!-- 4. Group 2: Business & Safety -->
+              <!-- Business & Safety -->
               <div class="mobile-menu-card-group">
                 <div class="mobile-menu-group-header">Business &amp; Safety</div>
 
@@ -1728,7 +1795,7 @@
               </div>
             </div>
           </div>
-        </main>
+        </div>
       </div>
 
       <!-- EDIT PROFILE MODAL -->
@@ -1752,6 +1819,27 @@
                 <label style="font-size:0.82rem;font-weight:600;color:#475569;margin-bottom:0.3rem;">Mobile Number (Verified)</label>
                 <input type="tel" id="modal-input-mobile" class="search-input" value="+91 98401 23456" disabled readonly style="width:100%;padding:0.6rem 0.85rem;border:1.5px solid #cbd5e1;border-radius:0px;background:#f8fafc;color:#64748b;cursor:not-allowed;">
                 <span style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;">Mobile number is permanently linked to your verified account.</span>
+              </div>
+              <div class="input-group">
+                <label style="font-size:0.82rem;font-weight:600;color:#475569;margin-bottom:0.3rem;">Gender &amp; 3D Avatar</label>
+                <div class="modal-gender-row" id="modal-gender-picker-row" style="display:flex;gap:0.75rem;margin-top:0.25rem;">
+                  <button type="button" class="gender-pill-btn active" data-gender="Male" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.45rem 1rem;border-radius:20px;border:1.5px solid #cbd5e1;background:#fff;cursor:pointer;font-weight:600;">
+                    <img src="assets/avatar_male.jpg" alt="Male" style="width:24px;height:24px;border-radius:50%;object-fit:cover;">
+                    <span>Male</span>
+                  </button>
+                  <button type="button" class="gender-pill-btn" data-gender="Female" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.45rem 1rem;border-radius:20px;border:1.5px solid #cbd5e1;background:#fff;cursor:pointer;font-weight:600;">
+                    <img src="assets/avatar_female.jpg" alt="Female" style="width:24px;height:24px;border-radius:50%;object-fit:cover;">
+                    <span>Female</span>
+                  </button>
+                </div>
+                <input type="hidden" id="modal-input-gender" value="Male">
+                <div style="margin-top:0.65rem;display:flex;align-items:center;gap:0.75rem;">
+                  <button type="button" class="btn-avatar-upload" id="modal-btn-upload-photo" style="font-size:0.82rem;padding:0.42rem 0.95rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span>Or upload custom photo</span>
+                  </button>
+                  <span id="modal-photo-name-hint" style="font-size:0.75rem;color:#059669;font-weight:600;"></span>
+                </div>
               </div>
               <div class="input-group">
                 <label style="font-size:0.82rem;font-weight:600;color:#475569;margin-bottom:0.3rem;">Home City of Residence</label>
@@ -2001,7 +2089,6 @@
         <!-- FAQs Accordion -->
         <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Frequently Asked Questions</h3>
         <div id="faq-accordion-container" style="margin-bottom:3rem;"></div>
-      </div>
       </div>
     </section>
 
@@ -3075,78 +3162,111 @@
   <!-- Toast Alerts Container -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- Mobile Bottom Sticky Navigation -->
-  <nav class="mobile-bottom-nav">
-    <button class="mobile-nav-btn active" data-nav="home" data-view="home">
-      <svg class="nav-icon-outline" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>
-      <svg class="nav-icon-filled" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 16c-.75 0-1.35-.6-1.35-1.35s.6-1.35 1.35-1.35 1.35.6 1.35 1.35S7.6 16 6.85 16zm10.3 0c-.75 0-1.35-.6-1.35-1.35s.6-1.35 1.35-1.35 1.35.6 1.35 1.35-.6 1.35-1.35 1.35zM5.12 11l1.37-4h11.02l1.37 4H5.12z"/></svg>
-      <span>Book</span>
+  <!-- Mobile Floating Bottom Dock (2-Box Format: 4-Item Nav Pill + Standalone AI Circle) -->
+  <div class="mobile-dock-wrapper" id="mobile-dock-wrapper">
+    <!-- Box 1: Navigation Pill (Explore, Services, Activity, Profile) -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
+      <!-- 1. Explore (Home) -->
+      <button type="button" class="mobile-nav-btn active" data-nav="home" data-view="home" id="btn-dock-explore" aria-label="Explore Home">
+        <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10.5L12 3l9 7.5v8.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/>
+        </svg>
+        <span class="mobile-nav-label">Explore</span>
+      </button>
+
+      <!-- 2. Services -->
+      <a href="services.html" class="mobile-nav-btn" data-nav="services" id="btn-dock-services" aria-label="Services">
+        <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7.5" height="7.5" rx="2.5"/>
+          <rect x="13.5" y="3" width="7.5" height="7.5" rx="2.5"/>
+          <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2.5"/>
+          <rect x="3" y="13.5" width="7.5" height="7.5" rx="2.5"/>
+        </svg>
+        <span class="mobile-nav-label">Services</span>
+      </a>
+
+      <!-- 3. Activity (Trips) -->
+      <button type="button" class="mobile-nav-btn" data-nav="trips" data-view="trips" id="btn-dock-activity" aria-label="Activity">
+        <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="17" rx="3.5"/>
+          <path d="M16 2v4M8 2v4M3 9.5h18"/>
+          <circle cx="8" cy="14.5" r="1" fill="currentColor"/>
+          <circle cx="12" cy="14.5" r="1" fill="currentColor"/>
+          <circle cx="16" cy="14.5" r="1" fill="currentColor"/>
+        </svg>
+        <span class="mobile-nav-label">Activity</span>
+      </button>
+
+      <!-- 4. Profile (Account) -->
+      <button type="button" class="mobile-nav-btn" data-nav="account" data-view="account" id="btn-dock-profile" aria-label="Profile">
+        <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4.25"/>
+          <path d="M5.5 20.5a6.5 6.5 0 0 1 13 0"/>
+        </svg>
+        <span class="mobile-nav-label">Profile</span>
+      </button>
+    </nav>
+
+    <!-- Box 2: Eyes Ah AI Assistant Floating Circle -->
+    <button type="button" class="mobile-dock-ai-circle" id="mobile-dock-ai-btn" aria-label="Open Eyeah AI Assistant">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0056d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2.5C12 7.7 7.7 12 2.5 12c5.2 0 9.5 4.3 9.5 9.5 0-5.2 4.3-9.5 9.5-9.5-5.2 0-9.5-4.3-9.5-9.5Z"/>
+        <path d="M18.5 2.5v3M17 4h3" stroke-width="1.8"/>
+      </svg>
     </button>
-    <button class="mobile-nav-btn" data-nav="trips" data-view="trips">
-      <svg class="nav-icon-outline" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="0" ry="0"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-      <svg class="nav-icon-filled" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/><path d="M7 11h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2zm-8 4h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
-      <span>My Trips</span>
-    </button>
-    <button class="mobile-nav-btn" data-nav="account" data-view="account">
-      <svg class="nav-icon-outline" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      <svg class="nav-icon-filled" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-      <span>Profile</span>
-    </button>
-  </nav>
+  </div>
 
   <!-- App Footer -->
-  <footer class="app-footer">
-    <div class="footer-container">
-      <div class="footer-col">
-        <div class="brand-logo-wrap" style="margin-bottom:1rem;" title="PickMi Home">
-          <img src="assets/pickmi-logo.png" alt="PickMi" class="brand-logo-img">
+  <!-- Simple Modern Minimalist Footer -->
+  <footer class="app-footer simple-footer">
+    <div class="simple-footer-container">
+      <div class="simple-footer-main">
+        <!-- Brand & Tagline -->
+        <div class="simple-footer-brand">
+          <a href="#home" data-nav="home" class="simple-footer-logo-wrap" title="PickMi Home">
+            <img src="assets/pickmi-logo-white.png" alt="PickMi" class="simple-footer-logo">
+          </a>
+          <p class="simple-footer-tagline">Fast, reliable city rides and intercity mobility across 100+ cities.</p>
         </div>
-        <p style="font-size:0.88rem;color:#64748b;line-height:1.6;margin-bottom:1.5rem;">
-          India's premium customer cab booking platform. Built according to high UX standards with upfront pricing, verified chauffeurs, and real-time Reservation Trip OTP safety.
-        </p>
-        <div style="font-size:0.82rem;color:#64748b;">
-          24/7 Helpline: <strong style="color:#111111;"><a href="tel:+918867791805" style="color:#111111;text-decoration:none;">1800-209-7425 (Toll-Free)</a></strong> &bull; info@pickmicabs.com
+
+        <!-- Essential Quick Links -->
+        <nav class="simple-footer-nav" aria-label="Footer Navigation">
+          <a href="#home" data-nav="home">Explore</a>
+          <a href="services.html">Services</a>
+          <a href="#trips" data-nav="trips">My Bookings</a>
+          <a href="#support" data-nav="support">Help &amp; Support</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="#policy" data-nav="policy">Terms</a>
+        </nav>
+
+        <!-- Social Media Links -->
+        <div class="simple-footer-social">
+          <a href="https://twitter.com" target="_blank" rel="noopener" class="simple-social-link" aria-label="X (Twitter)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" class="simple-social-link" aria-label="Instagram">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener" class="simple-social-link" aria-label="LinkedIn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.53 1.53 0 1 0-.01-3.05 1.53 1.53 0 0 0 .01 3.05m1.39 10.74v-8.37H5.07v8.37h2.78z"/></svg>
+          </a>
+          <a href="https://facebook.com" target="_blank" rel="noopener" class="simple-social-link" aria-label="Facebook">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
         </div>
       </div>
 
-      <div class="footer-col">
-        <h4>Our Services</h4>
-        <ul>
-          <li><a href="#home" data-nav="home">InCity Daily Rides</a></li>
-          <li><a href="#home" data-nav="home">Intercity One-Way Cabs</a></li>
-          <li><a href="#home" data-nav="home">Intercity Round Trips</a></li>
-          <li><a href="#home" data-nav="home">Airport Transfers (MAA/BLR/BOM)</a></li>
-          <li><a href="#home" data-nav="home">Hourly Local Rentals</a></li>
-        </ul>
-      </div>
+      <div class="simple-footer-divider"></div>
 
-      <div class="footer-col">
-        <h4>Customer Care</h4>
-        <ul>
-          <li><a href="#trips" data-nav="trips">My Bookings</a></li>
-          <li><a href="#support" data-nav="support">Help Centre & FAQs</a></li>
-          <li><a href="#policy" data-nav="policy">Cancellation & Refunds</a></li>
-          <li><a href="#offers" data-nav="offers">Promotions & Coupons</a></li>
-          <li><a href="#support" data-nav="support">Safety Guidelines</a></li>
-        </ul>
+      <!-- Bottom Bar -->
+      <div class="simple-footer-bottom">
+        <span class="simple-footer-copy">&copy; 2026 PickMi Mobility Technologies Private Limited. All rights reserved.</span>
+        <button type="button" class="simple-footer-top-btn" id="footer-btn-back-to-top" aria-label="Back to top">
+          <span>Back to top</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
       </div>
-
-      <div class="footer-col">
-        <h4>Partner & Legal</h4>
-        <ul>
-          <li><a href="#drive" data-nav="drive">Drive with PickMi</a></li>
-          <li><a href="#policy" data-nav="policy">Terms & Conditions</a></li>
-          <li><a href="privacy-policy.html">Privacy Policy</a></li>
-          <li><a href="account-deletion.html">Account Deletion</a></li>
-          <li><a href="#drive" data-nav="drive">Fleet Attachment</a></li>
-          <li><a href="#account/business" data-nav="account">Corporate Travel Desk</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div>&copy; 2026 PickMi Mobility Technologies Private Limited. All rights reserved.</div>
-      <div>Crafted for high performance & responsive mobile web experience.</div>
     </div>
   </footer>
 
@@ -3154,15 +3274,28 @@
        EYES AH AI CHATBOT ASSISTANT (Global Floating Widget)
        ========================================================================== -->
   <!-- Floating Pill Trigger Button -->
-  <div class="eyes-ah-trigger" id="eyes-ah-trigger" role="button" tabindex="0" aria-label="Open Eyes Ah Assistant">
-    Hi, I am Eyes Ah
+  <div class="eyes-ah-trigger ai-cta-pill-btn" id="eyes-ah-trigger" role="button" tabindex="0" aria-label="Open Eyesah AI Assistant">
+    <span>Eyesah AI</span>
+    <svg class="ai-cta-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+    </svg>
   </div>
 
   <!-- Chatbot Window Modal -->
   <div class="eyes-ah-modal" id="eyes-ah-modal" role="dialog" aria-modal="true" aria-labelledby="eyes-ah-modal-title" style="display: none;">
-    <!-- Modal Header -->
+    <!-- Modal / Mobile Page Header -->
     <div class="eyes-ah-header">
-      <h3 class="eyes-ah-title" id="eyes-ah-modal-title">Eyes Ah</h3>
+      <button type="button" class="eyes-ah-back-btn" id="eyes-ah-back-btn" aria-label="Go back">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+      <div class="eyes-ah-header-info">
+        <h3 class="eyes-ah-title" id="eyes-ah-modal-title">Eyes Ah AI Assistant</h3>
+        <span class="eyes-ah-status-dot">Online • Ready to help</span>
+      </div>
       <button type="button" class="eyes-ah-close-btn" id="eyes-ah-close-btn" aria-label="Close Assistant">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -3218,7 +3351,7 @@
   <!-- App Logic Scripts -->
   <script src="js/invoice-pdf.js?v=3"></script>
   <script type="module" src="js/data.js?v=3"></script>
-  <script type="module" src="js/store.js?v=3"></script>
-  <script type="module" src="js/app.js?v=3"></script>
+  <script type="module" src="js/store.js?v=4"></script>
+  <script type="module" src="js/app.js?v=13"></script>
 </body>
 </html>

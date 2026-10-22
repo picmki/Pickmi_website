@@ -322,6 +322,176 @@
         console.warn('submitContactInquiry note:', err.message);
         return { success: false, error: err.message };
       }
+    },
+
+    /**
+     * Fetch real trips from database for a specific user based on phone or email
+     */
+    async fetchUserTrips(phone, email) {
+      const cleanPhone = phone ? String(phone).replace(/\D/g, '').slice(-10) : '';
+      const cleanEmail = email ? String(email).trim().toLowerCase() : '';
+      if (!cleanPhone && !cleanEmail) return [];
+
+      const results = [];
+      const seenIds = new Set();
+
+      const formatTripTime = (dateStr, timeStr) => {
+        try {
+          const raw = timeStr || dateStr || '';
+          if (raw.includes('at')) {
+            const parts = raw.split('at');
+            const d = parts[0].trim();
+            const t = parts[1].trim();
+            const dt = new Date(d + 'T' + (t.length === 5 ? t + ':00' : t));
+            if (!isNaN(dt.getTime())) {
+              const day = dt.getDate();
+              const month = dt.toLocaleString('en-US', { month: 'short' });
+              let hours = dt.getHours();
+              const ampm = hours >= 12 ? 'pm' : 'am';
+              hours = hours % 12 || 12;
+              const mins = String(dt.getMinutes()).padStart(2, '0');
+              return `${day} ${month} • ${hours}:${mins} ${ampm}`;
+            }
+          }
+          if (dateStr) {
+            const dt = new Date(dateStr.length === 10 ? dateStr + 'T08:00:00' : dateStr);
+            if (!isNaN(dt.getTime())) {
+              const day = dt.getDate();
+              const month = dt.toLocaleString('en-US', { month: 'short' });
+              return `${day} ${month} • ${timeStr || '08:00 am'}`;
+            }
+          }
+        } catch (e) {}
+        return timeStr || dateStr || 'Scheduled';
+      };
+
+      // 1. Query 'website_bookings' table
+      try {
+        const sb = getClient();
+        let wbData = [];
+        if (sb) {
+          let query = sb.from('website_bookings').select('*');
+          if (cleanPhone && cleanEmail) {
+            const { data } = await query.or(`customer_phone.ilike.%${cleanPhone}%,customer_email.ilike.%${cleanEmail}%`).order('created_at', { ascending: false });
+            if (data) wbData = data;
+          } else if (cleanPhone) {
+            const { data } = await query.ilike('customer_phone', `%${cleanPhone}%`).order('created_at', { ascending: false });
+            if (data) wbData = data;
+          } else if (cleanEmail) {
+            const { data } = await query.ilike('customer_email', `%${cleanEmail}%`).order('created_at', { ascending: false });
+            if (data) wbData = data;
+          }
+        } else {
+          const filter = cleanPhone ? `customer_phone=ilike.*${cleanPhone}*` : `customer_email=ilike.*${cleanEmail}*`;
+          wbData = await restRequest('website_bookings', 'GET', null, `select=*&${filter}&order=created_at.desc`);
+        }
+
+        if (Array.isArray(wbData)) {
+          wbData.forEach(b => {
+            const ref = b.booking_number || b.id;
+            if (!seenIds.has(ref)) {
+              seenIds.add(ref);
+              const dropName = b.drop_location || 'Destination';
+              const pickupName = b.pickup_location || 'Pickup';
+              const isAuto = (b.vehicle_type || '').toLowerCase().includes('auto');
+              const isCancelled = (b.status || '').toUpperCase() === 'CANCELLED';
+              const isCompleted = (b.status || '').toUpperCase() === 'COMPLETED';
+              const fareVal = parseFloat(b.estimated_fare) || 0;
+
+              results.push({
+                id: ref,
+                supabaseId: b.id,
+                serviceType: b.trip_type === 'rental' ? 'rental' : 'intercity',
+                tripType: b.trip_type || 'oneway',
+                status: isCompleted ? 'Completed' : isCancelled ? 'Cancelled' : 'Confirmed',
+                statusBadge: isCompleted ? 'Completed' : isCancelled ? 'Cancelled' : 'Upcoming',
+                pickup: pickupName,
+                drop: dropName,
+                dropShort: dropName.includes(',') ? dropName.split(',')[0].trim() : dropName,
+                pickupShort: pickupName.includes(',') ? pickupName.split(',')[0].trim() : pickupName,
+                pickupTime: formatTripTime(b.pickup_date, b.pickup_time),
+                departureDate: b.pickup_date,
+                vehicleCategory: b.vehicle_type || 'Sedan',
+                vehicleModel: b.vehicle_type || 'Sedan',
+                passengerName: b.customer_name,
+                passengerPhone: b.customer_phone,
+                passengerEmail: b.customer_email,
+                distanceKm: b.distance_km || 35,
+                fare: {
+                  base: fareVal,
+                  total: fareVal
+                },
+                fareTotal: fareVal,
+                isAuto: isAuto,
+                isCancelled: isCancelled,
+                createdAt: b.created_at
+              });
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('⚠️ [Supabase] Could not fetch website_bookings:', err);
+      }
+
+      // 2. Query 'trips' table
+      try {
+        const sb = getClient();
+        let tData = [];
+        if (sb && cleanPhone) {
+          const { data } = await sb.from('trips').select('*').ilike('customer_phone', `%${cleanPhone}%`).order('created_at', { ascending: false });
+          if (data) tData = data;
+        } else if (cleanPhone) {
+          tData = await restRequest('trips', 'GET', null, `select=*&customer_phone=ilike.*${cleanPhone}*&order=created_at.desc`);
+        }
+
+        if (Array.isArray(tData)) {
+          tData.forEach(t => {
+            const ref = t.trip_number || t.id;
+            if (!seenIds.has(ref)) {
+              seenIds.add(ref);
+              const dropName = t.drop_location || 'Destination';
+              const pickupName = t.pickup_location || 'Pickup';
+              const isAuto = (t.vehicle_type || '').toLowerCase().includes('auto');
+              const isCancelled = (t.status || '').toUpperCase() === 'CANCELLED';
+              const isCompleted = (t.status || '').toUpperCase() === 'COMPLETED';
+              const fareVal = parseFloat(t.fare) || 0;
+
+              results.push({
+                id: ref,
+                supabaseId: t.id,
+                serviceType: t.trip_type === 'Rental' ? 'rental' : 'intercity',
+                tripType: (t.trip_type || 'One-way').toLowerCase(),
+                status: isCompleted ? 'Completed' : isCancelled ? 'Cancelled' : 'Confirmed',
+                statusBadge: isCompleted ? 'Completed' : isCancelled ? 'Cancelled' : 'Upcoming',
+                pickup: pickupName,
+                drop: dropName,
+                dropShort: dropName.includes(',') ? dropName.split(',')[0].trim() : dropName,
+                pickupShort: pickupName.includes(',') ? pickupName.split(',')[0].trim() : pickupName,
+                pickupTime: formatTripTime(t.pickup_date, t.pickup_time),
+                departureDate: t.pickup_date,
+                vehicleCategory: t.vehicle_type || 'Sedan',
+                vehicleModel: t.vehicle_type || 'Sedan',
+                passengerName: t.customer_name,
+                passengerPhone: t.customer_phone,
+                distanceKm: parseFloat(t.distance) || 45,
+                fare: {
+                  base: fareVal,
+                  total: fareVal
+                },
+                fareTotal: fareVal,
+                isAuto: isAuto,
+                isCancelled: isCancelled,
+                createdAt: t.created_at
+              });
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('⚠️ [Supabase] Could not fetch trips:', err);
+      }
+
+      console.log(`✅ [Supabase] Found ${results.length} real trips for user:`, results);
+      return results;
     }
   };
 
