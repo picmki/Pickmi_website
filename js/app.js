@@ -4498,20 +4498,32 @@ export class PickMiApp {
       store.clearDraft();
     }
 
-    // Dynamic Title & Message for Mobile Explore
+    // Modal Title & Message (Unified for seamless desktop and mobile experience)
     const modalTitle = phoneStep.querySelector('h3');
     const modalSub = phoneStep.querySelector('p');
-    if (window.innerWidth <= 768) {
-      if (modalTitle) modalTitle.textContent = 'Login to Explore';
-      if (modalSub) modalSub.textContent = 'Enter your 10-digit mobile number to verify and get started with PickMi rides.';
-    } else {
-      if (modalTitle) modalTitle.textContent = 'Login / Sign Up';
-      if (modalSub) modalSub.textContent = 'Enter your 10-digit mobile number to receive a secure verification OTP via SMS.';
-    }
+    if (modalTitle) modalTitle.textContent = 'Login / Sign Up';
+    if (modalSub) modalSub.textContent = 'Enter your 10-digit mobile number to receive a secure verification OTP via SMS.';
 
     modal.classList.add('open');
 
     const phoneInput = document.getElementById('login-phone-input');
+    if (phoneInput && !phoneInput._pickmiCleanBound) {
+      phoneInput._pickmiCleanBound = true;
+      phoneInput.addEventListener('input', () => {
+        let val = phoneInput.value.replace(/\s+/g, '');
+        if (val.startsWith('+91')) {
+          val = val.slice(3);
+        } else if (val.startsWith('91') && val.length > 10) {
+          val = val.slice(2);
+        } else if (val.startsWith('0') && val.length > 10) {
+          val = val.slice(1);
+        }
+        val = val.replace(/\D/g, '').slice(0, 10);
+        if (val !== phoneInput.value) {
+          phoneInput.value = val;
+        }
+      });
+    }
     const sendOtpBtn = document.getElementById('btn-send-otp');
     const otpInput = document.getElementById('login-otp-input');
     const verifyOtpBtn = document.getElementById('btn-verify-otp');
@@ -4859,8 +4871,12 @@ export class PickMiApp {
     }
 
     sendOtpBtn.onclick = async () => {
-      const rawVal = phoneInput ? phoneInput.value.trim() : '';
-      const cleanNum = rawVal.replace(/\D/g, '').slice(-10);
+      let rawVal = phoneInput ? phoneInput.value.trim() : '';
+      let cleanNum = rawVal.replace(/\s+/g, '');
+      if (cleanNum.startsWith('+91')) cleanNum = cleanNum.slice(3);
+      else if (cleanNum.startsWith('91') && cleanNum.length > 10) cleanNum = cleanNum.slice(2);
+      else if (cleanNum.startsWith('0') && cleanNum.length > 10) cleanNum = cleanNum.slice(1);
+      cleanNum = cleanNum.replace(/\D/g, '').slice(-10);
 
       if (!cleanNum || cleanNum.length !== 10 || !/^[6-9]\d{9}$/.test(cleanNum)) {
         this.showToast('Please enter a valid 10-digit Indian mobile number (e.g. 98401 23456)', 'error');
