@@ -11375,10 +11375,15 @@ body.account-view-active .site-footer {
     width: 100% !important;
     max-width: 100% !important;
     border-radius: 24px 24px 0 0 !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
     padding: 1.5rem 1.5rem calc(1.75rem + env(safe-area-inset-bottom, 0px)) !important;
     margin: 0 !important;
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.22) !important;
     border: none !important;
+    border-bottom: none !important;
     animation: loginSheetSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
     position: relative !important;
     max-height: 85vh !important;
@@ -11447,7 +11452,7 @@ body.account-view-active .site-footer {
   background: #ffffff;
   width: 100%;
   max-width: 440px;
-  border-radius: 20px !important;
+  border-radius: 20px;
   border: 1px solid #edf2f7;
   padding: 2.2rem 2.2rem;
   box-shadow: 0 25px 65px -12px rgba(15, 23, 42, 0.22);
@@ -11699,6 +11704,51 @@ body.account-view-active .site-footer {
 #login-otp-modal #btn-submit-profile:active {
   transform: scale(0.98);
   background: #000000;
+}
+
+/* Mobile Bottom Sheet Override: Strictly 0px border-radius on bottom-left and bottom-right */
+@media (max-width: 768px) {
+  #login-otp-modal.modal-overlay {
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+  }
+
+  #login-otp-modal .modal-content-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 24px 24px 0 0 !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    padding: 1.5rem 1.5rem calc(1.75rem + env(safe-area-inset-bottom, 0px)) !important;
+    margin: 0 !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.22) !important;
+    border: none !important;
+    border-bottom: none !important;
+    animation: loginSheetSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    position: relative !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+  }
+
+  #login-otp-modal .modal-content-box::before {
+    content: "";
+    display: block;
+    width: 42px;
+    height: 4.5px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    margin: -0.65rem auto 1.15rem;
+  }
+
+  #login-otp-modal .modal-close-btn {
+    display: none !important;
+  }
 }
 
 /* ========================================================
@@ -12886,7 +12936,11 @@ body.account-view-active .site-footer {
   max-width: 540px;
   max-height: 88vh;
   background: #ffffff;
-  border-radius: 0px;
+  border-radius: 24px 24px 0 0;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
   box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
