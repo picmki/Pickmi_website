@@ -661,13 +661,9 @@ const server = http.createServer(async (req, res) => {
 
       return sendJsonResponse(res, 200, {
         success: true,
-        message: result.mode === 'mock'
-          ? `Verification code generated for +91 ${cleanNum}. (Twilio mock mode: code is ${otp})`
-          : `Verification code sent to +91 ${cleanNum} via SMS.`,
+        message: `Verification code sent to +91 ${cleanNum} via SMS.`,
         phone: cleanNum,
-        expiresInSeconds: 600,
-        mode: result.mode,
-        devOtp: result.devOtp
+        expiresInSeconds: 600
       });
     } catch (err) {
       console.error('❌ [Mobile OTP Send] Error:', err);
@@ -725,7 +721,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ==========================================
-  // 📁 Static File Serving
+  // 📁 Static File Serving (SPA fallback)
   // ==========================================
   const filePath = path.join(__dirname, reqPath);
   const ext = path.extname(filePath).toLowerCase();
@@ -734,8 +730,23 @@ const server = http.createServer(async (req, res) => {
   fs.readFile(filePath, (err, content) => {
     if (err) {
       if (err.code === 'ENOENT') {
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('404 Not Found');
+        // SPA fallback: if no file extension (e.g. /trips, /account, /drive),
+        // serve index.html so client-side hash routing takes over
+        if (!ext) {
+          const indexPath = path.join(__dirname, 'index.html');
+          fs.readFile(indexPath, (idxErr, idxContent) => {
+            if (idxErr) {
+              res.writeHead(500, { 'Content-Type': 'text/plain' });
+              res.end('500 Server Error: could not load index.html');
+            } else {
+              res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+              res.end(idxContent);
+            }
+          });
+        } else {
+          res.writeHead(404, { 'Content-Type': 'text/plain' });
+          res.end('404 Not Found: ' + reqPath);
+        }
       } else {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
         res.end('500 Server Error: ' + err.code);

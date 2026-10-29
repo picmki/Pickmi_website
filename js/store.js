@@ -371,8 +371,11 @@ class Store {
           name: this.user.name,
           mobile: this.user.mobile
         })
-      }).then(r => r.json()).then(res => {
-        console.log('📧 [Email] Welcome email response:', res);
+      }).then(r => {
+        if (r && r.ok) return r.json().catch(() => null);
+        return null;
+      }).then(res => {
+        if (res) console.log('📧 [Email] Welcome email response:', res);
       }).catch(err => {
         console.warn('⚠️ [Email] Welcome email dispatch notice:', err);
       });
@@ -515,8 +518,11 @@ class Store {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ booking: newBooking })
-      }).then(r => r.json()).then(res => {
-        console.log('📧 [Email] Booking email response:', res);
+      }).then(r => {
+        if (r && r.ok) return r.json().catch(() => null);
+        return null;
+      }).then(res => {
+        if (res) console.log('📧 [Email] Booking email response:', res);
       }).catch(err => {
         console.warn('⚠️ [Email] Booking email dispatch notice:', err);
       });
@@ -535,8 +541,11 @@ class Store {
             transactionId: 'TXN_' + Math.floor(10000000 + Math.random() * 90000000)
           }
         })
-      }).then(r => r.json()).then(res => {
-        console.log('💳 [Email] Payment receipt response:', res);
+      }).then(r => {
+        if (r && r.ok) return r.json().catch(() => null);
+        return null;
+      }).then(res => {
+        if (res) console.log('💳 [Email] Payment receipt response:', res);
       }).catch(err => {
         console.warn('⚠️ [Email] Payment email dispatch notice:', err);
       });
@@ -870,36 +879,41 @@ class Store {
   async initSyncFromApi() {
     if (typeof fetch === 'undefined') return;
     try {
-      const res = await fetch('/api/fleet-config');
-      if (res.ok) {
-        const data = await res.json();
-        let changed = false;
-        if (Array.isArray(data.fleet) && data.fleet.length > 0) {
-          this.vehicles = data.fleet;
-          this.save(STORAGE_KEYS.ADMIN_VEHICLES, this.vehicles);
-          changed = true;
-        }
-        if (Array.isArray(data.rentalPackages) && data.rentalPackages.length > 0) {
-          this.rentalPackages = data.rentalPackages;
-          this.save(STORAGE_KEYS.ADMIN_RENTAL_PACKAGES, this.rentalPackages);
-          changed = true;
-        }
-        if (data.pricing && Object.keys(data.pricing).length > 0) {
-          this.pricingConfig = { ...this.pricingConfig, ...data.pricing };
-          this.save(STORAGE_KEYS.PRICING_CONFIG, this.pricingConfig);
-          changed = true;
-        }
-        if (Array.isArray(data.coupons) && data.coupons.length > 0) {
-          this.coupons = data.coupons;
-          this.save(STORAGE_KEYS.ADMIN_COUPONS, this.coupons);
-          this.save(STORAGE_KEYS.ADMIN_COUPONS_ALT, this.coupons);
-          changed = true;
-        }
-        if (changed) {
-          this.notify('vehicles_updated', this.vehicles);
-          this.notify('rental_packages_updated', this.rentalPackages);
-          this.notify('pricing_config_updated', this.pricingConfig);
-          this.notify('coupons_updated', this.coupons);
+      const res = await fetch('/api/fleet-config').catch(() => null);
+      if (res && res.ok) {
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await res.json().catch(() => null);
+          if (data) {
+            let changed = false;
+            if (Array.isArray(data.fleet) && data.fleet.length > 0) {
+              this.vehicles = data.fleet;
+              this.save(STORAGE_KEYS.ADMIN_VEHICLES, this.vehicles);
+              changed = true;
+            }
+            if (Array.isArray(data.rentalPackages) && data.rentalPackages.length > 0) {
+              this.rentalPackages = data.rentalPackages;
+              this.save(STORAGE_KEYS.ADMIN_RENTAL_PACKAGES, this.rentalPackages);
+              changed = true;
+            }
+            if (data.pricing && Object.keys(data.pricing).length > 0) {
+              this.pricingConfig = { ...this.pricingConfig, ...data.pricing };
+              this.save(STORAGE_KEYS.PRICING_CONFIG, this.pricingConfig);
+              changed = true;
+            }
+            if (Array.isArray(data.coupons) && data.coupons.length > 0) {
+              this.coupons = data.coupons;
+              this.save(STORAGE_KEYS.ADMIN_COUPONS, this.coupons);
+              this.save(STORAGE_KEYS.ADMIN_COUPONS_ALT, this.coupons);
+              changed = true;
+            }
+            if (changed) {
+              this.notify('vehicles_updated', this.vehicles);
+              this.notify('rental_packages_updated', this.rentalPackages);
+              this.notify('pricing_config_updated', this.pricingConfig);
+              this.notify('coupons_updated', this.coupons);
+            }
+          }
         }
       }
     } catch (err) {

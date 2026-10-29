@@ -522,25 +522,6 @@ export class PickMiApp {
       this.showView('home');
     }
 
-    // Mobile View: Mandatory Login to Explore - automatically open bottom sheet on load
-    setTimeout(() => {
-      const isMobile = window.innerWidth <= 768;
-      if (isMobile && (!store.user || !store.user.isLoggedIn)) {
-        this.openLoginModal();
-      }
-    }, 400);
-
-    // Auto-open on resize to mobile width if user is not logged in
-    window.addEventListener('resize', () => {
-      if (window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
-        const modal = document.getElementById('login-otp-modal');
-        if (modal && !modal.classList.contains('open') && !this._mobileSheetAutoOpened) {
-          this._mobileSheetAutoOpened = true;
-          this.openLoginModal();
-        }
-      }
-    });
-
     // Handle deep-link service parameter from mobile services page
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -1410,10 +1391,6 @@ export class PickMiApp {
         const targetView = el.dataset.nav;
 
         if (targetView === 'home') {
-          if (window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
-            this.openLoginModal();
-            return;
-          }
           if (this.currentView !== 'home') {
             this.navigateTo('home');
           }
@@ -1422,16 +1399,6 @@ export class PickMiApp {
             const match = (link.dataset.nav === 'home') || (link.dataset.view === 'home');
             link.classList.toggle('active', Boolean(match));
           });
-          return;
-        }
-
-        if (targetView === 'services') {
-          if (window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
-            this.showToast('Please sign in with your mobile number to explore services', 'warning');
-            this.openLoginModal();
-            return;
-          }
-          window.location.href = 'services.html';
           return;
         }
 
@@ -2743,13 +2710,6 @@ export class PickMiApp {
         return;
       }
 
-      // Mobile View: Mandatory Login to Explore & Search
-      if (window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
-        this.showToast('Please sign in with your mobile number to explore and book cabs', 'warning');
-        this.openLoginModal();
-        return;
-      }
-
       // Selected cab type and trip mode from hero pills
       const activeCabPill = document.querySelector('.cab-type-pill.active');
       const cabType = activeCabPill ? activeCabPill.dataset.cabType : (store.searchParams.cabType || 'sedan');
@@ -3730,7 +3690,12 @@ export class PickMiApp {
               }).addTo(map);
 
               currentBounds = L.latLngBounds([fromCoords, toCoords]);
-              map.fitBounds(currentBounds, { padding: [50, 50] });
+              try {
+                if (map && typeof map.invalidateSize === 'function') {
+                  map.invalidateSize();
+                }
+                map.fitBounds(currentBounds, { padding: [50, 50] });
+              } catch (e) {}
 
               if (estRoadDist && estRoadDist > 0) {
                 store.searchParams.distanceKm = estRoadDist;
@@ -3782,7 +3747,9 @@ export class PickMiApp {
                   }).addTo(map);
 
                   currentBounds = routeLine.getBounds();
-                  map.fitBounds(currentBounds, { padding: [50, 50] });
+                  try {
+                    map.fitBounds(currentBounds, { padding: [50, 50] });
+                  } catch (e) {}
                 } else {
                   drawFallbackRoute();
                 }
@@ -4922,12 +4889,7 @@ export class PickMiApp {
             const resData = await resp.json().catch(() => null);
             if (resData && resData.success) {
               serverHandled = true;
-              serverOtp = resData.devOtp || '';
-              if (resData.mode === 'mock' && resData.devOtp) {
-                this.showToast(`PickMi: Your verification code is ${resData.devOtp}`, 'success');
-              } else {
-                this.showToast(`SMS sent to +91 ${cleanNum}. Please enter the code.`, 'success');
-              }
+              this.showToast(`SMS sent to +91 ${cleanNum}. Please enter the code.`, 'success');
             } else if (resData && resData.error) {
               throw new Error(resData.error);
             }
@@ -4937,14 +4899,13 @@ export class PickMiApp {
         console.warn('API send-otp notification:', err.message);
       }
 
-      // If live site static host (404) or API server unavailable, generate seamless client verification code
       if (!serverHandled) {
-        const localOtp = String(Math.floor(1000 + Math.random() * 9000));
-        this.generatedOtp = localOtp;
-        this.showToast(`PickMi SMS: Your verification code is ${localOtp}`, 'success');
-      } else {
-        this.generatedOtp = serverOtp;
+        this.showToast(`SMS sent to +91 ${cleanNum}. Please enter the code.`, 'success');
       }
+
+      // Remove any lingering hint box from previous runs
+      const existingHint = document.getElementById('verify-otp-hint');
+      if (existingHint) existingHint.remove();
 
       phoneStep.style.display = 'none';
       verifyStep.style.display = 'block';
@@ -7852,14 +7813,6 @@ export class PickMiApp {
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
-          if (overlay.id === 'login-otp-modal' && window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
-            // Mandatory login to explore on mobile view
-            return;
-          }
-          const profileStep = overlay.querySelector('#otp-step-profile');
-          if (profileStep && profileStep.style.display === 'block') {
-            this.showToast('Profile completion is mandatory to use PickMi', 'warning');
-          }
           overlay.classList.remove('open');
         }
       });
@@ -7868,10 +7821,6 @@ export class PickMiApp {
     document.querySelectorAll('.modal-close-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const overlay = btn.closest('.modal-overlay');
-        const profileStep = overlay?.querySelector('#otp-step-profile');
-        if (profileStep && profileStep.style.display === 'block') {
-          this.showToast('Profile completion is mandatory to use PickMi', 'warning');
-        }
         overlay?.classList.remove('open');
       });
     });
