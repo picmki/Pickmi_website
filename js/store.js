@@ -2,7 +2,7 @@
 import { SEED_TRIPS, LOCATION_MASTER, PROMO_CODES, VEHICLE_CATEGORIES, RENTAL_PACKAGES } from './data.js';
 
 const STORAGE_KEYS = {
-  USER: 'pickmi_user_v2',
+  USER: 'pickmi_user_v3',
   REGISTERED_USERS: 'pickmi_registered_users_v2',
   PENDING_PROFILE: 'pickmi_pending_profile_v2',
   TRIPS: 'pickmi_trips',
@@ -60,23 +60,25 @@ export const DEFAULT_PRICING_CONFIG = {
   flashSaleBadgeText: 'FLASH SALE'
 };
 
-const DEFAULT_USER = {
-  isLoggedIn: true,
-  isProfileComplete: true,
-  name: 'karthik p',
-  mobile: '+91 9345233351',
-  rawMobile: '9345233351',
-  email: 'karthikpalani7613@gmail.com',
+const GUEST_USER = {
+  isLoggedIn: false,
+  isProfileComplete: false,
+  name: '',
+  mobile: '',
+  rawMobile: '',
+  email: '',
   gender: 'Male',
-  city: 'Chennai, Tamil Nadu',
-  emergencyContactName: 'Priya P',
-  emergencyContactPhone: '+91 98401 98765',
-  membershipTier: 'PickMi Gold Member',
-  ridesCount: 3,
+  city: 'Bangalore, Karnataka',
+  emergencyContactName: '',
+  emergencyContactPhone: '',
+  membershipTier: '',
+  ridesCount: 0,
   company: '',
   gstNumber: '',
-  isVerified: true
+  isVerified: false
 };
+
+const DEFAULT_USER = GUEST_USER;
 
 const DEFAULT_SAVED_PLACES = [
   { id: 'sp-1', label: 'Home', address: '14, 2nd Main Road, Anna Nagar, Chennai, Tamil Nadu', icon: 'home' },
@@ -111,9 +113,16 @@ class Store {
 
     this.pendingProfileMobile = this.load(STORAGE_KEYS.PENDING_PROFILE, null);
 
-    this.user = this.load(STORAGE_KEYS.USER, DEFAULT_USER);
-    if (!this.user || !this.user.rawMobile || this.user.name === 'Guest User' || !this.user.isLoggedIn) {
-      this.user = { ...DEFAULT_USER };
+    // Clean up legacy test session storage if present
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('pickmi_user_v2');
+      }
+    } catch (e) {}
+
+    this.user = this.load(STORAGE_KEYS.USER, GUEST_USER);
+    if (!this.user || typeof this.user !== 'object' || !this.user.isLoggedIn) {
+      this.user = { ...GUEST_USER };
       this.save(STORAGE_KEYS.USER, this.user);
     }
     this.trips = this.load(STORAGE_KEYS.TRIPS, SEED_TRIPS);

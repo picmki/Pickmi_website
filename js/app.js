@@ -522,6 +522,25 @@ export class PickMiApp {
       this.showView('home');
     }
 
+    // Mobile View: Mandatory Login to Explore - automatically open bottom sheet on load
+    setTimeout(() => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile && (!store.user || !store.user.isLoggedIn)) {
+        this.openLoginModal();
+      }
+    }, 400);
+
+    // Auto-open on resize to mobile width if user is not logged in
+    window.addEventListener('resize', () => {
+      if (window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
+        const modal = document.getElementById('login-otp-modal');
+        if (modal && !modal.classList.contains('open') && !this._mobileSheetAutoOpened) {
+          this._mobileSheetAutoOpened = true;
+          this.openLoginModal();
+        }
+      }
+    });
+
     // Handle deep-link service parameter from mobile services page
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -1042,39 +1061,39 @@ export class PickMiApp {
       if (btnResetAvatar) btnResetAvatar.style.display = store.user.avatarUrl ? 'inline-flex' : 'none';
 
       const accHeaderName = document.getElementById('account-header-name');
-      if (accHeaderName) accHeaderName.textContent = store.user.name || 'Karthik Prabhu';
+      if (accHeaderName) accHeaderName.textContent = store.user.name || 'Account';
       const accHeaderAvatar = document.getElementById('account-header-avatar');
       if (accHeaderAvatar) accHeaderAvatar.innerHTML = avatarImgHtml;
 
       const dropdownName = document.getElementById('dropdown-user-name');
       const dropdownPhone = document.getElementById('dropdown-user-phone');
-      if (dropdownName) dropdownName.textContent = store.user.name;
-      if (dropdownPhone) dropdownPhone.textContent = store.user.mobile || '+91 9345233351';
+      if (dropdownName) dropdownName.textContent = store.user.name || 'User';
+      if (dropdownPhone) dropdownPhone.textContent = store.user.mobile || '';
 
       const accDropdownName = document.getElementById('account-dropdown-user-name');
       const accDropdownPhone = document.getElementById('account-dropdown-user-phone');
-      if (accDropdownName) accDropdownName.textContent = store.user.name || 'karthik p';
-      if (accDropdownPhone) accDropdownPhone.textContent = store.user.mobile || '+91 9345233351';
+      if (accDropdownName) accDropdownName.textContent = store.user.name || 'User';
+      if (accDropdownPhone) accDropdownPhone.textContent = store.user.mobile || '';
 
       const chkHeaderName = document.getElementById('checkout-header-name');
-      if (chkHeaderName) chkHeaderName.textContent = store.user.name || 'karthik p';
+      if (chkHeaderName) chkHeaderName.textContent = store.user.name || 'User';
       const chkHeaderAvatar = document.getElementById('checkout-header-avatar');
       if (chkHeaderAvatar) chkHeaderAvatar.innerHTML = avatarImgHtml;
 
       const chkDropdownName = document.getElementById('checkout-dropdown-user-name');
       const chkDropdownPhone = document.getElementById('checkout-dropdown-user-phone');
-      if (chkDropdownName) chkDropdownName.textContent = store.user.name || 'karthik p';
-      if (chkDropdownPhone) chkDropdownPhone.textContent = store.user.mobile || '+91 9345233351';
+      if (chkDropdownName) chkDropdownName.textContent = store.user.name || 'User';
+      if (chkDropdownPhone) chkDropdownPhone.textContent = store.user.mobile || '';
 
       const tripsHeaderName = document.getElementById('trips-header-name');
-      if (tripsHeaderName) tripsHeaderName.textContent = store.user.name || 'karthik p';
+      if (tripsHeaderName) tripsHeaderName.textContent = store.user.name || 'User';
       const tripsHeaderAvatar = document.getElementById('trips-header-avatar');
       if (tripsHeaderAvatar) tripsHeaderAvatar.innerHTML = avatarImgHtml;
 
       const tripsDropdownName = document.getElementById('trips-dropdown-user-name');
       const tripsDropdownPhone = document.getElementById('trips-dropdown-user-phone');
-      if (tripsDropdownName) tripsDropdownName.textContent = store.user.name || 'karthik p';
-      if (tripsDropdownPhone) tripsDropdownPhone.textContent = store.user.mobile || '+91 9345233351';
+      if (tripsDropdownName) tripsDropdownName.textContent = store.user.name || 'User';
+      if (tripsDropdownPhone) tripsDropdownPhone.textContent = store.user.mobile || '';
 
       const drawerAuthText = document.getElementById('drawer-auth-text');
       if (drawerAuthText) drawerAuthText.textContent = store.user.name || 'My Account';
@@ -1165,9 +1184,7 @@ export class PickMiApp {
     document.getElementById('item-header-logout')?.addEventListener('click', () => {
       if (userDropdown) userDropdown.style.display = 'none';
       if (userWrap) userWrap.classList.remove('open');
-      store.logout();
-      this.updateUserUI();
-      this.navigateTo('home');
+      this.handleLogout();
     });
 
     const headerLoginBtn = document.getElementById('header-login-btn');
@@ -1209,6 +1226,13 @@ export class PickMiApp {
         }
       };
     }
+  }
+
+  handleLogout() {
+    store.logout();
+    this.showToast('Signed out of PickMi.');
+    this.updateUserUI();
+    this.navigateTo('home');
   }
 
   // Navigation & Routing
@@ -1386,6 +1410,10 @@ export class PickMiApp {
         const targetView = el.dataset.nav;
 
         if (targetView === 'home') {
+          if (window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
+            this.openLoginModal();
+            return;
+          }
           if (this.currentView !== 'home') {
             this.navigateTo('home');
           }
@@ -1398,6 +1426,11 @@ export class PickMiApp {
         }
 
         if (targetView === 'services') {
+          if (window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
+            this.showToast('Please sign in with your mobile number to explore services', 'warning');
+            this.openLoginModal();
+            return;
+          }
           window.location.href = 'services.html';
           return;
         }
@@ -2707,6 +2740,13 @@ export class PickMiApp {
 
       if (store.searchParams.serviceType !== 'rental' && !drop) {
         this.showToast('Please enter a destination', 'error');
+        return;
+      }
+
+      // Mobile View: Mandatory Login to Explore & Search
+      if (window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
+        this.showToast('Please sign in with your mobile number to explore and book cabs', 'warning');
+        this.openLoginModal();
         return;
       }
 
@@ -4491,6 +4531,17 @@ export class PickMiApp {
       store.clearDraft();
     }
 
+    // Dynamic Title & Message for Mobile Explore
+    const modalTitle = phoneStep.querySelector('h3');
+    const modalSub = phoneStep.querySelector('p');
+    if (window.innerWidth <= 768) {
+      if (modalTitle) modalTitle.textContent = 'Login to Explore';
+      if (modalSub) modalSub.textContent = 'Enter your 10-digit mobile number to verify and get started with PickMi rides.';
+    } else {
+      if (modalTitle) modalTitle.textContent = 'Login / Sign Up';
+      if (modalSub) modalSub.textContent = 'Enter your 10-digit mobile number to receive a secure verification OTP via SMS.';
+    }
+
     modal.classList.add('open');
 
     const phoneInput = document.getElementById('login-phone-input');
@@ -4826,7 +4877,7 @@ export class PickMiApp {
       };
     }
 
-    sendOtpBtn.onclick = () => {
+    sendOtpBtn.onclick = async () => {
       const rawVal = phoneInput ? phoneInput.value.trim() : '';
       const cleanNum = rawVal.replace(/\D/g, '').slice(-10);
 
@@ -4837,37 +4888,62 @@ export class PickMiApp {
       }
 
       currentPendingMobile = cleanNum;
-      this.generatedOtp = String(Math.floor(1000 + Math.random() * 9000));
+      sendOtpBtn.disabled = true;
+      const originalText = sendOtpBtn.textContent;
+      sendOtpBtn.textContent = 'Sending...';
 
-      phoneStep.style.display = 'none';
-      verifyStep.style.display = 'block';
-      if (profileStep) profileStep.style.display = 'none';
-      if (otpInput) {
-        otpInput.value = '';
-        setTimeout(() => otpInput.focus(), 150);
-      }
+      try {
+        const resp = await fetch('/api/sms/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: cleanNum })
+        });
+        const resData = await resp.json();
 
-      if (verifyPhoneDisplay) {
-        verifyPhoneDisplay.textContent = `+91 ${cleanNum.slice(0, 5)} ${cleanNum.slice(5)}`;
-      }
-
-      // Display simulated carrier SMS delivery notification
-      this.showToast(`PickMi SMS: Your verification code is ${this.generatedOtp}`, 'success');
-
-      // Start 30s resend timer
-      let timeLeft = 30;
-      if (resendTimerSpan) resendTimerSpan.textContent = `${timeLeft}s`;
-      if (resendBtn) resendBtn.disabled = true;
-
-      clearInterval(this.otpTimerInterval);
-      this.otpTimerInterval = setInterval(() => {
-        timeLeft -= 1;
-        if (resendTimerSpan) resendTimerSpan.textContent = `${timeLeft}s`;
-        if (timeLeft <= 0) {
-          clearInterval(this.otpTimerInterval);
-          if (resendBtn) resendBtn.disabled = false;
+        if (!resp.ok || !resData.success) {
+          throw new Error(resData.error || 'Failed to dispatch verification code');
         }
-      }, 1000);
+
+        this.generatedOtp = resData.devOtp || '';
+
+        phoneStep.style.display = 'none';
+        verifyStep.style.display = 'block';
+        if (profileStep) profileStep.style.display = 'none';
+        if (otpInput) {
+          otpInput.value = '';
+          setTimeout(() => otpInput.focus(), 150);
+        }
+
+        if (verifyPhoneDisplay) {
+          verifyPhoneDisplay.textContent = `+91 ${cleanNum.slice(0, 5)} ${cleanNum.slice(5)}`;
+        }
+
+        if (resData.mode === 'mock' && resData.devOtp) {
+          this.showToast(`PickMi (Twilio Mock): SMS code is ${resData.devOtp}`, 'success');
+        } else {
+          this.showToast(`SMS sent to +91 ${cleanNum}. Please enter the code.`, 'success');
+        }
+
+        // Start 30s resend timer
+        let timeLeft = 30;
+        if (resendTimerSpan) resendTimerSpan.textContent = `${timeLeft}s`;
+        if (resendBtn) resendBtn.disabled = true;
+
+        clearInterval(this.otpTimerInterval);
+        this.otpTimerInterval = setInterval(() => {
+          timeLeft -= 1;
+          if (resendTimerSpan) resendTimerSpan.textContent = `${timeLeft}s`;
+          if (timeLeft <= 0) {
+            clearInterval(this.otpTimerInterval);
+            if (resendBtn) resendBtn.disabled = false;
+          }
+        }, 1000);
+      } catch (err) {
+        this.showToast(err.message || 'Unable to send SMS. Please try again.', 'error');
+      } finally {
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.textContent = originalText;
+      }
     };
 
     if (phoneInput) {
@@ -4879,7 +4955,7 @@ export class PickMiApp {
       };
     }
 
-    verifyOtpBtn.onclick = () => {
+    verifyOtpBtn.onclick = async () => {
       const enteredOtp = otpInput ? otpInput.value.trim() : '';
       if (!enteredOtp || enteredOtp.length < 4) {
         this.showToast('Please enter the 4-digit code sent to your mobile', 'error');
@@ -4887,38 +4963,55 @@ export class PickMiApp {
         return;
       }
 
-      if (enteredOtp !== this.generatedOtp && enteredOtp !== '1234') {
-        this.showToast("That code doesn't match. Check the SMS code and try again.", 'error');
-        if (otpInput) otpInput.focus();
-        return;
-      }
+      verifyOtpBtn.disabled = true;
+      const originalVerifyText = verifyOtpBtn.textContent;
+      verifyOtpBtn.textContent = 'Verifying...';
 
-      const existingUser = store.getUserByMobile(currentPendingMobile);
+      try {
+        const resp = await fetch('/api/sms/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: currentPendingMobile, otp: enteredOtp })
+        });
+        const resData = await resp.json();
 
-      if (existingUser && existingUser.isProfileComplete) {
-        // Existing registered customer with complete profile
-        store.loginWithOtp(currentPendingMobile);
-        this.showToast(`Welcome back, ${store.user.name}!`);
-        modal.classList.remove('open');
-
-        if (onSuccessCallback) {
-          onSuccessCallback();
+        if (!resp.ok || !resData.verified) {
+          throw new Error(resData.error || "That code doesn't match. Check the SMS code and try again.");
         }
-      } else {
-        // New user or incomplete profile -> Transition to profile onboarding
-        phoneStep.style.display = 'none';
-        verifyStep.style.display = 'none';
-        if (profileStep) {
-          profileStep.style.display = 'block';
-          if (onboardingPhoneDisplay) {
-            onboardingPhoneDisplay.textContent = `+91 ${currentPendingMobile.slice(0, 5)} ${currentPendingMobile.slice(5)}`;
+
+        const existingUser = store.getUserByMobile(currentPendingMobile);
+
+        if (existingUser && existingUser.isProfileComplete) {
+          // Existing registered customer with complete profile
+          store.loginWithOtp(currentPendingMobile);
+          this.showToast(`Welcome back, ${store.user.name}!`);
+          modal.classList.remove('open');
+
+          if (onSuccessCallback) {
+            onSuccessCallback();
           }
-          if (onboardingName) onboardingName.value = '';
-          if (onboardingEmail) onboardingEmail.value = '';
-          resetEmailVerificationState();
-          populateOnboardingCity();
+        } else {
+          // New user or incomplete profile -> Transition to profile onboarding
+          phoneStep.style.display = 'none';
+          verifyStep.style.display = 'none';
+          if (profileStep) {
+            profileStep.style.display = 'block';
+            if (onboardingPhoneDisplay) {
+              onboardingPhoneDisplay.textContent = `+91 ${currentPendingMobile.slice(0, 5)} ${currentPendingMobile.slice(5)}`;
+            }
+            if (onboardingName) onboardingName.value = '';
+            if (onboardingEmail) onboardingEmail.value = '';
+            resetEmailVerificationState();
+            populateOnboardingCity();
+          }
+          this.showToast('Mobile number verified! Please enter your details and verify your email to continue.');
         }
-        this.showToast('Mobile number verified! Please enter your details and verify your email to continue.');
+      } catch (err) {
+        this.showToast(err.message || 'Verification failed. Try again.', 'error');
+        if (otpInput) otpInput.focus();
+      } finally {
+        verifyOtpBtn.disabled = false;
+        verifyOtpBtn.textContent = originalVerifyText;
       }
     };
 
@@ -5023,9 +5116,9 @@ export class PickMiApp {
     const passengerPhoneInput = document.getElementById('checkout-passenger-phone');
     const passengerEmailInput = document.getElementById('checkout-passenger-email');
 
-    if (passengerNameInput) passengerNameInput.value = store.user.name || 'Karthik Prabhu';
-    if (passengerPhoneInput) passengerPhoneInput.value = store.user.mobile || '+91 98401 23456';
-    if (passengerEmailInput) passengerEmailInput.value = store.user.email || 'karthik@example.com';
+    if (passengerNameInput) passengerNameInput.value = (store.user && store.user.isLoggedIn) ? (store.user.name || '') : '';
+    if (passengerPhoneInput) passengerPhoneInput.value = (store.user && store.user.isLoggedIn) ? (store.user.mobile || '') : '';
+    if (passengerEmailInput) passengerEmailInput.value = (store.user && store.user.isLoggedIn) ? (store.user.email || '') : '';
 
     if (vehicleSummaryBox) {
       // Helper for clean formatted date: e.g. "Tue, 13 Oct 2026"
@@ -5493,9 +5586,9 @@ export class PickMiApp {
         return;
       }
 
-      const pName = passengerNameInput?.value || store.user.name || 'Karthik Prabhu';
-      const pPhone = passengerPhoneInput?.value || store.user.mobile || '+91 98401 23456';
-      const pEmail = passengerEmailInput?.value || store.user.email || 'karthik@example.com';
+      const pName = passengerNameInput?.value || (store.user && store.user.isLoggedIn ? store.user.name : '') || 'Passenger';
+      const pPhone = passengerPhoneInput?.value || (store.user && store.user.isLoggedIn ? store.user.mobile : '') || '';
+      const pEmail = passengerEmailInput?.value || (store.user && store.user.isLoggedIn ? store.user.email : '') || '';
       const notes = document.getElementById('checkout-pickup-notes')?.value || '';
       const mode = paymentDropdown ? paymentDropdown.value : 'pay_full_driver';
       const isAdvance = mode === 'advance_100';
@@ -5626,9 +5719,9 @@ export class PickMiApp {
     const notesContent = booking.pickupNotes || 'Standard pickup';
 
     // Passenger info
-    const pName = booking.passengerName || store.user.name || 'Karthik Prabhu';
-    const pPhone = booking.passengerPhone || store.user.mobile || '+91 98401 23456';
-    const pEmail = booking.passengerEmail || store.user.email || 'karthik@example.com';
+    const pName = booking.passengerName || (store.user && store.user.isLoggedIn ? store.user.name : '') || 'Passenger';
+    const pPhone = booking.passengerPhone || (store.user && store.user.isLoggedIn ? store.user.mobile : '') || '';
+    const pEmail = booking.passengerEmail || (store.user && store.user.isLoggedIn ? store.user.email : '') || '';
 
     // Driver & vehicle info
     const driver = booking.driver || null;
@@ -6807,8 +6900,8 @@ export class PickMiApp {
       this.navigateTo('home');
     });
 
-    const customerName = (user.name && user.name !== 'Valued Passenger') ? user.name : 'karthik p';
-    const customerPhone = user.mobile || user.phone || '+91 9345233351';
+    const customerName = (user.name && user.name !== 'Valued Passenger') ? user.name : 'Valued Passenger';
+    const customerPhone = user.mobile || user.phone || '';
 
     const headerName = document.getElementById('account-header-name');
     if (headerName) {
@@ -6944,11 +7037,7 @@ export class PickMiApp {
       this.navigateTo('home');
     });
 
-    // 2. Profile Details Values (Authentic Customer Profile)
-    if (!user.name || user.name === 'Valued Passenger') {
-      store.updateProfile({ name: 'Karthik Prabhu' });
-    }
-
+    // 2. Profile Details Values (Customer Profile)
     const profileHeading = document.getElementById('profile-heading-name');
     const valPhone = document.getElementById('profile-val-phone');
     const valEmail = document.getElementById('profile-val-email');
@@ -6958,19 +7047,19 @@ export class PickMiApp {
     const valCompany = document.getElementById('profile-val-company');
 
     if (profileHeading) profileHeading.textContent = customerName;
-    if (valPhone) valPhone.textContent = user.mobile || '+91 98401 23456';
-    if (valEmail) valEmail.textContent = user.email || 'karthik.prabhu@example.com';
+    if (valPhone) valPhone.textContent = user.mobile || 'Not provided';
+    if (valEmail) valEmail.textContent = user.email || 'Not provided';
     if (valLocation) valLocation.textContent = user.city ? user.city.split(',')[0].trim() : 'Bangalore';
     if (valEmergency) {
       valEmergency.textContent = user.emergencyContactPhone
-        ? `Emergency Contact: ${user.emergencyContactPhone} (${user.emergencyContactName || 'Priya P'})`
-        : 'Emergency Contact: +91 98401 98765 (Priya P)';
+        ? `Emergency Contact: ${user.emergencyContactPhone} (${user.emergencyContactName || ''})`
+        : 'Emergency Contact: Not set';
     }
     if (valMembership) {
-      valMembership.textContent = `${user.membershipTier || 'PickMi Gold Member'} • ${user.ridesCount || 14} Rides Completed`;
+      valMembership.textContent = user.membershipTier ? `${user.membershipTier} • ${user.ridesCount || 0} Rides Completed` : 'PickMi Member';
     }
     if (valCompany) {
-      valCompany.textContent = `${user.company || 'Acumen Analytics Services Pte Ltd'} (Corporate Profile)`;
+      valCompany.textContent = user.company ? `${user.company} (Corporate Profile)` : 'Personal Account';
     }
 
     // 2b. Mobile Profile UI Component Population
@@ -7042,14 +7131,14 @@ export class PickMiApp {
       };
     }
     if (mobileName) mobileName.textContent = customerName;
-    if (mobilePhone) mobilePhone.textContent = user.mobile || '+91 98401 23456';
-    if (mobileEmail) mobileEmail.textContent = user.email || 'karthik.prabhu@example.com';
+    if (mobilePhone) mobilePhone.textContent = user.mobile || 'Not provided';
+    if (mobileEmail) mobileEmail.textContent = user.email || 'Not provided';
     if (mobileLocation) mobileLocation.textContent = user.city ? user.city.split(',')[0].trim() : 'Bangalore';
-    if (mobileRides) mobileRides.textContent = String(user.ridesCount || trips.length || 14);
+    if (mobileRides) mobileRides.textContent = String(user.ridesCount || trips.length || 0);
     if (mobileEmergencySub) {
       mobileEmergencySub.textContent = user.emergencyContactPhone
-        ? `${user.emergencyContactName || 'Priya P'} (${user.emergencyContactPhone})`
-        : 'Priya P (+91 98401 98765)';
+        ? `${user.emergencyContactName || ''} (${user.emergencyContactPhone})`
+        : 'Not set';
     }
 
     // Profile View Logout Button
@@ -7057,10 +7146,7 @@ export class PickMiApp {
     if (btnProfileLogout) {
       btnProfileLogout.onclick = (e) => {
         e.preventDefault();
-        store.logout();
-        this.showToast('Signed out of PickMi.');
-        this.updateUserUI();
-        this.navigateTo('home');
+        this.handleLogout();
       };
     }
 
@@ -7257,9 +7343,9 @@ export class PickMiApp {
     }
 
     const openModal = () => {
-      if (inputName) inputName.value = customerName;
-      if (inputMobile) inputMobile.value = user.mobile || '+91 98401 23456';
-      if (inputEmail) inputEmail.value = user.email || 'karthik.prabhu@example.com';
+      if (inputName) inputName.value = (user.name && user.name !== 'Valued Passenger') ? user.name : '';
+      if (inputMobile) inputMobile.value = user.mobile || '';
+      if (inputEmail) inputEmail.value = user.email || '';
       if (inputLocation) inputLocation.value = user.city ? user.city.split(',')[0].trim() : 'Bangalore';
       updateGenderPillsUI(user.gender || 'Male');
       const modalPhotoHint = document.getElementById('modal-photo-name-hint');
@@ -7428,7 +7514,7 @@ export class PickMiApp {
       this.supportTickets = [
         {
           id: '#TKT-82914',
-          name: store.user.name || 'Karthik Prabhu',
+          name: (store.user && store.user.isLoggedIn ? store.user.name : '') || 'Customer',
           subject: 'Fare & Highway Toll Clarification',
           status: 'Waiting for response',
           statusType: 'waiting',
@@ -7436,14 +7522,14 @@ export class PickMiApp {
           messages: [
             {
               sender: 'user',
-              name: store.user.name || 'Karthik Prabhu',
+              name: (store.user && store.user.isLoggedIn ? store.user.name : '') || 'Customer',
               text: 'Hi, can you clarify whether toll charges are included in the Prime Sedan round-trip fare?',
               time: '11:45 AM'
             },
             {
               sender: 'agent',
               name: 'PickMi Support Desk (Admin)',
-              text: 'Hello Karthik! Toll charges are calculated based on highway toll plazas and billed at actuals unless booked as an All-Inclusive package. Our operations team is available 24/7 if you need assistance on your route.',
+              text: 'Hello! Toll charges are calculated based on highway toll plazas and billed at actuals unless booked as an All-Inclusive package. Our operations team is available 24/7 if you need assistance on your route.',
               time: '11:46 AM'
             }
           ]
@@ -7464,7 +7550,7 @@ export class PickMiApp {
     const replyBtn = document.getElementById('btn-send-ticket-reply');
     const createAnotherBtn = document.getElementById('btn-create-another-ticket');
 
-    if (inputName) inputName.value = store.user.name || 'Karthik Prabhu';
+    if (inputName) inputName.value = (store.user && store.user.isLoggedIn ? store.user.name : '');
 
     const renderChatMessages = () => {
       const activeTicket = this.supportTickets.find(t => t.id === this.activeTicketId) || this.supportTickets[0];
@@ -7553,7 +7639,7 @@ export class PickMiApp {
 
       activeTicket.messages.push({
         sender: 'user',
-        name: store.user.name || 'Karthik Prabhu',
+        name: (store.user && store.user.isLoggedIn ? store.user.name : '') || 'Customer',
         text: text,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       });
@@ -7713,6 +7799,10 @@ export class PickMiApp {
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
+          if (overlay.id === 'login-otp-modal' && window.innerWidth <= 768 && (!store.user || !store.user.isLoggedIn)) {
+            // Mandatory login to explore on mobile view
+            return;
+          }
           const profileStep = overlay.querySelector('#otp-step-profile');
           if (profileStep && profileStep.style.display === 'block') {
             this.showToast('Profile completion is mandatory to use PickMi', 'warning');

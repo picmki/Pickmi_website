@@ -22,9 +22,9 @@
      */
     generatePDFString(trip) {
       const invNum = trip.invoiceNumber || ('INV-2026-10-' + String(trip.id || '').replace('PKM-', ''));
-      const passengerName = sanitize(trip.passengerName || 'Karthik Prabhu');
-      const phone = sanitize(trip.passengerPhone || '+91 9840123456');
-      const email = sanitize(trip.passengerEmail || 'info@pickmicabs.com');
+      const passengerName = sanitize(trip.passengerName || 'Passenger');
+      const phone = sanitize(trip.passengerPhone || '');
+      const email = sanitize(trip.passengerEmail || '');
       const bookingId = sanitize(trip.id || 'PKM-46587');
       const service = sanitize((trip.serviceType || 'Intercity').toUpperCase());
       const vehicle = sanitize(trip.vehicleCategory || trip.vehicle?.name || 'Prime Sedan');
@@ -216,9 +216,9 @@
      */
     renderA4PreviewHTML(trip) {
       const invNum = trip.invoiceNumber || ('INV-2026-10-' + String(trip.id || '').replace('PKM-', ''));
-      const pName = trip.passengerName || 'Karthik Prabhu';
-      const pPhone = trip.passengerPhone || '+91 9840123456';
-      const pEmail = trip.passengerEmail || 'info@pickmicabs.com';
+      const pName = trip.passengerName || 'Passenger';
+      const pPhone = trip.passengerPhone || '';
+      const pEmail = trip.passengerEmail || '';
       const bookingId = trip.id || 'PKM-46587';
       const service = (trip.serviceType || 'Intercity').toUpperCase();
       const vehicle = trip.vehicleCategory || trip.vehicle?.name || 'Prime Sedan';

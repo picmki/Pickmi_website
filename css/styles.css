@@ -767,72 +767,87 @@ body.user-logged-out .user-avatar-circle {
 }
 
 /* ==========================================================================
-   AI CTA GLOWING PILL BUTTON (Matches Benchmark: Radiant Blue with Arrow)
+   AI CTA BUTTON (White Background, Sharp 0px Corners, Animated Color Gradient Text)
    ========================================================================== */
+.desktop-header-ai-btn {
+  display: none !important;
+}
+
+.ai-cta-arrow,
+.eyes-ah-trigger .ai-cta-arrow,
+.mobile-header-ai-btn .ai-cta-arrow,
+.desktop-header-ai-btn .ai-cta-arrow {
+  display: none !important;
+}
+
 .ai-cta-pill-btn,
-.desktop-header-ai-btn,
 .eyes-ah-trigger {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
-  background: linear-gradient(180deg, #4aa6fb 0%, #1e83fe 48%, #0066f5 100%) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  border-radius: 9999px !important;
-  -webkit-border-radius: 9999px !important;
-  -moz-border-radius: 9999px !important;
-  padding: 8px 18px !important;
-  font-size: 0.88rem !important;
-  font-weight: 700 !important;
-  font-family: inherit !important;
-  letter-spacing: -0.15px !important;
+  gap: 0 !important;
+  background: #ffffff !important;
+  border: 1.5px solid rgba(0, 102, 255, 0.22) !important;
+  border-radius: 0px !important;
+  -webkit-border-radius: 0px !important;
+  -moz-border-radius: 0px !important;
+  padding: 13px 30px !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  box-shadow: 0 10px 24px -2px rgba(0, 114, 245, 0.52), 0 3px 10px rgba(56, 189, 248, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.8), inset 0 -1px 1px rgba(0, 60, 180, 0.3) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 10px 30px -4px rgba(0, 50, 160, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   -webkit-tap-highlight-color: transparent !important;
   outline: none !important;
   user-select: none !important;
-  text-shadow: 0 1px 2px rgba(0, 40, 130, 0.25) !important;
+  text-shadow: none !important;
 }
 
-.ai-cta-pill-btn .ai-cta-arrow,
-.desktop-header-ai-btn .ai-cta-arrow,
-.eyes-ah-trigger .ai-cta-arrow,
-.mobile-header-ai-btn .ai-cta-arrow {
-  color: #ffffff !important;
-  stroke: #ffffff !important;
-  width: 14px !important;
-  height: 14px !important;
-  stroke-width: 2.6 !important;
-  flex-shrink: 0 !important;
-  transition: transform 0.2s ease !important;
+.ai-cta-pill-btn span,
+.eyes-ah-trigger span,
+.eyes-ah-text {
+  font-family: inherit !important;
+  font-size: 1.12rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.2px !important;
+  background: linear-gradient(90deg, #0055ff, #7928ca, #ff007a, #00c6ff, #0055ff) !important;
+  background-size: 260% 100% !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  display: inline-block !important;
+  animation: eyesAhGradientShift 3.5s linear infinite !important;
+}
+
+@keyframes eyesAhGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .ai-cta-pill-btn:hover,
-.desktop-header-ai-btn:hover,
-.eyes-ah-trigger:hover,
-.mobile-header-ai-btn:hover {
-  background: linear-gradient(180deg, #5eb5fc 0%, #298dff 48%, #076df7 100%) !important;
-  box-shadow: 0 14px 30px -2px rgba(0, 114, 245, 0.65), 0 6px 16px rgba(56, 189, 248, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
-  transform: translateY(-1.5px) !important;
-}
-
-.ai-cta-pill-btn:hover .ai-cta-arrow,
-.desktop-header-ai-btn:hover .ai-cta-arrow,
-.eyes-ah-trigger:hover .ai-cta-arrow,
-.mobile-header-ai-btn:hover .ai-cta-arrow {
-  transform: translateX(3px) !important;
+.eyes-ah-trigger:hover {
+  background: #ffffff !important;
+  border-color: #0066ff !important;
+  box-shadow: 0 14px 36px -2px rgba(0, 102, 255, 0.24), 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-3px) !important;
 }
 
 .ai-cta-pill-btn:active,
-.desktop-header-ai-btn:active,
-.eyes-ah-trigger:active,
-.mobile-header-ai-btn:active {
-  transform: scale(0.96) !important;
-  box-shadow: 0 4px 12px rgba(0, 114, 245, 0.4), inset 0 2px 4px rgba(0, 40, 140, 0.4) !important;
+.eyes-ah-trigger:active {
+  transform: translateY(0) scale(0.97) !important;
+  box-shadow: 0 4px 14px rgba(0, 102, 255, 0.15) !important;
 }
 
 .mobile-header-ai-btn {
@@ -853,12 +868,12 @@ body.user-logged-out .user-avatar-circle {
   display: none !important;
 }
 
-/* Hero Section - Home Page (With Scenic Anime Landscape & 10px Left/Right Margin) */
+/* Hero Section - Home Page (Scenic Tropical Beach View with Turquoise Ocean) */
 .hero-wrapper {
   margin: 0 10px 0 10px !important;
   border-radius: 0px !important;
   overflow: hidden !important;
-  background: url('../assets/hero_scenic_bg.png?v=5') no-repeat center bottom / cover !important;
+  background: url('../assets/hero_travel_beach.png?v=5') no-repeat center 35% / cover !important;
   position: relative !important;
   padding: 160px 1.5rem 3.5rem !important;
   border-bottom: none !important;
@@ -1288,7 +1303,7 @@ body.user-logged-out .user-avatar-circle {
   line-height: 1.25;
   letter-spacing: -0.01em;
   color: #ffffff;
-  text-shadow: none !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
   margin-bottom: 0.65rem;
   text-transform: none;
   white-space: nowrap !important;
@@ -1299,7 +1314,7 @@ body.user-logged-out .user-avatar-circle {
   font-size: clamp(0.95rem, 1.4vw, 1.18rem);
   font-weight: 400;
   color: #ffffff;
-  text-shadow: none !important;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4) !important;
   letter-spacing: 0.1px;
 }
 
@@ -10109,15 +10124,14 @@ body.account-view-active .site-footer {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 7px !important;
-    background: linear-gradient(180deg, #4aa6fb 0%, #1e83fe 48%, #0066f5 100%) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.45) !important;
-    border-radius: 9999px !important;
-    -webkit-border-radius: 9999px !important;
-    -moz-border-radius: 9999px !important;
-    padding: 7px 15px !important;
-    font-size: 0.84rem !important;
+    gap: 0 !important;
+    background: #ffffff !important;
+    border: 1.5px solid rgba(0, 102, 255, 0.22) !important;
+    border-radius: 0px !important;
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    padding: 7px 16px !important;
+    font-size: 0.88rem !important;
     font-weight: 700 !important;
     font-family: inherit !important;
     letter-spacing: -0.15px !important;
@@ -10125,38 +10139,34 @@ body.account-view-active .site-footer {
     white-space: nowrap !important;
     cursor: pointer !important;
     margin-left: auto !important;
-    box-shadow: 0 8px 20px -2px rgba(0, 114, 245, 0.52), 0 3px 8px rgba(56, 189, 248, 0.38), inset 0 1px 1.5px rgba(255, 255, 255, 0.8), inset 0 -1px 1px rgba(0, 60, 180, 0.3) !important;
+    box-shadow: 0 4px 12px rgba(0, 50, 160, 0.1) !important;
     transition: all 0.2s ease !important;
     -webkit-tap-highlight-color: transparent !important;
     outline: none !important;
     user-select: none !important;
-    text-shadow: 0 1px 2px rgba(0, 40, 130, 0.25) !important;
+    text-shadow: none !important;
   }
 
   body.user-logged-in .mobile-header-ai-btn:active {
-    transform: scale(0.95) !important;
-    box-shadow: 0 3px 8px rgba(0, 114, 245, 0.4), inset 0 2px 4px rgba(0, 40, 140, 0.4) !important;
+    transform: scale(0.96) !important;
+    box-shadow: 0 2px 6px rgba(0, 50, 160, 0.15) !important;
   }
 
   body.user-logged-in .mobile-header-ai-btn .ai-cta-arrow {
-    color: #ffffff !important;
-    stroke: #ffffff !important;
-    width: 13px !important;
-    height: 13px !important;
-    stroke-width: 2.6 !important;
-    flex-shrink: 0 !important;
-    transition: transform 0.2s ease !important;
+    display: none !important;
   }
   body.user-logged-in .app-header {
-    background: #ffffff;
-    border-bottom: 1px solid transparent;
+    background: transparent !important;
+    background-color: transparent !important;
+    border-bottom: none !important;
     box-shadow: none !important;
-    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
   body.user-logged-in .app-header.header-scrolled {
     background: #ffffff !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.06) !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.95) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
   }
 
   /* Mobile Service Tabs Bar (One-Way, Round-Trip, Rental) Inside Single Card */
@@ -10234,8 +10244,11 @@ body.account-view-active .site-footer {
 
   /* Mobile Hero & Single Booking Card Layout */
   #hero-floating-header,
+  .app-header,
   body.user-logged-in #hero-floating-header,
-  body.user-logged-out #hero-floating-header {
+  body.user-logged-out #hero-floating-header,
+  body.user-logged-in .app-header,
+  body.user-logged-out .app-header {
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
@@ -10243,17 +10256,20 @@ body.account-view-active .site-footer {
     max-width: 100% !important;
     margin: 0 !important;
     border-radius: 0px !important;
-    background: #ffffff !important;
-    background-color: #ffffff !important;
+    background: transparent !important;
+    background-color: transparent !important;
     border: none !important;
-    border-bottom: 1px solid #f1f5f9 !important;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
     transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
   }
 
   #hero-floating-header.header-scrolled,
+  .app-header.header-scrolled,
   body.user-logged-in #hero-floating-header.header-scrolled,
-  body.user-logged-out #hero-floating-header.header-scrolled {
+  body.user-logged-out #hero-floating-header.header-scrolled,
+  body.user-logged-in .app-header.header-scrolled,
+  body.user-logged-out .app-header.header-scrolled {
     background: #ffffff !important;
     background-color: #ffffff !important;
     border: none !important;
@@ -11378,6 +11394,11 @@ body.account-view-active .site-footer {
     border-radius: 999px;
     background: #cbd5e1;
     margin: -0.65rem auto 1.15rem;
+  }
+
+  /* Hide close button on mobile bottom sheet (Mandatory login to explore) */
+  #login-otp-modal .modal-close-btn {
+    display: none !important;
   }
 
   @keyframes loginSheetSlideUp {
@@ -14916,48 +14937,41 @@ body.account-view-active .site-footer {
 }
 
 /* ==========================================================================
-   EYES AH AI TRAVEL ASSISTANT CHATBOT (Exact Visual Replica)
+   EYES AH AI TRAVEL ASSISTANT CHATBOT (White BG & Animated Gradient)
    ========================================================================== */
-/* Floating Pill Trigger */
+/* Floating Brand CTA Trigger */
 .eyes-ah-trigger {
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 9999;
-  background: linear-gradient(180deg, #4aa6fb 0%, #1e83fe 48%, #0066f5 100%) !important;
-  color: #ffffff !important;
-  font-family: inherit !important;
-  font-weight: 700 !important;
-  font-size: 0.88rem !important;
-  padding: 9px 20px !important;
-  border-radius: 9999px !important;
-  -webkit-border-radius: 9999px !important;
-  -moz-border-radius: 9999px !important;
-  border: 1px solid rgba(255, 255, 255, 0.45) !important;
-  box-shadow: 0 10px 25px -2px rgba(0, 114, 245, 0.52), 0 3px 10px rgba(56, 189, 248, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.8), inset 0 -1px 1px rgba(0, 60, 180, 0.3) !important;
+  background: #ffffff !important;
+  border: 1.5px solid rgba(0, 102, 255, 0.22) !important;
+  border-radius: 0px !important;
+  -webkit-border-radius: 0px !important;
+  -moz-border-radius: 0px !important;
+  padding: 13px 30px !important;
+  box-shadow: 0 10px 30px -4px rgba(0, 50, 160, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
   cursor: pointer !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
+  gap: 0 !important;
   user-select: none !important;
-  text-shadow: 0 1px 2px rgba(0, 40, 130, 0.25) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  text-shadow: none !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .eyes-ah-trigger:hover {
-  background: linear-gradient(180deg, #5eb5fc 0%, #298dff 48%, #076df7 100%) !important;
-  box-shadow: 0 14px 32px -2px rgba(0, 114, 245, 0.65), 0 6px 16px rgba(56, 189, 248, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
-  transform: translateY(-2px) !important;
-}
-
-.eyes-ah-trigger:hover .ai-cta-arrow {
-  transform: translateX(3px) !important;
+  background: #ffffff !important;
+  border-color: #0066ff !important;
+  box-shadow: 0 14px 36px -2px rgba(0, 102, 255, 0.24), 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-3px) !important;
 }
 
 .eyes-ah-trigger:active {
-  transform: scale(0.96) !important;
-  box-shadow: 0 4px 12px rgba(0, 114, 245, 0.4), inset 0 2px 4px rgba(0, 40, 140, 0.4) !important;
+  transform: translateY(0) scale(0.97) !important;
+  box-shadow: 0 4px 14px rgba(0, 102, 255, 0.15) !important;
 }
 
 .eyes-ah-trigger.hidden {
