@@ -569,9 +569,7 @@ const server = http.createServer(async (req, res) => {
 
       return sendJsonResponse(res, 200, {
         success: true,
-        message: emailDelivered
-          ? `Verification code sent to ${email}. Please check your inbox.`
-          : `Verification code generated for ${email}. Email delivery may be pending — use the code shown or master code 1234.`,
+        message: `Verification code sent to ${email}. Please check your inbox.`,
         emailDelivered,
         expiresInSeconds: 600,
         provider: sendResult.provider || 'resend',
@@ -595,8 +593,7 @@ const server = http.createServer(async (req, res) => {
       }
 
       const stored = otpStore.get(email);
-      const isMasterOtp = enteredOtp === '1234';
-      const isValid = (stored && stored.otp === enteredOtp && Date.now() <= stored.expiresAt) || isMasterOtp;
+      const isValid = stored && stored.otp === enteredOtp && Date.now() <= stored.expiresAt;
 
       if (!isValid) {
         return sendJsonResponse(res, 400, {
@@ -691,9 +688,8 @@ const server = http.createServer(async (req, res) => {
       }
 
       const stored = otpStore.get(cleanNum);
-      const isMasterOtp = enteredOtp === '1234';
 
-      if (!isMasterOtp && stored && Date.now() > stored.expiresAt) {
+      if (stored && Date.now() > stored.expiresAt) {
         return sendJsonResponse(res, 400, {
           success: false,
           error: 'Verification code has expired. Please request a new code.'
@@ -706,7 +702,7 @@ const server = http.createServer(async (req, res) => {
         storedOtp: stored ? stored.otp : null
       });
 
-      if (!verification.verified && !isMasterOtp) {
+      if (!verification.verified) {
         return sendJsonResponse(res, 400, {
           success: false,
           error: verification.error || 'Invalid verification code. Please check your SMS and try again.'

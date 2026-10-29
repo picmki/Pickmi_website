@@ -193,17 +193,6 @@ export async function verifyTwilioOtp({ phone, code, storedOtp }) {
   const formattedPhone = formatE164Phone(phone);
   const cleanCode = String(code).trim();
 
-  // Master bypass code for testing/development
-  if (cleanCode === "1234") {
-    return {
-      success: true,
-      verified: true,
-      bypassed: true,
-      phone: formattedPhone,
-      message: "Verified with master bypass code"
-    };
-  }
-
   // If Twilio Verify service is active -> check directly with Twilio Verify API
   if (config.isConfigured && config.verifyServiceSid) {
     const basicAuth = Buffer.from(`${config.accountSid}:${config.authToken}`).toString("base64");

@@ -493,7 +493,7 @@ export class PickMiApp {
     } catch (e) {}
     this.activeTripDetail = null;
     this.otpTimerInterval = null;
-    this.generatedOtp = '4829';
+    this.generatedOtp = '';
     this.detectedCity = '';
     try {
       this.detectedCity = sessionStorage.getItem('pickmi_detected_city') || '';
@@ -4697,8 +4697,8 @@ export class PickMiApp {
         // Fallback
       }
 
-      // Check master code 1234 or local generated code
-      if (!isSuccess && (enteredOtp === this.currentEmailOtp || enteredOtp === '1234')) {
+      // Match strictly against dispatched verification code
+      if (!isSuccess && this.currentEmailOtp && enteredOtp === this.currentEmailOtp) {
         isSuccess = true;
       }
 
