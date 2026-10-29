@@ -9411,15 +9411,21 @@ body.account-view-active .site-footer {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .toast-container {
-    max-width: 90vw;
-    width: 90vw;
+    top: 16px !important;
+    left: 50% !important;
+    bottom: auto !important;
+    transform: translateX(-50%) !important;
+    max-width: min(92vw, 420px) !important;
+    width: 92vw !important;
+    z-index: 9999999 !important;
   }
   .toast-item {
     padding: 0.85rem 1.15rem;
     font-size: 0.88rem;
-    border-radius: 0px;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18) !important;
   }
 }
 
