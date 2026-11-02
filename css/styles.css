@@ -868,17 +868,54 @@ body.user-logged-out .user-avatar-circle {
   display: none !important;
 }
 
-/* Hero Section - Home Page (Scenic Tropical Beach View with Turquoise Ocean) */
+/* Hero Section - Home Page (Scenic Sunset Mountain Highway 4K View - Background Image 50% Height) */
 .hero-wrapper {
-  margin: 0 10px 0 10px !important;
+  margin: 0 !important;
   border-radius: 0px !important;
   overflow: hidden !important;
-  background: url('../assets/hero_travel_beach.png?v=5') no-repeat center 35% / cover !important;
   position: relative !important;
   padding: 160px 1.5rem 3.5rem !important;
   border-bottom: none !important;
   box-sizing: border-box !important;
   min-height: 720px;
+  background: #ffffff !important;
+}
+
+.hero-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70%; /* Only the background image height is set to 70% */
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.25) 100%), url('../assets/hero_sunset_highway_vivid_4k.jpg?v=1') no-repeat center 35% / cover !important;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 1920px) {
+  .hero-wrapper {
+    min-height: 800px;
+  }
+  .hero-wrapper::before {
+    background-position: center 30% !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .hero-wrapper {
+    min-height: 920px;
+  }
+  .hero-wrapper::before {
+    background-position: center 25% !important;
+  }
 }
 
 /* Secondary Hero Sections (Drive, Partner, Help/Support) - No BG image, using uploaded #f8fafc swatch, flush full-width with 0 left/right margin */
@@ -1215,7 +1252,8 @@ body.user-logged-out .user-avatar-circle {
 }
 
 .hero-container {
-  max-width: 1060px;
+  max-width: 1240px;
+  width: 100%;
   margin: 0 auto;
   position: relative;
   z-index: 5;
@@ -10262,11 +10300,12 @@ body.account-view-active .site-footer {
     max-width: 100% !important;
     margin: 0 !important;
     border-radius: 0px !important;
-    background: transparent !important;
-    background-color: transparent !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
     border: none !important;
-    border-bottom: none !important;
-    box-shadow: none !important;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+    z-index: 1000 !important;
     transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
   }
 
@@ -10285,14 +10324,21 @@ body.account-view-active .site-footer {
   }
 
   #hero-floating-header .header-container {
-    padding: 0.75rem 20px !important;
+    padding: 10px 16px !important;
+    min-height: 54px !important;
     justify-content: space-between !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
   }
 
   .hero-brand-logo {
-    height: 26px !important;
+    height: 28px !important;
+    max-height: 28px !important;
+    display: block !important;
+    width: auto !important;
+    object-fit: contain !important;
   }
 
   .hero-wrapper {
@@ -10302,11 +10348,25 @@ body.account-view-active .site-footer {
     border-radius: 0px !important;
     overflow: hidden !important;
     padding: 68px 14px 1.25rem !important;
-    background-image: none !important;
     background: #F5F7FA !important;
-    background-color: #F5F7FA !important;
     min-height: auto !important;
     box-sizing: border-box !important;
+    position: relative !important;
+  }
+
+  .hero-wrapper::before {
+    content: '' !important;
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 70% !important; /* Mobile background image top 70% banner */
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.25) 100%), url('../assets/hero_sunset_highway_vivid_4k.jpg?v=1') no-repeat center 25% / cover !important;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: high-quality;
+    pointer-events: none !important;
+    z-index: 1 !important;
   }
 
   .hero-container {
@@ -10315,6 +10375,8 @@ body.account-view-active .site-footer {
     margin: 0 auto !important;
     padding: 0 !important;
     box-sizing: border-box !important;
+    position: relative !important;
+    z-index: 2 !important;
   }
   .page-hero-wrapper,
   .driver-hero-section,
@@ -10731,7 +10793,7 @@ body.account-view-active .site-footer {
   .quick-dates-row {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    gap: 0.5rem !important;
+    gap: 0.35rem !important;
     width: 100%;
     padding-bottom: 0 !important;
     overflow-x: visible !important;
@@ -10740,7 +10802,7 @@ body.account-view-active .site-footer {
     grid-template-columns: repeat(3, 1fr) !important;
   }
   .date-pill-card {
-    height: 64px !important;
+    height: 56px !important;
     min-width: 0 !important;
     border-radius: 0px !important;
     background: #ffffff !important;
@@ -10749,22 +10811,24 @@ body.account-view-active .site-footer {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 0.25rem !important;
+    padding: 0.2rem 0.1rem !important;
     text-align: center !important;
     cursor: pointer !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
     transition: all 0.2s ease !important;
   }
   .date-pill-day {
-    font-size: 0.92rem !important;
+    font-size: 0.84rem !important;
     font-weight: 700 !important;
     color: #0f172a !important;
-    line-height: 1.2 !important;
+    line-height: 1.15 !important;
   }
   .date-pill-sub {
-    font-size: 0.78rem !important;
+    font-size: 0.7rem !important;
     font-weight: 500 !important;
     color: #64748b !important;
-    margin-top: 2px !important;
+    margin-top: 1px !important;
   }
   .date-pill-card.active {
     background: #f0f7ff !important;
@@ -10778,9 +10842,9 @@ body.account-view-active .site-footer {
     font-weight: 600 !important;
   }
   .calendar-pill-card {
-    height: 64px !important;
+    height: 56px !important;
     min-width: 0 !important;
-    padding: 0.25rem !important;
+    padding: 0.2rem 0.1rem !important;
     border-radius: 0px !important;
     background: #ffffff !important;
     border: 1.5px solid #e2e8f0 !important;
@@ -10789,15 +10853,17 @@ body.account-view-active .site-footer {
     align-items: center !important;
     justify-content: center !important;
     color: #0056d6 !important;
-    font-size: 0.8rem !important;
+    font-size: 0.74rem !important;
     font-weight: 600 !important;
-    gap: 4px !important;
+    gap: 2px !important;
     cursor: pointer !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
     transition: all 0.2s ease !important;
   }
   .calendar-pill-card svg {
-    width: 18px !important;
-    height: 18px !important;
+    width: 17px !important;
+    height: 17px !important;
     stroke: #0056d6 !important;
   }
 
@@ -10805,13 +10871,13 @@ body.account-view-active .site-footer {
   .quick-times-row {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    gap: 0.5rem !important;
+    gap: 0.35rem !important;
     width: 100%;
     padding-bottom: 0 !important;
     overflow-x: visible !important;
   }
   .time-pill-card {
-    height: 64px !important;
+    height: 56px !important;
     min-width: 0 !important;
     border-radius: 0px !important;
     background: #ffffff !important;
@@ -10820,23 +10886,30 @@ body.account-view-active .site-footer {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 0.25rem !important;
+    padding: 0.2rem 0.1rem !important;
     text-align: center !important;
     cursor: pointer !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
     transition: all 0.2s ease !important;
   }
   .time-pill-hour {
-    font-size: 0.88rem !important;
+    font-size: 0.76rem !important;
     font-weight: 700 !important;
     color: #0f172a !important;
-    line-height: 1.2 !important;
+    line-height: 1.15 !important;
     white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    letter-spacing: -0.3px !important;
+    max-width: 100% !important;
   }
   .time-pill-sub {
-    font-size: 0.75rem !important;
+    font-size: 0.68rem !important;
     font-weight: 500 !important;
     color: #64748b !important;
-    margin-top: 2px !important;
+    margin-top: 1px !important;
+    line-height: 1 !important;
   }
   .time-pill-card.active {
     background: #f0f7ff !important;
@@ -10850,9 +10923,9 @@ body.account-view-active .site-footer {
     font-weight: 600 !important;
   }
   .time-custom-pill-card {
-    height: 64px !important;
+    height: 56px !important;
     min-width: 0 !important;
-    padding: 0.25rem !important;
+    padding: 0.2rem 0.1rem !important;
     border-radius: 0px !important;
     background: #ffffff !important;
     border: 1.5px solid #e2e8f0 !important;
@@ -10861,22 +10934,32 @@ body.account-view-active .site-footer {
     align-items: center !important;
     justify-content: center !important;
     color: #0056d6 !important;
-    font-size: 0.78rem !important;
+    font-size: 0.72rem !important;
     font-weight: 600 !important;
-    gap: 4px !important;
+    gap: 2px !important;
     cursor: pointer !important;
     position: relative !important;
     transition: all 0.2s ease !important;
     text-align: center !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
   }
   .time-custom-pill-card svg {
-    width: 18px !important;
-    height: 18px !important;
+    width: 17px !important;
+    height: 17px !important;
     stroke: #0056d6 !important;
   }
   .time-custom-pill-card.active {
     background: #f0f7ff !important;
     border: 2px solid #0056d6 !important;
+  }
+  .time-custom-pill-card span {
+    font-size: 0.7rem !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
   }
   .time-custom-pill-card.active span {
     color: #0056d6 !important;
@@ -10888,8 +10971,8 @@ body.account-view-active .site-footer {
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
-    gap: 1.35rem !important;
-    margin-top: 1.35rem !important;
+    gap: 1.25rem !important;
+    margin-top: 1.25rem !important;
     padding-top: 0 !important;
     border-top: none !important;
   }
@@ -10912,28 +10995,31 @@ body.account-view-active .site-footer {
   .cab-types-pills-row {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 0.55rem !important;
+    gap: 0.4rem !important;
     width: 100% !important;
   }
   .cab-types-filter-wrap button.cab-type-pill,
   .cab-type-pill {
     flex: 1 1 auto !important;
     width: 100% !important;
-    height: 44px !important;
+    height: 42px !important;
     border-radius: 0px !important;
     border: 1.5px solid #e2e8f0 !important;
     background: #f8fafc !important;
-    font-size: 0.88rem !important;
+    font-size: 0.82rem !important;
     font-weight: 600 !important;
     color: #334155 !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 0.45rem !important;
-    padding: 0 0.5rem !important;
+    gap: 0.35rem !important;
+    padding: 0 0.35rem !important;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     cursor: pointer !important;
     white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    box-sizing: border-box !important;
     user-select: none;
     box-shadow: none !important;
     -webkit-tap-highlight-color: transparent;
