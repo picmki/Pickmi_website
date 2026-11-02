@@ -2771,7 +2771,10 @@ export class PickMiApp {
           dropInput.value = city;
           store.setSearchParams({ drop: city });
         }
-        this.showToast(`Destination set to ${city}! Choose travel date to search cabs.`, 'success');
+        // Toast popup not needed on mobile when selecting destination (auto-scrolls to booking card)
+        if (window.innerWidth > 768) {
+          this.showToast(`Destination set to ${city}! Choose travel date to search cabs.`, 'success');
+        }
         const bookingCard = document.querySelector('.hero-booking-card');
         if (bookingCard) {
           bookingCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -8432,7 +8435,10 @@ export class PickMiApp {
           store.searchParams.drop = toCity;
         }
 
-        this.showToast(`Selected route: ${fromCity} → ${toCity}. Choose your dates to book!`, 'info');
+        // Toast popup not needed on mobile when selecting route
+        if (window.innerWidth > 768) {
+          this.showToast(`Selected route: ${fromCity} → ${toCity}. Choose your dates to book!`, 'info');
+        }
 
         const searchForm = document.getElementById('search-form');
         if (searchForm) {
@@ -8521,7 +8527,10 @@ export class PickMiApp {
           }
         }
 
-        this.showToast(`Selected ${destCity} as destination. Choose your travel dates to view live fares!`, 'info');
+        // Toast popup not needed on mobile when selecting destination
+        if (window.innerWidth > 768) {
+          this.showToast(`Selected ${destCity} as destination. Choose your travel dates to view live fares!`, 'info');
+        }
 
         const searchForm = document.getElementById('hero-cab-search-form') || document.getElementById('search-form');
         if (searchForm) {
