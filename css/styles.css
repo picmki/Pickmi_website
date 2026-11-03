@@ -17116,10 +17116,10 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     align-items: center !important;
     justify-content: space-between !important;
     background: #ffffff !important;
-    border-radius: 26px !important;
-    padding: 8px 12px 8px 22px !important;
+    border-radius: 8px !important;
+    padding: 8px 12px 8px 18px !important;
     margin: 0 auto 16px !important;
-    min-height: 58px !important;
+    min-height: 56px !important;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
     cursor: pointer !important;
     border: 1px solid rgba(226, 232, 240, 0.85) !important;
@@ -17159,8 +17159,8 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     border: none !important;
     font-size: 1rem !important;
     font-weight: 700 !important;
-    padding: 9px 26px !important;
-    border-radius: 9999px !important;
+    padding: 8px 24px !important;
+    border-radius: 4px !important;
     cursor: pointer !important;
     box-shadow: 0 3px 10px rgba(0, 102, 246, 0.35) !important;
     line-height: 1.2 !important;
@@ -17177,7 +17177,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
 
   .mobile-service-card {
     background: #ffffff !important;
-    border-radius: 16px !important;
+    border-radius: 8px !important;
     overflow: hidden !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
     cursor: pointer !important;
@@ -17200,14 +17200,14 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     width: 100% !important;
     height: auto !important;
     display: block !important;
-    border-radius: 16px !important;
+    border-radius: 8px !important;
   }
 
   /* 50% Promo Banner (Image 1) */
   .mobile-home-promo-wrap {
     margin: 14px 0 20px !important;
     width: 100% !important;
-    border-radius: 16px !important;
+    border-radius: 8px !important;
     overflow: hidden !important;
     box-shadow: 0 4px 18px rgba(0, 86, 214, 0.12) !important;
     cursor: pointer !important;
@@ -17223,7 +17223,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     width: 100% !important;
     height: auto !important;
     display: block !important;
-    border-radius: 16px !important;
+    border-radius: 8px !important;
   }
 
   /* Popular Domestic Destinations Block (Image 1) */
@@ -17263,7 +17263,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     flex: 0 0 120px !important;
     width: 120px !important;
     height: 180px !important;
-    border-radius: 16px !important;
+    border-radius: 8px !important;
     overflow: hidden !important;
     position: relative !important;
     cursor: pointer !important;
@@ -17282,7 +17282,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     height: 100% !important;
     object-fit: cover !important;
     display: block !important;
-    border-radius: 16px !important;
+    border-radius: 8px !important;
   }
 
   .mobile-dest-item-overlay {
@@ -17489,7 +17489,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   body.mobile-search-active .btn-swap-locations {
     width: 40px !important;
     height: 40px !important;
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     background: #0066f6 !important;
     right: 0 !important;
     box-shadow: 0 2px 8px rgba(0, 102, 246, 0.3) !important;
@@ -17509,7 +17509,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   body.mobile-search-active .time-pill-card,
   body.mobile-search-active .time-custom-pill-card,
   body.mobile-search-active .rental-pkg-pill {
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     border: 1.5px solid #e2e8f0 !important;
     background: #ffffff !important;
   }
@@ -17522,7 +17522,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   }
 
   body.mobile-search-active .cab-type-pill {
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     border: 1.5px solid #e2e8f0 !important;
     background: #ffffff !important;
   }
@@ -17544,6 +17544,15 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     box-shadow: 0 4px 16px rgba(0, 86, 214, 0.3) !important;
     margin-top: 1rem !important;
     width: 100% !important;
+  }
+
+  /* All Mobile Cards 8px border-radius standard */
+  .cab-result-card,
+  .cab-card,
+  .mobile-activity-upcoming-card,
+  .mobile-activity-empty-upcoming-card,
+  .mobile-menu-card-group {
+    border-radius: 8px !important;
   }
 }
 
