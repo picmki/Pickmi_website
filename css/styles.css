@@ -17221,16 +17221,17 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   }
 
   .mobile-service-card {
-    background: #ffffff !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    box-shadow: none !important;
     cursor: pointer !important;
-    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
-    border: 1px solid rgba(226, 232, 240, 0.5) !important;
+    transition: transform 0.15s ease !important;
+    border: none !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    padding: 0 !important;
   }
 
   .mobile-service-card.wide-card {
@@ -17245,19 +17246,23 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     width: 100% !important;
     height: auto !important;
     display: block !important;
-    border-radius: 8px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   /* 50% Promo Banner (Image 1) */
   .mobile-home-promo-wrap {
     margin: 14px 0 20px !important;
     width: 100% !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 18px rgba(0, 86, 214, 0.12) !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    box-shadow: none !important;
     cursor: pointer !important;
     transition: transform 0.15s ease !important;
     box-sizing: border-box !important;
+    background: transparent !important;
+    border: none !important;
   }
 
   .mobile-home-promo-wrap:active {
@@ -17268,7 +17273,9 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     width: 100% !important;
     height: auto !important;
     display: block !important;
-    border-radius: 8px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   /* Popular Domestic Destinations Block (Image 1) */
