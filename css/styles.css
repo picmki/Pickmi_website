@@ -17063,7 +17063,16 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   body:not(.mobile-search-active) #mobile-now-serving-section,
   body:not(.mobile-search-active) .mobile-now-serving-wrapper,
   body:not(.mobile-search-active) #smart-city-routes-section,
-  body:not(.mobile-search-active) .smart-city-routes-section {
+  body:not(.mobile-search-active) .smart-city-routes-section,
+  body:not(.mobile-search-active) #interactive-pricing-showcase-section,
+  body:not(.mobile-search-active) .interactive-pricing-showcase-section,
+  body:not(.mobile-search-active) #home-app-download-section,
+  body:not(.mobile-search-active) .home-app-download-section,
+  body:not(.mobile-search-active) .home-editorial-grid-section,
+  body:not(.mobile-search-active) .home-seo-directory-section,
+  body:not(.mobile-search-active) .features-section,
+  body:not(.mobile-search-active) .app-footer,
+  body:not(.mobile-search-active) footer {
     display: none !important;
   }
 
@@ -17077,15 +17086,15 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: none !important;
   }
 
-  /* Mobile Home Clean Hero Background & Spacing */
+  /* Mobile Home Clean Hero Background & Spacing (Exact flush with bottom menu) */
   body:not(.mobile-search-active) .hero-wrapper::before {
     display: none !important;
   }
 
   body:not(.mobile-search-active) .hero-wrapper {
-    padding: 16px 14px 95px !important;
+    padding: 16px 14px 58px !important;
     background: #F5F7FA !important;
-    min-height: 100vh !important;
+    min-height: auto !important;
     box-sizing: border-box !important;
   }
 
@@ -17289,7 +17298,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
   }
 
-  /* 5. Now Serving Edge-to-Edge Full-Width Banner (Mobile Only - 0px Side Margins) */
+  /* 5. Now Serving Edge-to-Edge Full-Width Banner (Mobile Only - 0px Side & Bottom Margins) */
   .mobile-now-serving-fullwidth,
   #mobile-now-serving-banner {
     width: 100vw !important;
@@ -17299,11 +17308,13 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     margin-left: -50vw !important;
     margin-right: -50vw !important;
     margin-top: 1.5rem !important;
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0 !important;
     padding: 0 !important;
     display: block !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
   }
 
   .mobile-now-serving-fullwidth-img {
@@ -17313,6 +17324,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     border-radius: 0px !important;
     margin: 0 !important;
     padding: 0 !important;
+    vertical-align: bottom !important;
     object-fit: cover !important;
   }
 
