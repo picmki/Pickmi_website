@@ -17546,6 +17546,21 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     padding: 0.85rem 3.5rem 0.85rem 0 !important;
   }
 
+  /* Rental Mode Adjustments on Mobile Search */
+  body.mobile-search-active .booking-card-inputs-grid.has-rental #from-input-wrapper {
+    border-bottom: none !important;
+  }
+
+  body.mobile-search-active .booking-card-inputs-grid.has-rental #rental-package-block {
+    display: flex !important;
+    margin-top: 0.85rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  body.mobile-search-active .rental-pkg-pill {
+    border-radius: 8px !important;
+  }
+
   body.mobile-search-active .autocomplete-dropdown {
     position: absolute !important;
     top: calc(100% + 4px) !important;

@@ -1612,7 +1612,15 @@ export class PickMiApp {
         dynamicHeading.textContent = modeHeadings[mode] || 'Book outstation cabs';
       }
 
+      const titleEl = document.getElementById('mobile-search-header-title');
+
       if (mode === 'rental') {
+        this.isRentalMode = true;
+        this.isAirportTransfer = false;
+        if (titleEl) titleEl.textContent = 'Hourly Rental';
+        if (inputPickup && !inputPickup.value) {
+          inputPickup.placeholder = 'Enter pickup city or local area';
+        }
         const curPkg = store.searchParams.packageId || 'rent-4h40k';
         store.setSearchParams({ serviceType: 'rental', tripType: 'rental', returnDate: '', packageId: curPkg });
         if (returnDateWrapper) {
@@ -1637,6 +1645,12 @@ export class PickMiApp {
           inputDrop.disabled = true;
         }
       } else if (mode === 'round') {
+        this.isRentalMode = false;
+        this.isAirportTransfer = false;
+        if (titleEl) titleEl.textContent = 'Search Cabs';
+        if (inputPickup && inputPickup.placeholder.includes('local area')) {
+          inputPickup.placeholder = 'Enter pickup city or area';
+        }
         store.setSearchParams({ serviceType: 'intercity', tripType: 'round' });
         if (returnDateWrapper) {
           returnDateWrapper.classList.add('active-roundtrip');
@@ -1674,6 +1688,12 @@ export class PickMiApp {
           inputDrop.disabled = false;
         }
       } else if (mode === 'airport') {
+        this.isRentalMode = false;
+        this.isAirportTransfer = true;
+        if (titleEl) titleEl.textContent = 'Airport Transfer';
+        if (inputPickup && inputPickup.placeholder.includes('local area')) {
+          inputPickup.placeholder = 'Enter pickup city or area';
+        }
         store.setSearchParams({ serviceType: 'airport', tripType: 'oneway', returnDate: '' });
         if (returnDateWrapper) {
           returnDateWrapper.classList.remove('active-roundtrip');
@@ -1693,11 +1713,18 @@ export class PickMiApp {
           if (inputDrop.value === 'Local Rental Service') {
             inputDrop.value = store.searchParams.drop || '';
           }
-          inputDrop.placeholder = 'Enter airport or city name';
+          inputDrop.placeholder = 'Enter Airport name (e.g. Bangalore Airport, Chennai Airport)';
           inputDrop.disabled = false;
         }
       } else {
         // One-way (Default)
+        this.isRentalMode = false;
+        if (titleEl) {
+          titleEl.textContent = this.isAirportTransfer ? 'Airport Transfer' : 'Search Cabs';
+        }
+        if (inputPickup && inputPickup.placeholder.includes('local area')) {
+          inputPickup.placeholder = 'Enter pickup city or area';
+        }
         store.setSearchParams({ serviceType: 'intercity', tripType: 'oneway', returnDate: '' });
         if (returnDateWrapper) {
           returnDateWrapper.classList.remove('active-roundtrip');
@@ -1717,7 +1744,9 @@ export class PickMiApp {
           if (inputDrop.value === 'Local Rental Service') {
             inputDrop.value = store.searchParams.drop || '';
           }
-          inputDrop.placeholder = 'Enter destination city or area';
+          inputDrop.placeholder = this.isAirportTransfer
+            ? 'Enter Airport name (e.g. Bangalore Airport, Chennai Airport)'
+            : 'Enter destination city or area';
           inputDrop.disabled = false;
         }
       }
@@ -1917,15 +1946,27 @@ export class PickMiApp {
 
     if (preset === 'airport') {
       this.isAirportTransfer = true;
+      this.isRentalMode = false;
       if (titleEl) titleEl.textContent = 'Airport Transfer';
       if (dropInput && !dropInput.value) {
         dropInput.placeholder = 'Enter Airport name (e.g. Bangalore Airport, Chennai Airport)';
       }
+    } else if (tripMode === 'rental') {
+      this.isAirportTransfer = false;
+      this.isRentalMode = true;
+      if (titleEl) titleEl.textContent = 'Hourly Rental';
+      if (pickupInput && !pickupInput.value) {
+        pickupInput.placeholder = 'Enter pickup city or local area';
+      }
     } else {
       this.isAirportTransfer = false;
+      this.isRentalMode = false;
       if (titleEl) titleEl.textContent = 'Search Cabs';
       if (dropInput && dropInput.placeholder && dropInput.placeholder.includes('Airport')) {
         dropInput.placeholder = 'Enter destination city or area';
+      }
+      if (pickupInput && pickupInput.placeholder && pickupInput.placeholder.includes('local area')) {
+        pickupInput.placeholder = 'Enter pickup city or area';
       }
     }
 
@@ -1952,11 +1993,16 @@ export class PickMiApp {
 
   closeMobileSearch() {
     this.isAirportTransfer = false;
+    this.isRentalMode = false;
     const titleEl = document.getElementById('mobile-search-header-title');
     if (titleEl) titleEl.textContent = 'Search Cabs';
     const dropInput = document.getElementById('input-drop');
     if (dropInput && dropInput.placeholder && dropInput.placeholder.includes('Airport')) {
       dropInput.placeholder = 'Enter destination city or area';
+    }
+    const pickupInput = document.getElementById('input-pickup');
+    if (pickupInput && pickupInput.placeholder && pickupInput.placeholder.includes('local area')) {
+      pickupInput.placeholder = 'Enter pickup city or area';
     }
 
     document.body.classList.remove('mobile-search-active');
@@ -2734,6 +2780,52 @@ export class PickMiApp {
              placeholder.includes('airport');
     };
 
+    const isRentalInput = () => {
+      const placeholder = (inputEl.placeholder || '').toLowerCase();
+      return (this.isRentalMode && inputEl.id === 'input-pickup') ||
+             placeholder.includes('rental') ||
+             placeholder.includes('local area');
+    };
+
+    const getRentalPickupSuggestions = (detectedCity = '') => {
+      const cityLower = (detectedCity || '').toLowerCase();
+      let defaultItems = [
+        {
+          id: 'current-loc',
+          primary: 'Use Current Location',
+          secondary: detectedCity ? `Detected: ${detectedCity}` : 'Detect via GPS or IP',
+          label: detectedCity || 'Bangalore, Karnataka',
+          city: detectedCity || 'Bangalore',
+          isCurrentLocationAction: true
+        }
+      ];
+
+      // Prioritize areas matching the detected city
+      const cityAreas = LOCATION_MASTER.filter(l =>
+        l.type === 'area' && cityLower && (l.city.toLowerCase().includes(cityLower) || cityLower.includes(l.city.toLowerCase()))
+      );
+
+      // Other popular metro hubs
+      const otherHubs = LOCATION_MASTER.filter(l =>
+        l.type === 'area' && (!cityLower || !l.city.toLowerCase().includes(cityLower))
+      ).slice(0, 6);
+
+      // Major cities
+      const majorCities = LOCATION_MASTER.filter(l => l.type === 'city').slice(0, 4);
+
+      const combined = [...cityAreas, ...otherHubs, ...majorCities].map(loc => ({
+        id: loc.id,
+        primary: loc.area ? `${loc.area}, ${loc.city}` : loc.city,
+        secondary: `${loc.state || ''}${loc.area ? ' • Local Hub' : ''}`,
+        label: loc.label,
+        city: loc.city,
+        lat: loc.lat,
+        lon: loc.lon
+      }));
+
+      return [...defaultItems, ...combined.slice(0, 10)];
+    };
+
     const showDefaultOrAirportList = () => {
       if (isAirportInput()) {
         const query = inputEl.value.trim().toLowerCase();
@@ -2749,6 +2841,18 @@ export class PickMiApp {
             (apt.state && apt.state.toLowerCase().includes(query))
           );
           renderList(matched.length > 0 ? matched : ALL_INDIAN_AIRPORTS, false, query);
+        }
+        return;
+      }
+
+      if (isRentalInput()) {
+        const query = inputEl.value.trim().toLowerCase();
+        if (query.length === 0) {
+          const rentalSuggestions = getRentalPickupSuggestions(this.detectedCity);
+          renderList(rentalSuggestions, false, '');
+        } else {
+          const localMatches = getLocalMatches(query);
+          renderList(localMatches, false, query);
         }
         return;
       }
@@ -2839,6 +2943,7 @@ export class PickMiApp {
     inputEl.addEventListener('input', (e) => {
       const query = e.target.value.trim();
       const isAirport = isAirportInput();
+      const isRental = isRentalInput();
 
       if (isAirport) {
         if (query.length === 0) {
@@ -2862,6 +2967,26 @@ export class PickMiApp {
         localMatches.forEach(l => {
           const key = (l.primary || l.label).toLowerCase();
           if (!seen.has(key)) {
+            seen.add(key);
+            combined.push(l);
+          }
+        });
+
+        renderList(combined.slice(0, 15), false, query);
+        return;
+      }
+
+      if (isRental) {
+        if (query.length === 0) {
+          const rentalSuggestions = getRentalPickupSuggestions(this.detectedCity);
+          renderList(rentalSuggestions, false, '');
+          return;
+        }
+
+        const localMatches = getLocalMatches(query);
+        renderList(localMatches, false, query);
+        return;
+      }
             seen.add(key);
             combined.push(l);
           }
