@@ -1,7 +1,7 @@
 // PickMi Cab Booking Website - Main Application Controller
 // Aligned with Product & UX Documentation v1.0
 
-import { ALL_INDIAN_STATES, STATE_CODE_MAP, LOCATION_MASTER, VEHICLE_CATEGORIES, RENTAL_PACKAGES, PROMO_CODES, FAQS } from './data.js';
+import { ALL_INDIAN_STATES, STATE_CODE_MAP, LOCATION_MASTER, ALL_INDIAN_AIRPORTS, VEHICLE_CATEGORIES, RENTAL_PACKAGES, PROMO_CODES, FAQS } from './data.js';
 import { store } from './store.js';
 
 export const GLOBAL_CITY_COORDS = {
@@ -1795,6 +1795,11 @@ export class PickMiApp {
         const temp = inputPickup.value;
         inputPickup.value = inputDrop.value;
         inputDrop.value = temp;
+        if (this.isAirportTransfer) {
+          const pTemp = inputPickup.placeholder;
+          inputPickup.placeholder = inputDrop.placeholder;
+          inputDrop.placeholder = pTemp;
+        }
         store.setSearchParams({
           pickup: inputPickup.value,
           drop: inputDrop.value
@@ -1906,23 +1911,28 @@ export class PickMiApp {
       if (tab) tab.click();
     }
 
-    if (destination) {
-      const dropInput = document.getElementById('input-drop');
-      if (dropInput) {
-        dropInput.value = destination;
-        store.setSearchParams({ drop: destination });
+    const titleEl = document.getElementById('mobile-search-header-title');
+    const dropInput = document.getElementById('input-drop');
+    const pickupInput = document.getElementById('input-pickup');
+
+    if (preset === 'airport') {
+      this.isAirportTransfer = true;
+      if (titleEl) titleEl.textContent = 'Airport Transfer';
+      if (dropInput && !dropInput.value) {
+        dropInput.placeholder = 'Enter Airport name (e.g. Bangalore Airport, Chennai Airport)';
+      }
+    } else {
+      this.isAirportTransfer = false;
+      if (titleEl) titleEl.textContent = 'Search Cabs';
+      if (dropInput && dropInput.placeholder && dropInput.placeholder.includes('Airport')) {
+        dropInput.placeholder = 'Enter destination city or area';
       }
     }
 
-    if (preset === 'airport') {
-      const dropInput = document.getElementById('input-drop');
-      if (dropInput && !dropInput.value) {
-        dropInput.placeholder = 'Enter Airport name (e.g. Bangalore Airport)';
-      }
-    } else if (preset === 'parcel') {
-      const dropInput = document.getElementById('input-drop');
-      if (dropInput && !dropInput.value) {
-        dropInput.placeholder = 'Enter parcel delivery location';
+    if (destination) {
+      if (dropInput) {
+        dropInput.value = destination;
+        store.setSearchParams({ drop: destination });
       }
     }
 
@@ -1941,6 +1951,14 @@ export class PickMiApp {
   }
 
   closeMobileSearch() {
+    this.isAirportTransfer = false;
+    const titleEl = document.getElementById('mobile-search-header-title');
+    if (titleEl) titleEl.textContent = 'Search Cabs';
+    const dropInput = document.getElementById('input-drop');
+    if (dropInput && dropInput.placeholder && dropInput.placeholder.includes('Airport')) {
+      dropInput.placeholder = 'Enter destination city or area';
+    }
+
     document.body.classList.remove('mobile-search-active');
     const dockEl = document.getElementById('mobile-dock-wrapper');
     if (dockEl) dockEl.style.removeProperty('display');
@@ -2654,17 +2672,20 @@ export class PickMiApp {
           const iconSvg = isCurrentLoc
             ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>`
             : isAirport
-            ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>`
+            ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0056D6" stroke-width="2.2"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>`
             : isStation
             ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.2"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><circle cx="8" cy="15" r="1"/><circle cx="16" cy="15" r="1"/><path d="M6 19l-2 2"/><path d="M18 19l2 2"/></svg>`
             : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#111111"/><circle cx="12" cy="9" r="2.5" fill="#ffffff"/></svg>`;
 
+          const codeBadge = loc.code ? `<span class="airport-code-pill">${escapeHtml(loc.code)}</span>` : '';
+
           return `
-            <div class="autocomplete-item" data-index="${idx}">
+            <div class="autocomplete-item ${isAirport ? 'is-airport-item' : ''}" data-index="${idx}">
               <div class="autocomplete-icon ${isAirport ? 'airport-icon' : ''}">${iconSvg}</div>
               <div class="autocomplete-text-col">
                 <div class="autocomplete-primary-row">
                   <span class="autocomplete-primary">${escapeHtml(loc.primary || loc.label)}</span>
+                  ${codeBadge}
                 </div>
                 <div class="autocomplete-sub">${escapeHtml(loc.secondary || loc.city || loc.state || '')}</div>
               </div>
@@ -2707,8 +2728,31 @@ export class PickMiApp {
       });
     };
 
-    // Show current location option & popular suggestions on focus if empty
-    inputEl.addEventListener('focus', () => {
+    const isAirportInput = () => {
+      const placeholder = (inputEl.placeholder || '').toLowerCase();
+      return (this.isAirportTransfer && inputEl.id === 'input-drop') ||
+             placeholder.includes('airport');
+    };
+
+    const showDefaultOrAirportList = () => {
+      if (isAirportInput()) {
+        const query = inputEl.value.trim().toLowerCase();
+        if (query.length === 0) {
+          renderList(ALL_INDIAN_AIRPORTS, false, '');
+        } else {
+          const matched = ALL_INDIAN_AIRPORTS.filter(apt =>
+            apt.label.toLowerCase().includes(query) ||
+            apt.primary.toLowerCase().includes(query) ||
+            apt.city.toLowerCase().includes(query) ||
+            (apt.code && apt.code.toLowerCase().includes(query)) ||
+            (apt.secondary && apt.secondary.toLowerCase().includes(query)) ||
+            (apt.state && apt.state.toLowerCase().includes(query))
+          );
+          renderList(matched.length > 0 ? matched : ALL_INDIAN_AIRPORTS, false, query);
+        }
+        return;
+      }
+
       if (inputEl.value.trim().length === 0) {
         let defaultItems = [];
         if (inputEl.id === 'input-pickup') {
@@ -2721,29 +2765,51 @@ export class PickMiApp {
             isCurrentLocationAction: true
           });
         }
-        const topCities = LOCATION_MASTER.filter(l => l.type === 'city' || l.type === 'airport').slice(0, 5).map(loc => ({
-          id: loc.id,
-          primary: loc.area ? `${loc.area}, ${loc.city}` : loc.city,
-          secondary: `${loc.state || ''}${loc.type === 'airport' ? ' • Airport' : ''}`,
-          label: loc.label,
-          city: loc.city,
-          lat: loc.lat,
-          lon: loc.lon
-        }));
-        defaultItems = [...defaultItems, ...topCities];
+
+        if (this.isAirportTransfer) {
+          defaultItems = [...defaultItems, ...ALL_INDIAN_AIRPORTS.slice(0, 8)];
+        } else {
+          const topCities = LOCATION_MASTER.filter(l => l.type === 'city' || l.type === 'airport').slice(0, 5).map(loc => ({
+            id: loc.id,
+            primary: loc.area ? `${loc.area}, ${loc.city}` : loc.city,
+            secondary: `${loc.state || ''}${loc.type === 'airport' ? ' • Airport' : ''}`,
+            label: loc.label,
+            city: loc.city,
+            lat: loc.lat,
+            lon: loc.lon
+          }));
+          defaultItems = [...defaultItems, ...topCities];
+        }
+
         renderList(defaultItems, false, '');
+      }
+    };
+
+    inputEl.addEventListener('focus', showDefaultOrAirportList);
+    inputEl.addEventListener('click', () => {
+      if (!dropdownEl.classList.contains('open')) {
+        showDefaultOrAirportList();
       }
     });
 
     const getLocalMatches = (query) => {
       const q = query.toLowerCase();
-      return LOCATION_MASTER.filter(loc =>
+      const airportMatches = ALL_INDIAN_AIRPORTS.filter(apt =>
+        apt.label.toLowerCase().includes(q) ||
+        apt.primary.toLowerCase().includes(q) ||
+        apt.city.toLowerCase().includes(q) ||
+        (apt.code && apt.code.toLowerCase().includes(q)) ||
+        (apt.secondary && apt.secondary.toLowerCase().includes(q)) ||
+        (apt.state && apt.state.toLowerCase().includes(q))
+      );
+
+      const locMatches = LOCATION_MASTER.filter(loc =>
         loc.label.toLowerCase().includes(q) ||
         (loc.area && loc.area.toLowerCase().includes(q)) ||
         (loc.city && loc.city.toLowerCase().includes(q)) ||
         (loc.code && loc.code.toLowerCase().includes(q)) ||
         (loc.state && loc.state.toLowerCase().includes(q))
-      ).slice(0, 5).map(loc => ({
+      ).map(loc => ({
         id: loc.id,
         primary: loc.area ? `${loc.area}, ${loc.city}` : loc.city,
         secondary: `${loc.state || ''}${loc.type === 'airport' ? ' • Airport' : ''}`,
@@ -2754,12 +2820,57 @@ export class PickMiApp {
         lat: loc.lat,
         lon: loc.lon,
         type: loc.type || 'city',
+        code: loc.code || '',
         source: 'verified'
       }));
+
+      const combined = [...airportMatches];
+      const seen = new Set(airportMatches.map(a => (a.primary || a.label).toLowerCase()));
+      locMatches.forEach(l => {
+        const key = (l.primary || l.label).toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          combined.push(l);
+        }
+      });
+      return combined.slice(0, 10);
     };
 
     inputEl.addEventListener('input', (e) => {
       const query = e.target.value.trim();
+      const isAirport = isAirportInput();
+
+      if (isAirport) {
+        if (query.length === 0) {
+          renderList(ALL_INDIAN_AIRPORTS, false, '');
+          return;
+        }
+
+        const q = query.toLowerCase();
+        const matchedAirports = ALL_INDIAN_AIRPORTS.filter(apt =>
+          apt.label.toLowerCase().includes(q) ||
+          apt.primary.toLowerCase().includes(q) ||
+          apt.city.toLowerCase().includes(q) ||
+          (apt.code && apt.code.toLowerCase().includes(q)) ||
+          (apt.secondary && apt.secondary.toLowerCase().includes(q)) ||
+          (apt.state && apt.state.toLowerCase().includes(q))
+        );
+
+        const localMatches = getLocalMatches(query);
+        const combined = [...matchedAirports];
+        const seen = new Set(matchedAirports.map(m => (m.primary || m.label).toLowerCase()));
+        localMatches.forEach(l => {
+          const key = (l.primary || l.label).toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            combined.push(l);
+          }
+        });
+
+        renderList(combined.slice(0, 15), false, query);
+        return;
+      }
+
       if (query.length < 2) {
         if (abortCtrl) abortCtrl.abort();
         clearTimeout(debounceTimer);
