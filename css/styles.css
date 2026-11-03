@@ -17048,13 +17048,23 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: none !important;
   }
 
-  /* Mobile Home Clean Hero Background */
+  /* Hide Top Header Bar on Mobile Home Screen (Matches Image 1) */
+  body.home-view-active #hero-floating-header,
+  body.home-view-active .app-header,
+  body.home-view-active:not(.mobile-search-active) #hero-floating-header,
+  body.home-view-active:not(.mobile-search-active) .app-header,
+  body.user-logged-in.home-view-active #hero-floating-header,
+  body.user-logged-out.home-view-active #hero-floating-header {
+    display: none !important;
+  }
+
+  /* Mobile Home Clean Hero Background & Spacing */
   body:not(.mobile-search-active) .hero-wrapper::before {
     display: none !important;
   }
 
   body:not(.mobile-search-active) .hero-wrapper {
-    padding: 72px 14px 95px !important;
+    padding: 16px 14px 95px !important;
     background: #F5F7FA !important;
     min-height: 100vh !important;
     box-sizing: border-box !important;
