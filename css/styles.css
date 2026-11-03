@@ -17426,11 +17426,11 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     letter-spacing: -0.3px !important;
   }
 
-  /* Hero Wrapper on Mobile Search Active: Edge-to-Edge Full Width, 0 top/left/right space */
+  /* Hero Wrapper on Mobile Search Active: Clean page background */
   body.mobile-search-active .hero-wrapper {
     padding: 0 0 40px !important;
     margin: 0 !important;
-    background: #ffffff !important;
+    background: #F5F7FA !important;
     min-height: 100vh !important;
     box-sizing: border-box !important;
     width: 100% !important;
@@ -17448,21 +17448,23 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: none !important;
   }
 
-  /* Booking Card on Search Page (Image 2) */
+  /* Booking Card on Search Page (Image 2): 20px spacing top/left/right, 12px border radius */
   body.mobile-search-active #hero-booking-card,
   body.mobile-search-active .hero-booking-card {
     display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
+    width: calc(100% - 40px) !important;
+    max-width: calc(100% - 40px) !important;
+    margin: 20px auto 24px !important;
     background: #ffffff !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0px !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
     padding: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  /* Mobile Tabs Bar matching Image 2: Full Width */
+  /* Mobile Tabs Bar matching Image 2 */
   body.mobile-search-active .mobile-travel-tabs-bar {
     display: flex !important;
     align-items: center !important;
@@ -17472,6 +17474,8 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     border-bottom: 1.5px solid #eef2f6 !important;
     width: 100% !important;
     margin: 0 !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
   }
 
   body.mobile-search-active .mobile-travel-tab {
