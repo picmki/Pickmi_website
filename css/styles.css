@@ -17116,13 +17116,13 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     align-items: center !important;
     justify-content: space-between !important;
     background: #ffffff !important;
-    border-radius: 8px !important;
+    border-radius: 12px !important;
     padding: 8px 12px 8px 18px !important;
     margin: 0 auto 16px !important;
     min-height: 56px !important;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
     cursor: pointer !important;
-    border: 1px solid rgba(226, 232, 240, 0.85) !important;
+    border: none !important;
     width: 100% !important;
     box-sizing: border-box !important;
     transition: transform 0.15s ease !important;
@@ -17147,7 +17147,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   }
 
   .mobile-where-to-text {
-    font-size: 1.15rem !important;
+    font-size: 0.98rem !important;
     font-weight: 700 !important;
     color: #0f172a !important;
     letter-spacing: -0.2px !important;
@@ -17157,10 +17157,10 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     background: #0066f6 !important;
     color: #ffffff !important;
     border: none !important;
-    font-size: 1rem !important;
+    font-size: 0.98rem !important;
     font-weight: 700 !important;
     padding: 8px 24px !important;
-    border-radius: 4px !important;
+    border-radius: 9999px !important;
     cursor: pointer !important;
     box-shadow: 0 3px 10px rgba(0, 102, 246, 0.35) !important;
     line-height: 1.2 !important;
