@@ -1890,6 +1890,17 @@ export class PickMiApp {
       });
     }
 
+    const stickyWrap = document.getElementById('mobile-where-to-sticky-wrap');
+    if (stickyWrap) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          stickyWrap.classList.add('is-scrolled');
+        } else {
+          stickyWrap.classList.remove('is-scrolled');
+        }
+      }, { passive: true });
+    }
+
     // 2. 5 Service Cards (Airport, Rental, Reserve, Intercity, Parcel)
     const serviceCards = document.querySelectorAll('.mobile-service-card[data-service]');
     serviceCards.forEach(card => {
