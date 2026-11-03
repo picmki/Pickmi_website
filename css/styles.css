@@ -17027,7 +17027,9 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   .mobile-home-dashboard,
   #mobile-home-screen,
   .mobile-search-nav-header,
-  #mobile-search-nav-header {
+  #mobile-search-nav-header,
+  .mobile-now-serving-fullwidth,
+  #mobile-now-serving-banner {
     display: none !important;
   }
 
@@ -17285,6 +17287,33 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     font-size: 0.95rem !important;
     letter-spacing: -0.2px !important;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  /* 5. Now Serving Edge-to-Edge Full-Width Banner (Mobile Only - 0px Side Margins) */
+  .mobile-now-serving-fullwidth,
+  #mobile-now-serving-banner {
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    right: 50% !important;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    padding: 0 !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .mobile-now-serving-fullwidth-img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    border-radius: 0px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    object-fit: cover !important;
   }
 
   /* ==========================================================================
