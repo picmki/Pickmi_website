@@ -1365,6 +1365,17 @@ export class PickMiApp {
       btn.classList.toggle('active', Boolean(match));
     });
 
+    // Strictly show mobile bottom menu ONLY on the 3 Main Views: Home, Trips (Activity), Account
+    const dockEl = document.getElementById('mobile-dock-wrapper');
+    if (dockEl) {
+      const isMainThreeViews = ['home', 'trips', 'account'].includes(viewName);
+      if (isMainThreeViews && !document.body.classList.contains('mobile-search-active')) {
+        dockEl.style.removeProperty('display');
+      } else {
+        dockEl.style.setProperty('display', 'none', 'important');
+      }
+    }
+
     if (viewName === 'results') {
       this.renderVehicleResults();
     } else if (viewName === 'checkout') {
@@ -1907,6 +1918,8 @@ export class PickMiApp {
     }
 
     document.body.classList.add('mobile-search-active');
+    const dockEl = document.getElementById('mobile-dock-wrapper');
+    if (dockEl) dockEl.style.setProperty('display', 'none', 'important');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (window.location.hash !== '#search') {
@@ -1920,6 +1933,8 @@ export class PickMiApp {
 
   closeMobileSearch() {
     document.body.classList.remove('mobile-search-active');
+    const dockEl = document.getElementById('mobile-dock-wrapper');
+    if (dockEl) dockEl.style.removeProperty('display');
     if (window.location.hash === '#search') {
       try {
         history.pushState({ view: 'home' }, '', '#home');

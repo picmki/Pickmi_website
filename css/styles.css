@@ -9966,7 +9966,7 @@ body.account-view-active .site-footer {
      NORMAL MOBILE BOTTOM NAVIGATION BAR (Standard Full-Width)
      ======================================================== */
   .mobile-dock-wrapper {
-    display: flex !important;
+    display: none !important;
     position: fixed !important;
     bottom: 0 !important;
     left: 0 !important;
@@ -9988,12 +9988,29 @@ body.account-view-active .site-footer {
     border-radius: 0 !important;
   }
 
+  /* STRICT USER RULE: Show Mobile Bottom Menu ONLY on the 3 Main Views (Home, Activity, Account) */
+  body.home-view-active:not(.mobile-search-active) .mobile-dock-wrapper,
+  body.home-view-active:not(.mobile-search-active) #mobile-dock-wrapper,
+  body.trips-view-active .mobile-dock-wrapper,
+  body.trips-view-active #mobile-dock-wrapper,
+  body.account-view-active .mobile-dock-wrapper,
+  body.account-view-active #mobile-dock-wrapper {
+    display: flex !important;
+  }
+
+  /* Hide on all other pages and mobile search */
+  body:not(.home-view-active):not(.trips-view-active):not(.account-view-active) .mobile-dock-wrapper,
+  body:not(.home-view-active):not(.trips-view-active):not(.account-view-active) #mobile-dock-wrapper,
+  body.mobile-search-active .mobile-dock-wrapper,
+  body.mobile-search-active #mobile-dock-wrapper,
+  body.results-view-active .mobile-dock-wrapper,
+  body.results-view-active #mobile-dock-wrapper,
   body.checkout-view-active .mobile-dock-wrapper,
   body.checkout-view-active #mobile-dock-wrapper,
+  body.confirmation-view-active .mobile-dock-wrapper,
+  body.confirmation-view-active #mobile-dock-wrapper,
   body.trip-detail-view-active .mobile-dock-wrapper,
-  body.trip-detail-view-active #mobile-dock-wrapper,
-  body.user-logged-in.trip-detail-view-active .mobile-dock-wrapper,
-  body.user-logged-in.trip-detail-view-active #mobile-dock-wrapper {
+  body.trip-detail-view-active #mobile-dock-wrapper {
     display: none !important;
   }
 
