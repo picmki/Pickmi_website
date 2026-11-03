@@ -17389,17 +17389,17 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: none !important;
   }
 
-  /* Mobile Search Dedicated Header: Full Width, 0 top/left/right space, NO border line */
+  /* Mobile Search Dedicated Header: Full Width with Divider Line */
   body.mobile-search-active .mobile-search-nav-header,
   body.mobile-search-active #mobile-search-nav-header {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: 12px 1rem 6px !important;
+    padding: 12px 1rem !important;
     width: 100% !important;
     box-sizing: border-box !important;
     background: #ffffff !important;
-    border-bottom: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
     margin: 0 !important;
   }
 
