@@ -17030,6 +17030,8 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   #mobile-where-to-sticky-wrap,
   .mobile-search-nav-header,
   #mobile-search-nav-header,
+  .mobile-travel-tabs-bar,
+  #mobile-travel-tabs-bar,
   .mobile-now-serving-fullwidth,
   #mobile-now-serving-banner {
     display: none !important;
@@ -17059,6 +17061,8 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   body:not(.mobile-search-active) .hero-booking-card,
   body:not(.mobile-search-active) #mobile-search-nav-header,
   body:not(.mobile-search-active) .mobile-search-nav-header,
+  body:not(.mobile-search-active) #mobile-travel-tabs-bar,
+  body:not(.mobile-search-active) .mobile-travel-tabs-bar,
   body:not(.mobile-search-active) .hero-header-text-group,
   body:not(.mobile-search-active) #popular-destinations-section,
   body:not(.mobile-search-active) .popular-destinations-section,
@@ -17385,17 +17389,17 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: none !important;
   }
 
-  /* Mobile Search Dedicated Header: Full Width, 0 top/left/right space */
+  /* Mobile Search Dedicated Header: Full Width, 0 top/left/right space, NO border line */
   body.mobile-search-active .mobile-search-nav-header,
   body.mobile-search-active #mobile-search-nav-header {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: 12px 1rem !important;
+    padding: 12px 1rem 6px !important;
     width: 100% !important;
     box-sizing: border-box !important;
     background: #ffffff !important;
-    border-bottom: 1px solid #f1f5f9 !important;
+    border-bottom: none !important;
     margin: 0 !important;
   }
 
@@ -17426,6 +17430,20 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     letter-spacing: -0.3px !important;
   }
 
+  /* Mobile Tabs Bar (Separate from Card, Full Width at Top) */
+  body.mobile-search-active .mobile-travel-tabs-bar,
+  body.mobile-search-active #mobile-travel-tabs-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    background: #ffffff !important;
+    padding: 0.25rem 0 0 !important;
+    border-bottom: 1.5px solid #eef2f6 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+
   /* Hero Wrapper on Mobile Search Active: Clean page background */
   body.mobile-search-active .hero-wrapper {
     padding: 0 0 40px !important;
@@ -17448,7 +17466,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: none !important;
   }
 
-  /* Booking Card on Search Page (Image 2): 20px spacing top/left/right, 12px border radius */
+  /* Booking Card on Search Page: 20px spacing top/left/right, 12px border radius, NO border line */
   body.mobile-search-active #hero-booking-card,
   body.mobile-search-active .hero-booking-card {
     display: block !important;
@@ -17456,26 +17474,12 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     max-width: calc(100% - 40px) !important;
     margin: 20px auto 24px !important;
     background: #ffffff !important;
-    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    border: none !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
     border-radius: 12px !important;
     overflow: hidden !important;
     padding: 0 !important;
     box-sizing: border-box !important;
-  }
-
-  /* Mobile Tabs Bar matching Image 2 */
-  body.mobile-search-active .mobile-travel-tabs-bar {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-around !important;
-    background: #ffffff !important;
-    padding: 0.25rem 0 0 !important;
-    border-bottom: 1.5px solid #eef2f6 !important;
-    width: 100% !important;
-    margin: 0 !important;
-    border-top-left-radius: 12px !important;
-    border-top-right-radius: 12px !important;
   }
 
   body.mobile-search-active .mobile-travel-tab {
