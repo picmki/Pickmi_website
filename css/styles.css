@@ -17026,6 +17026,8 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
 @media (min-width: 769px) {
   .mobile-home-dashboard,
   #mobile-home-screen,
+  .mobile-where-to-sticky-bar,
+  #mobile-where-to-sticky-wrap,
   .mobile-search-nav-header,
   #mobile-search-nav-header,
   .mobile-now-serving-fullwidth,
@@ -17096,6 +17098,12 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     background: #F5F7FA !important;
     min-height: auto !important;
     box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+
+  body:not(.mobile-search-active) .hero-container,
+  body:not(.mobile-search-active) #view-home {
+    overflow: visible !important;
   }
 
   /* Show Bottom Navigation Dock on Mobile Home */
@@ -17110,6 +17118,19 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: none !important;
   }
 
+  /* Sticky Search Bar on Mobile Home Scroll */
+  .mobile-where-to-sticky-bar {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    background: #F5F7FA !important;
+    padding: 14px 0 10px !important;
+    margin: -16px 0 2px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
   /* Mobile Top Where-To Pill (Image 1 & Reference) */
   .mobile-where-to-pill {
     display: flex !important;
@@ -17118,7 +17139,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     background: #ffffff !important;
     border-radius: 12px !important;
     padding: 8px 12px 8px 18px !important;
-    margin: 0 auto 16px !important;
+    margin: 0 auto !important;
     min-height: 56px !important;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
     cursor: pointer !important;

@@ -427,15 +427,17 @@
 
           <!-- Mobile Home Dashboard (Image 1 Reference Layout) -->
           <div class="mobile-home-dashboard" id="mobile-home-screen">
-            <!-- 1. Top Search Pill: Where To ? [Go] -->
-            <div class="mobile-where-to-pill" id="mobile-where-to-trigger" role="button" tabindex="0" aria-label="Search destination">
-              <div class="mobile-where-to-left">
-                <svg class="mobile-where-to-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-                <span class="mobile-where-to-text">Where To ?</span>
+            <!-- 1. Top Search Pill: Where To ? [Go] (Fixed on Scroll) -->
+            <div class="mobile-where-to-sticky-bar" id="mobile-where-to-sticky-wrap">
+              <div class="mobile-where-to-pill" id="mobile-where-to-trigger" role="button" tabindex="0" aria-label="Search destination">
+                <div class="mobile-where-to-left">
+                  <svg class="mobile-where-to-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                  <span class="mobile-where-to-text">Where To ?</span>
+                </div>
+                <button type="button" class="mobile-where-to-btn" aria-label="Go">Go</button>
               </div>
-              <button type="button" class="mobile-where-to-btn" aria-label="Go">Go</button>
             </div>
 
             <!-- 2. Grid of 5 Services (Airport, Rental, Reserve, Intercity, Parcel) -->
