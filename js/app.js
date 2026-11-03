@@ -1751,9 +1751,13 @@ export class PickMiApp {
         }
       }
     };
+    this.activateTripMode = activateTripMode;
 
     tripPills.forEach(pill => {
       pill.addEventListener('click', () => {
+        if (pill.dataset.tripMode === 'oneway') {
+          this.isAirportTransfer = false;
+        }
         activateTripMode(pill.dataset.tripMode);
       });
     });
@@ -1762,6 +1766,9 @@ export class PickMiApp {
       tab.addEventListener('click', () => {
         const mode = tab.dataset.tripMode;
         if (mode) {
+          if (mode === 'oneway') {
+            this.isAirportTransfer = false;
+          }
           activateTripMode(mode);
         }
       });
@@ -1933,6 +1940,17 @@ export class PickMiApp {
   }
 
   openMobileSearch(tripMode = 'oneway', destination = null, preset = null) {
+    if (preset === 'airport') {
+      this.isAirportTransfer = true;
+      this.isRentalMode = false;
+    } else if (tripMode === 'rental') {
+      this.isAirportTransfer = false;
+      this.isRentalMode = true;
+    } else {
+      this.isAirportTransfer = false;
+      this.isRentalMode = false;
+    }
+
     if (typeof this.activateTripMode === 'function') {
       this.activateTripMode(tripMode);
     } else {
@@ -1945,22 +1963,16 @@ export class PickMiApp {
     const pickupInput = document.getElementById('input-pickup');
 
     if (preset === 'airport') {
-      this.isAirportTransfer = true;
-      this.isRentalMode = false;
       if (titleEl) titleEl.textContent = 'Airport Transfer';
       if (dropInput && !dropInput.value) {
         dropInput.placeholder = 'Enter Airport name (e.g. Bangalore Airport, Chennai Airport)';
       }
     } else if (tripMode === 'rental') {
-      this.isAirportTransfer = false;
-      this.isRentalMode = true;
       if (titleEl) titleEl.textContent = 'Hourly Rental';
       if (pickupInput && !pickupInput.value) {
         pickupInput.placeholder = 'Enter pickup city or local area';
       }
     } else {
-      this.isAirportTransfer = false;
-      this.isRentalMode = false;
       if (titleEl) titleEl.textContent = 'Search Cabs';
       if (dropInput && dropInput.placeholder && dropInput.placeholder.includes('Airport')) {
         dropInput.placeholder = 'Enter destination city or area';
@@ -2985,14 +2997,6 @@ export class PickMiApp {
 
         const localMatches = getLocalMatches(query);
         renderList(localMatches, false, query);
-        return;
-      }
-            seen.add(key);
-            combined.push(l);
-          }
-        });
-
-        renderList(combined.slice(0, 15), false, query);
         return;
       }
 
