@@ -17385,15 +17385,18 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: none !important;
   }
 
-  /* Mobile Search Dedicated Header */
+  /* Mobile Search Dedicated Header: Full Width, 0 top/left/right space */
   body.mobile-search-active .mobile-search-nav-header,
   body.mobile-search-active #mobile-search-nav-header {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: 10px 4px 14px !important;
+    padding: 12px 1rem !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    margin: 0 !important;
   }
 
   .btn-search-back-arrow {
@@ -17423,11 +17426,21 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     letter-spacing: -0.3px !important;
   }
 
-  /* Hero Wrapper on Mobile Search Active: White and Clean */
+  /* Hero Wrapper on Mobile Search Active: Edge-to-Edge Full Width, 0 top/left/right space */
   body.mobile-search-active .hero-wrapper {
-    padding: 16px 14px 40px !important;
+    padding: 0 0 40px !important;
+    margin: 0 !important;
     background: #ffffff !important;
     min-height: 100vh !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
+  body.mobile-search-active .hero-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
   }
 
@@ -17440,7 +17453,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
   body.mobile-search-active .hero-booking-card {
     display: block !important;
     width: 100% !important;
-    max-width: 500px !important;
+    max-width: 100% !important;
     margin: 0 auto !important;
     background: #ffffff !important;
     border: none !important;
@@ -17449,7 +17462,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     padding: 0 !important;
   }
 
-  /* Mobile Tabs Bar matching Image 2 */
+  /* Mobile Tabs Bar matching Image 2: Full Width */
   body.mobile-search-active .mobile-travel-tabs-bar {
     display: flex !important;
     align-items: center !important;
@@ -17458,6 +17471,7 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     padding: 0.25rem 0 0 !important;
     border-bottom: 1.5px solid #eef2f6 !important;
     width: 100% !important;
+    margin: 0 !important;
   }
 
   body.mobile-search-active .mobile-travel-tab {
@@ -17486,9 +17500,11 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     background: #0056d6 !important;
   }
 
-  /* Inputs Box in Image 2 */
+  /* Inputs Box in Image 2: 1rem horizontal padding inside form */
   body.mobile-search-active #hero-cab-search-form {
-    padding: 1.25rem 0.25rem 1rem !important;
+    padding: 1.25rem 1rem 1.5rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   body.mobile-search-active #from-input-wrapper {
