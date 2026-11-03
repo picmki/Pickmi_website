@@ -1248,7 +1248,7 @@ export class PickMiApp {
       this.navigateTo('trips');
     } else if (view === 'business' || (view === 'account' && param === 'business')) {
       this.showView('account', 'business');
-    } else if (['home', 'results', 'checkout', 'confirmation', 'trips', 'account', 'offers', 'support', 'drive', 'policy', 'partner'].includes(view)) {
+    } else if (['home', 'results', 'checkout', 'confirmation', 'trips', 'account', 'offers', 'support', 'drive', 'policy', 'partner', 'service-unavailable'].includes(view)) {
       this.showView(view, param);
     } else {
       this.showView('home');
@@ -1359,6 +1359,13 @@ export class PickMiApp {
       document.body.classList.remove('account-view-active');
     }
 
+    // Toggle service-unavailable view state
+    if (viewName === 'service-unavailable') {
+      document.body.classList.add('service-unavailable-active');
+    } else {
+      document.body.classList.remove('service-unavailable-active');
+    }
+
     // Update nav links active states
     document.querySelectorAll('.nav-link, .mobile-nav-btn, .drawer-nav-item').forEach(btn => {
       const match = (btn.dataset.view === viewName) || (btn.dataset.nav === viewName);
@@ -1401,6 +1408,8 @@ export class PickMiApp {
       this.setupDrivePartnerPage();
     } else if (viewName === 'partner') {
       this.setupPartnerPage();
+    } else if (viewName === 'service-unavailable') {
+      this.renderServiceUnavailable(param || 'parcel');
     } else if (viewName === 'home') {
       this.renderHomeDynamicSections();
     }
@@ -1853,7 +1862,7 @@ export class PickMiApp {
         } else if (svc === 'airport') {
           this.openMobileSearch('oneway', null, 'airport');
         } else if (svc === 'parcel') {
-          this.openMobileSearch('oneway', null, 'parcel');
+          this.navigateTo('service-unavailable', 'parcel');
         } else {
           this.openMobileSearch('oneway');
         }
@@ -7950,6 +7959,102 @@ export class PickMiApp {
         setTimeout(() => this.navigateTo('home'), 1200);
       };
     });
+  }
+
+  // Service Unavailable / Coming Soon Page (VIEW 13)
+  renderServiceUnavailable(serviceKey = 'parcel') {
+    const navTitle = document.getElementById('service-unavailable-nav-title');
+    const badgeText = document.getElementById('service-unavailable-badge-text');
+    const titleEl = document.getElementById('service-unavailable-title');
+    const descEl = document.getElementById('service-unavailable-desc');
+    const successBox = document.getElementById('service-request-success');
+    const successText = document.getElementById('service-request-success-text');
+    const requestBtn = document.getElementById('btn-service-request');
+    const requestLabel = document.getElementById('btn-service-request-label');
+    const backBtn = document.getElementById('btn-service-back');
+    const headerBackBtn = document.getElementById('service-unavailable-header-back');
+
+    const serviceName = serviceKey === 'parcel' ? 'Parcel Delivery' : (serviceKey.charAt(0).toUpperCase() + serviceKey.slice(1));
+
+    if (navTitle) navTitle.textContent = serviceName;
+    if (badgeText) badgeText.textContent = 'COMING SOON';
+    if (titleEl) titleEl.textContent = 'Service Not Available Yet';
+    if (descEl) {
+      descEl.textContent = `PickMi ${serviceName} is coming soon to your city! We are building fast, dependable doorstep delivery with live tracking and verified riders.`;
+    }
+
+    const storageKey = `pickmi_service_requested_${serviceKey}`;
+    let alreadyRequested = false;
+    try {
+      alreadyRequested = localStorage.getItem(storageKey) === 'true';
+    } catch (e) {}
+
+    if (alreadyRequested) {
+      if (successBox) successBox.style.display = 'flex';
+      if (successText) {
+        successText.textContent = `Request already registered! We will notify you via SMS/WhatsApp as soon as ${serviceName} launches in your area.`;
+      }
+      if (requestBtn) {
+        requestBtn.classList.add('requested');
+        if (requestLabel) requestLabel.textContent = '✓ Request Registered';
+      }
+    } else {
+      if (successBox) successBox.style.display = 'none';
+      if (requestBtn) {
+        requestBtn.classList.remove('requested');
+        if (requestLabel) requestLabel.textContent = 'Request Service';
+      }
+    }
+
+    // CTA 1: Request Service
+    if (requestBtn && !requestBtn._serviceBound) {
+      requestBtn._serviceBound = true;
+      requestBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        let curRequested = false;
+        try {
+          curRequested = localStorage.getItem(storageKey) === 'true';
+        } catch (e) {}
+
+        if (curRequested) {
+          this.showToast(`You have already registered your request for ${serviceName}. We will notify you when it launches!`, 'info');
+          return;
+        }
+
+        try {
+          localStorage.setItem(storageKey, 'true');
+        } catch (err) {}
+
+        if (successBox) successBox.style.display = 'flex';
+        if (successText) {
+          successText.textContent = `Request registered! We will notify you as soon as ${serviceName} launches in your area.`;
+        }
+        requestBtn.classList.add('requested');
+        if (requestLabel) requestLabel.textContent = '✓ Request Registered';
+
+        this.showToast(`Thank you! We've noted your request for ${serviceName} and will notify you when available.`, 'success');
+      });
+    }
+
+    // CTA 2: Go Back (Both bottom CTA and top mobile back arrow)
+    const handleGoBack = (e) => {
+      e?.preventDefault();
+      if (this.previousView && this.previousView !== 'service-unavailable') {
+        this.navigateTo(this.previousView);
+      } else {
+        this.navigateTo('home');
+      }
+    };
+
+    if (backBtn && !backBtn._backBound) {
+      backBtn._backBound = true;
+      backBtn.addEventListener('click', handleGoBack);
+    }
+
+    if (headerBackBtn && !headerBackBtn._backBound) {
+      headerBackBtn._backBound = true;
+      headerBackBtn.addEventListener('click', handleGoBack);
+    }
   }
 
   // Support & FAQ Page (Section 13)
