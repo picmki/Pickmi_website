@@ -17492,14 +17492,39 @@ body.user-logged-in.trip-detail-view-active #mobile-bottom-nav {
     display: block !important;
     width: calc(100% - 40px) !important;
     max-width: calc(100% - 40px) !important;
-    margin: 20px auto 24px !important;
+    margin: 20px 20px 24px 20px !important;
     background: #ffffff !important;
     border: none !important;
+    outline: none !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
     border-radius: 12px !important;
+    -webkit-border-radius: 12px !important;
     overflow: visible !important;
     padding: 0 !important;
     box-sizing: border-box !important;
+  }
+
+  body.mobile-search-active .booking-card-top-row {
+    display: none !important;
+  }
+
+  body.mobile-search-active #hero-cab-search-form {
+    padding: 1.25rem 1rem 1.5rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    -webkit-border-radius: 12px !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  body.mobile-search-active .booking-card-inputs-grid {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    -webkit-border-radius: 12px !important;
+    border: none !important;
+    outline: none !important;
   }
 
   body.mobile-search-active .mobile-travel-tab {

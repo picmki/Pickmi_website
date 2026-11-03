@@ -27,7 +27,7 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="css/styles.css?v=84">
+  <link rel="stylesheet" href="css/styles.css?v=85">
   <style>
     *,
     *::before,
@@ -57,7 +57,7 @@
         background-color: #F5F7FA !important;
       }
 
-      .hero-wrapper {
+      body:not(.mobile-search-active) .hero-wrapper {
         background-image: none !important;
         background: #F5F7FA !important;
         margin: 0 !important;
@@ -67,18 +67,64 @@
         padding-right: 14px !important;
       }
 
-      .hero-container {
+      body:not(.mobile-search-active) .hero-container {
         width: 100% !important;
         max-width: 540px !important;
         margin: 0 auto !important;
       }
 
-      .hero-booking-card {
+      body:not(.mobile-search-active) .hero-booking-card {
         width: calc(100% - 24px) !important;
         max-width: 540px !important;
         margin: 0.5rem auto 1rem !important;
         border: 1px solid #e2e8f0 !important;
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
+      }
+
+      /* Search Page Card: EXACT 20px spacing top, left, right; 12px border radius; NO border line */
+      body.mobile-search-active .hero-wrapper {
+        padding: 0 0 40px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      body.mobile-search-active .hero-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+      }
+
+      body.mobile-search-active #hero-booking-card,
+      body.mobile-search-active .hero-booking-card {
+        display: block !important;
+        width: calc(100% - 40px) !important;
+        max-width: calc(100% - 40px) !important;
+        margin: 20px 20px 24px 20px !important;
+        background: #ffffff !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+        border-radius: 12px !important;
+        -webkit-border-radius: 12px !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+      }
+
+      body.mobile-search-active .booking-card-top-row {
+        display: none !important;
+      }
+
+      body.mobile-search-active #hero-cab-search-form,
+      body.mobile-search-active .booking-card-inputs-grid {
+        border-radius: 12px !important;
+        -webkit-border-radius: 12px !important;
+        border: none !important;
+        background: #ffffff !important;
       }
 
       .popular-destinations-section,
@@ -429,9 +475,11 @@
           <div class="mobile-home-dashboard" id="mobile-home-screen">
             <!-- 1. Top Search Pill: Where To ? [Go] (Fixed on Scroll) -->
             <div class="mobile-where-to-sticky-bar" id="mobile-where-to-sticky-wrap">
-              <div class="mobile-where-to-pill" id="mobile-where-to-trigger" role="button" tabindex="0" aria-label="Search destination">
+              <div class="mobile-where-to-pill" id="mobile-where-to-trigger" role="button" tabindex="0"
+                aria-label="Search destination">
                 <div class="mobile-where-to-left">
-                  <svg class="mobile-where-to-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="mobile-where-to-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                   </svg>
                   <span class="mobile-where-to-text">Where To ?</span>
@@ -442,26 +490,34 @@
 
             <!-- 2. Grid of 5 Services (Airport, Rental, Reserve, Intercity, Parcel) -->
             <div class="mobile-service-grid" id="mobile-service-grid">
-              <div class="mobile-service-card" data-service="airport" role="button" tabindex="0" aria-label="Airport Transfer">
+              <div class="mobile-service-card" data-service="airport" role="button" tabindex="0"
+                aria-label="Airport Transfer">
                 <img src="assets/service_card_airport.png" alt="Airport" class="mobile-service-img">
               </div>
-              <div class="mobile-service-card" data-service="rental" role="button" tabindex="0" aria-label="Hourly Rental">
+              <div class="mobile-service-card" data-service="rental" role="button" tabindex="0"
+                aria-label="Hourly Rental">
                 <img src="assets/service_card_rental.png" alt="Rental" class="mobile-service-img">
               </div>
-              <div class="mobile-service-card" data-service="reserve" role="button" tabindex="0" aria-label="Reserve Ride">
+              <div class="mobile-service-card" data-service="reserve" role="button" tabindex="0"
+                aria-label="Reserve Ride">
                 <img src="assets/service_card_reserve_v2.png" alt="Reserve" class="mobile-service-img">
               </div>
-              <div class="mobile-service-card wide-card" data-service="intercity" role="button" tabindex="0" aria-label="Intercity Rides Starting at 12 Per kms">
-                <img src="assets/service_card_intercity_wide.png" alt="Intercity Starting at 12 Per kms" class="mobile-service-img">
+              <div class="mobile-service-card wide-card" data-service="intercity" role="button" tabindex="0"
+                aria-label="Intercity Rides Starting at 12 Per kms">
+                <img src="assets/service_card_intercity_wide.png" alt="Intercity Starting at 12 Per kms"
+                  class="mobile-service-img">
               </div>
-              <div class="mobile-service-card" data-service="parcel" role="button" tabindex="0" aria-label="Parcel Delivery">
+              <div class="mobile-service-card" data-service="parcel" role="button" tabindex="0"
+                aria-label="Parcel Delivery">
                 <img src="assets/service_card_parcel_box.png" alt="Parcel" class="mobile-service-img">
               </div>
             </div>
 
             <!-- 3. 50% Discount Blue Banner -->
-            <div class="mobile-home-promo-wrap" id="mobile-home-promo-trigger" role="button" tabindex="0" aria-label="Get 50% Discount for the first Inter City">
-              <img src="assets/promo_intercity_50.png" alt="Get 50% Discount for the first Inter City" class="mobile-promo-banner-img">
+            <div class="mobile-home-promo-wrap" id="mobile-home-promo-trigger" role="button" tabindex="0"
+              aria-label="Get 50% Discount for the first Inter City">
+              <img src="assets/promo_intercity_50.png" alt="Get 50% Discount for the first Inter City"
+                class="mobile-promo-banner-img">
             </div>
 
             <!-- 4. Popular Domestic Destinations Horizontal Cards -->
@@ -520,7 +576,8 @@
           <!-- Mobile Search Dedicated Header (Visible only when mobile-search-active on Mobile) -->
           <div class="mobile-search-nav-header" id="mobile-search-nav-header">
             <button type="button" class="btn-search-back-arrow" id="btn-search-back" aria-label="Go back to Home">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
@@ -3429,8 +3486,10 @@
     <section id="view-service-unavailable" class="app-view" style="display:none;">
       <!-- Mobile Top Navigation Bar -->
       <div class="service-unavailable-mobile-nav" id="service-unavailable-nav">
-        <button type="button" class="service-unavailable-back-btn" id="service-unavailable-header-back" aria-label="Go Back">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <button type="button" class="service-unavailable-back-btn" id="service-unavailable-header-back"
+          aria-label="Go Back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
@@ -3493,8 +3552,10 @@
               <circle cx="240" cy="165" r="5" fill="#93C5FD" opacity="0.8" />
 
               <!-- Speed / Transit Dashes -->
-              <line x1="52" y1="135" x2="74" y2="135" stroke="#93C5FD" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 4" />
-              <line x1="246" y1="145" x2="268" y2="145" stroke="#93C5FD" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 3" />
+              <line x1="52" y1="135" x2="74" y2="135" stroke="#93C5FD" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="4 4" />
+              <line x1="246" y1="145" x2="268" y2="145" stroke="#93C5FD" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="3 3" />
 
               <!-- Ground Soft Shadow -->
               <ellipse cx="160" cy="198" rx="72" ry="14" fill="#0F172A" fill-opacity="0.07" />
@@ -3503,11 +3564,14 @@
               <!-- Isometric Parcel Delivery Box -->
               <g filter="url(#shadowFilter)">
                 <!-- Top Face -->
-                <polygon points="160,88 220,118 160,148 100,118" fill="url(#boxTop)" stroke="#0F172A" stroke-width="2.5" stroke-linejoin="round" />
+                <polygon points="160,88 220,118 160,148 100,118" fill="url(#boxTop)" stroke="#0F172A" stroke-width="2.5"
+                  stroke-linejoin="round" />
                 <!-- Left Face -->
-                <polygon points="100,118 160,148 160,192 100,162" fill="url(#boxLeft)" stroke="#0F172A" stroke-width="2.5" stroke-linejoin="round" />
+                <polygon points="100,118 160,148 160,192 100,162" fill="url(#boxLeft)" stroke="#0F172A"
+                  stroke-width="2.5" stroke-linejoin="round" />
                 <!-- Right Face -->
-                <polygon points="160,148 220,118 220,162 160,192" fill="url(#boxRight)" stroke="#0F172A" stroke-width="2.5" stroke-linejoin="round" />
+                <polygon points="160,148 220,118 220,162 160,192" fill="url(#boxRight)" stroke="#0F172A"
+                  stroke-width="2.5" stroke-linejoin="round" />
 
                 <!-- Royal Blue Tape Top -->
                 <polygon points="152,92 168,100 168,144 152,136" fill="url(#blueTapeTop)" />
@@ -3517,13 +3581,16 @@
                 <polygon points="160,140 168,144 168,188 160,192" fill="url(#blueTapeRight)" />
 
                 <!-- Left Face Shipping Label Sticker -->
-                <polygon points="112,136 134,147 134,167 112,156" fill="#FFFFFF" stroke="#0056D6" stroke-width="1.5" stroke-linejoin="round" />
+                <polygon points="112,136 134,147 134,167 112,156" fill="#FFFFFF" stroke="#0056D6" stroke-width="1.5"
+                  stroke-linejoin="round" />
                 <!-- Fragile / Handle With Care Motif -->
-                <path d="M118 147 L123 143 L128 147 M123 143 L123 155" stroke="#0056D6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M118 147 L123 143 L128 147 M123 143 L123 155" stroke="#0056D6" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" />
                 <line x1="117" y1="158" x2="129" y2="164" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round" />
 
                 <!-- Right Face Shipping Barcode Label -->
-                <polygon points="186,136 208,125 208,146 186,157" fill="#FFFFFF" stroke="#0056D6" stroke-width="1.5" stroke-linejoin="round" />
+                <polygon points="186,136 208,125 208,146 186,157" fill="#FFFFFF" stroke="#0056D6" stroke-width="1.5"
+                  stroke-linejoin="round" />
                 <line x1="190" y1="140" x2="190" y2="152" stroke="#0F172A" stroke-width="1.5" />
                 <line x1="193" y1="138" x2="193" y2="150" stroke="#0F172A" stroke-width="1.2" />
                 <line x1="196" y1="137" x2="196" y2="149" stroke="#0F172A" stroke-width="2" />
@@ -3534,15 +3601,18 @@
               <!-- Floating Modern Pin -->
               <g transform="translate(208, 62)">
                 <circle cx="16" cy="16" r="18" fill="#0056D6" filter="drop-shadow(0 4px 10px rgba(0,86,214,0.35))" />
-                <path d="M16 8C12.7 8 10 10.7 10 14C10 18.5 16 24 16 24C16 24 22 18.5 22 14C22 10.7 19.3 8 16 8Z" fill="#FFFFFF" />
+                <path d="M16 8C12.7 8 10 10.7 10 14C10 18.5 16 24 16 24C16 24 22 18.5 22 14C22 10.7 19.3 8 16 8Z"
+                  fill="#FFFFFF" />
                 <circle cx="16" cy="13.5" r="2.5" fill="#0056D6" />
               </g>
 
               <!-- Floating Clock / Coming Soon Indicator -->
               <g transform="translate(68, 76)">
-                <circle cx="16" cy="16" r="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5" filter="drop-shadow(0 4px 10px rgba(37,99,235,0.2))" />
+                <circle cx="16" cy="16" r="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"
+                  filter="drop-shadow(0 4px 10px rgba(37,99,235,0.2))" />
                 <circle cx="16" cy="16" r="2" fill="#2563EB" />
-                <polyline points="16 10 16 16 20 18" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                <polyline points="16 10 16 16 20 18" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round"
+                  stroke-linejoin="round" />
               </g>
             </svg>
           </div>
@@ -3561,22 +3631,29 @@
 
           <!-- Info / Request Success Feedback Box -->
           <div class="service-unavailable-feedback-box" id="service-request-success" style="display:none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <span id="service-request-success-text">Request registered! We will notify you as soon as this service launches in your area.</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span id="service-request-success-text">Request registered! We will notify you as soon as this service
+              launches in your area.</span>
           </div>
 
           <!-- Phone input for notification -->
           <div class="service-request-input-wrap" id="service-request-input-wrap">
             <div class="service-phone-input-field">
               <span class="service-phone-prefix">+91</span>
-              <input type="tel" id="service-request-phone" class="service-request-phone" placeholder="Enter mobile number to get notified" maxlength="10" />
+              <input type="tel" id="service-request-phone" class="service-request-phone"
+                placeholder="Enter mobile number to get notified" maxlength="10" />
             </div>
           </div>
 
           <!-- Action Buttons (CTA) -->
           <div class="service-unavailable-btn-group">
             <button type="button" class="btn-service-request-cta" id="btn-service-request">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
               </svg>
