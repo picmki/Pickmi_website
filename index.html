@@ -425,6 +425,106 @@
             <p class="hero-subheading">Comfortable. Safe. Affordable Rides for Your Next Journey.</p>
           </div>
 
+          <!-- Mobile Home Dashboard (Image 1 Reference Layout) -->
+          <div class="mobile-home-dashboard" id="mobile-home-screen">
+            <!-- 1. Top Search Pill: Where To ? [Go] -->
+            <div class="mobile-where-to-pill" id="mobile-where-to-trigger" role="button" tabindex="0" aria-label="Search destination">
+              <div class="mobile-where-to-left">
+                <svg class="mobile-where-to-horn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                </svg>
+                <span class="mobile-where-to-text">Where To ?</span>
+              </div>
+              <button type="button" class="mobile-where-to-btn" aria-label="Go">Go</button>
+            </div>
+
+            <!-- 2. Grid of 5 Services (Airport, Rental, Reserve, Intercity, Parcel) -->
+            <div class="mobile-service-grid" id="mobile-service-grid">
+              <div class="mobile-service-card" data-service="airport" role="button" tabindex="0" aria-label="Airport Transfer">
+                <img src="assets/service_card_airport.png" alt="Airport" class="mobile-service-img">
+              </div>
+              <div class="mobile-service-card" data-service="rental" role="button" tabindex="0" aria-label="Hourly Rental">
+                <img src="assets/service_card_rental.png" alt="Rental" class="mobile-service-img">
+              </div>
+              <div class="mobile-service-card" data-service="reserve" role="button" tabindex="0" aria-label="Reserve Ride">
+                <img src="assets/service_card_reserve_v2.png" alt="Reserve" class="mobile-service-img">
+              </div>
+              <div class="mobile-service-card wide-card" data-service="intercity" role="button" tabindex="0" aria-label="Intercity Rides Starting at 12 Per kms">
+                <img src="assets/service_card_intercity_wide.png" alt="Intercity Starting at 12 Per kms" class="mobile-service-img">
+              </div>
+              <div class="mobile-service-card" data-service="parcel" role="button" tabindex="0" aria-label="Parcel Delivery">
+                <img src="assets/service_card_parcel_box.png" alt="Parcel" class="mobile-service-img">
+              </div>
+            </div>
+
+            <!-- 3. 50% Discount Blue Banner -->
+            <div class="mobile-home-promo-wrap" id="mobile-home-promo-trigger" role="button" tabindex="0" aria-label="Get 50% Discount for the first Inter City">
+              <img src="assets/promo_intercity_50.png" alt="Get 50% Discount for the first Inter City" class="mobile-promo-banner-img">
+            </div>
+
+            <!-- 4. Popular Domestic Destinations Horizontal Cards -->
+            <div class="mobile-popular-dest-block">
+              <div class="mobile-dest-heading-wrap">
+                <h3 class="mobile-dest-section-title">Popular Domestic Destinations from</h3>
+              </div>
+              <div class="mobile-dest-cards-scroll">
+                <div class="mobile-dest-item-card" data-city="Mumbai" role="button" tabindex="0" title="Mumbai">
+                  <img src="assets/dest_mumbai_card.png" alt="Mumbai" class="mobile-dest-item-img">
+                </div>
+                <div class="mobile-dest-item-card" data-city="Bangalore" role="button" tabindex="0" title="Bangalore">
+                  <div class="mobile-dest-item-overlay">
+                    <span class="mobile-dest-item-title">Bangalore</span>
+                  </div>
+                  <img src="assets/dest_bangalore.jpg" alt="Bangalore" class="mobile-dest-item-img">
+                </div>
+                <div class="mobile-dest-item-card" data-city="Chennai" role="button" tabindex="0" title="Chennai">
+                  <div class="mobile-dest-item-overlay">
+                    <span class="mobile-dest-item-title">Chennai</span>
+                  </div>
+                  <img src="assets/dest_chennai.jpg" alt="Chennai" class="mobile-dest-item-img">
+                </div>
+                <div class="mobile-dest-item-card" data-city="Ooty" role="button" tabindex="0" title="Ooty">
+                  <div class="mobile-dest-item-overlay">
+                    <span class="mobile-dest-item-title">Ooty</span>
+                  </div>
+                  <img src="assets/dest_ooty.jpg" alt="Ooty" class="mobile-dest-item-img">
+                </div>
+                <div class="mobile-dest-item-card" data-city="Goa" role="button" tabindex="0" title="Goa">
+                  <div class="mobile-dest-item-overlay">
+                    <span class="mobile-dest-item-title">Goa</span>
+                  </div>
+                  <img src="assets/dest_goa.jpg" alt="Goa" class="mobile-dest-item-img">
+                </div>
+                <div class="mobile-dest-item-card" data-city="Hyderabad" role="button" tabindex="0" title="Hyderabad">
+                  <div class="mobile-dest-item-overlay">
+                    <span class="mobile-dest-item-title">Hyderabad</span>
+                  </div>
+                  <img src="assets/dest_hyderabad.jpg?v=2" alt="Hyderabad" class="mobile-dest-item-img">
+                </div>
+                <div class="mobile-dest-item-card" data-city="Pune" role="button" tabindex="0" title="Pune">
+                  <div class="mobile-dest-item-overlay">
+                    <span class="mobile-dest-item-title">Pune</span>
+                  </div>
+                  <img src="assets/dest_pune.jpg?v=2" alt="Pune" class="mobile-dest-item-img">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Search Dedicated Header (Visible only when mobile-search-active on Mobile) -->
+          <div class="mobile-search-nav-header" id="mobile-search-nav-header">
+            <button type="button" class="btn-search-back-arrow" id="btn-search-back" aria-label="Go back to Home">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <span class="mobile-search-header-title">Search Cabs</span>
+            <div style="width: 28px;"></div>
+          </div>
+
           <!-- Main White Travel Card (Exact Visual Hierarchy of Screenshot) -->
           <div class="hero-booking-card" id="hero-booking-card">
             <!-- Mobile Travel Mode Tabs Bar (Top Section of Single Card) -->
@@ -759,14 +859,6 @@
                 </button>
               </div>
             </form>
-          </div>
-
-
-          <div class="mobile-home-promo-card-wrapper" id="mobile-home-promo-card">
-            <div class="mobile-home-promo-card" role="button" aria-label="Get 50% Discount for the first Inter City">
-              <img src="assets/promo_intercity_50.png" alt="Get 50% Discount for the first Inter City"
-                class="mobile-home-promo-img">
-            </div>
           </div>
 
         </div>
@@ -3906,24 +3998,21 @@
         aria-label="Activity">
         <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="17" rx="3.5" />
-          <path d="M16 2v4M8 2v4M3 9.5h18" />
-          <circle cx="8" cy="14.5" r="1" fill="currentColor" />
-          <circle cx="12" cy="14.5" r="1" fill="currentColor" />
-          <circle cx="16" cy="14.5" r="1" fill="currentColor" />
+          <path d="M22 2L11 13" />
+          <path d="M22 2l-7 20-4-9-9-4 20-7z" />
         </svg>
         <span class="mobile-nav-label">Activity</span>
       </button>
 
-      <!-- 4. Profile (Account) -->
+      <!-- 4. Account (Profile) -->
       <button type="button" class="mobile-nav-btn" data-nav="account" data-view="account" id="btn-dock-profile"
-        aria-label="Profile">
+        aria-label="Account">
         <svg class="mobile-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="8" r="4.25" />
           <path d="M5.5 20.5a6.5 6.5 0 0 1 13 0" />
         </svg>
-        <span class="mobile-nav-label">Profile</span>
+        <span class="mobile-nav-label">Account</span>
       </button>
     </nav>
 

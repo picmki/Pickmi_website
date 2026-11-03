@@ -504,6 +504,7 @@ export class PickMiApp {
   init() {
     this.setupNavigation();
     this.setupServiceTabs();
+    this.setupMobileHomeScreen();
     this.setupAutocomplete();
     this.setupSearchForm();
     this.setupModals();
@@ -1230,7 +1231,13 @@ export class PickMiApp {
     const hash = window.location.hash.replace('#', '');
     const [view, param] = hash.split('/');
 
-    if (view === 'login') {
+    if (view === 'search') {
+      this.showView('home');
+      if (window.innerWidth <= 768) {
+        document.body.classList.add('mobile-search-active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else if (view === 'login') {
       this.showView('home');
       setTimeout(() => this.openLoginModal(), 200);
     } else if (view === 'trip-detail' && param) {
@@ -1249,6 +1256,10 @@ export class PickMiApp {
   }
 
   showView(viewName, param = null) {
+    // When leaving search view, remove mobile search state
+    if (viewName !== 'search') {
+      document.body.classList.remove('mobile-search-active');
+    }
     // Guard protected user views
     if (['checkout', 'trips', 'account'].includes(viewName) && (!store.user.isLoggedIn || !store.user.isProfileComplete)) {
       if (viewName === 'account' && (param === 'support' || param === 'business')) {
@@ -1800,8 +1811,123 @@ export class PickMiApp {
       });
     });
 
+    // Store activateTripMode on instance for mobile card triggers
+    this.activateTripMode = activateTripMode;
+
     // Default initialization: Activate One-Way mode strictly
     activateTripMode('oneway');
+  }
+
+  // Setup Mobile Home Screen Interactions (Image 1 & 2 flow)
+  setupMobileHomeScreen() {
+    // 1. Where To Search Pill Trigger
+    const whereToTrigger = document.getElementById('mobile-where-to-trigger');
+    if (whereToTrigger) {
+      whereToTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.openMobileSearch('oneway');
+      });
+    }
+
+    // 2. 5 Service Cards (Airport, Rental, Reserve, Intercity, Parcel)
+    const serviceCards = document.querySelectorAll('.mobile-service-card[data-service]');
+    serviceCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        const svc = card.dataset.service;
+        if (svc === 'rental') {
+          this.openMobileSearch('rental');
+        } else if (svc === 'reserve') {
+          this.openMobileSearch('round');
+        } else if (svc === 'airport') {
+          this.openMobileSearch('oneway', null, 'airport');
+        } else if (svc === 'parcel') {
+          this.openMobileSearch('oneway', null, 'parcel');
+        } else {
+          this.openMobileSearch('oneway');
+        }
+      });
+    });
+
+    // 3. 50% Promo Banner Trigger
+    const promoTrigger = document.getElementById('mobile-home-promo-trigger');
+    if (promoTrigger) {
+      promoTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.openMobileSearch('oneway');
+      });
+    }
+
+    // 4. Popular Domestic Destination Cards
+    const destCards = document.querySelectorAll('.mobile-dest-item-card[data-city]');
+    destCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        const city = card.dataset.city;
+        this.openMobileSearch('oneway', city);
+      });
+    });
+
+    // 5. Back Button on Search Card Page
+    const backBtn = document.getElementById('btn-search-back');
+    if (backBtn) {
+      backBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.closeMobileSearch();
+      });
+    }
+  }
+
+  openMobileSearch(tripMode = 'oneway', destination = null, preset = null) {
+    if (typeof this.activateTripMode === 'function') {
+      this.activateTripMode(tripMode);
+    } else {
+      const tab = document.querySelector(`.mobile-travel-tab[data-trip-mode="${tripMode}"]`);
+      if (tab) tab.click();
+    }
+
+    if (destination) {
+      const dropInput = document.getElementById('input-drop');
+      if (dropInput) {
+        dropInput.value = destination;
+        store.setSearchParams({ drop: destination });
+      }
+    }
+
+    if (preset === 'airport') {
+      const dropInput = document.getElementById('input-drop');
+      if (dropInput && !dropInput.value) {
+        dropInput.placeholder = 'Enter Airport name (e.g. Bangalore Airport)';
+      }
+    } else if (preset === 'parcel') {
+      const dropInput = document.getElementById('input-drop');
+      if (dropInput && !dropInput.value) {
+        dropInput.placeholder = 'Enter parcel delivery location';
+      }
+    }
+
+    document.body.classList.add('mobile-search-active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (window.location.hash !== '#search') {
+      try {
+        history.pushState({ view: 'search' }, '', '#search');
+      } catch (e) {
+        window.location.hash = '#search';
+      }
+    }
+  }
+
+  closeMobileSearch() {
+    document.body.classList.remove('mobile-search-active');
+    if (window.location.hash === '#search') {
+      try {
+        history.pushState({ view: 'home' }, '', '#home');
+      } catch (e) {
+        window.location.hash = '#home';
+      }
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Setup Dynamic 5-day Date Pills + Calendar
@@ -2728,6 +2854,7 @@ export class PickMiApp {
         cabType
       });
 
+      document.body.classList.remove('mobile-search-active');
       this.navigateTo('results');
     });
 
@@ -5481,6 +5608,7 @@ export class PickMiApp {
 
     // Sticky Checkout Header Back Button & Full-Width Top Header Handlers
     document.getElementById('btn-checkout-back')?.addEventListener('click', () => {
+      document.body.classList.remove('mobile-search-active');
       this.navigateTo('results');
     });
 
