@@ -7969,6 +7969,8 @@ export class PickMiApp {
     const descEl = document.getElementById('service-unavailable-desc');
     const successBox = document.getElementById('service-request-success');
     const successText = document.getElementById('service-request-success-text');
+    const phoneInputWrap = document.getElementById('service-request-input-wrap');
+    const phoneInput = document.getElementById('service-request-phone');
     const requestBtn = document.getElementById('btn-service-request');
     const requestLabel = document.getElementById('btn-service-request-label');
     const backBtn = document.getElementById('btn-service-back');
@@ -7983,22 +7985,31 @@ export class PickMiApp {
       descEl.textContent = `PickMi ${serviceName} is coming soon to your city! We are building fast, dependable doorstep delivery with live tracking and verified riders.`;
     }
 
+    if (phoneInput && store.user?.phone) {
+      phoneInput.value = store.user.phone.replace('+91', '').trim();
+    }
+
     const storageKey = `pickmi_service_requested_${serviceKey}`;
     let alreadyRequested = false;
+    let savedPhone = '';
     try {
       alreadyRequested = localStorage.getItem(storageKey) === 'true';
+      savedPhone = localStorage.getItem(`${storageKey}_phone`) || '';
     } catch (e) {}
 
     if (alreadyRequested) {
+      if (phoneInputWrap) phoneInputWrap.style.display = 'none';
       if (successBox) successBox.style.display = 'flex';
       if (successText) {
-        successText.textContent = `Request already registered! We will notify you via SMS/WhatsApp as soon as ${serviceName} launches in your area.`;
+        const contactHint = savedPhone ? ` at +91 ${savedPhone}` : '';
+        successText.textContent = `Request registered! We will notify you${contactHint} via SMS/WhatsApp as soon as ${serviceName} launches in your area.`;
       }
       if (requestBtn) {
         requestBtn.classList.add('requested');
         if (requestLabel) requestLabel.textContent = '✓ Request Registered';
       }
     } else {
+      if (phoneInputWrap) phoneInputWrap.style.display = 'block';
       if (successBox) successBox.style.display = 'none';
       if (requestBtn) {
         requestBtn.classList.remove('requested');
@@ -8021,13 +8032,25 @@ export class PickMiApp {
           return;
         }
 
+        const phoneVal = phoneInput?.value?.trim() || '';
+        if (phoneVal && phoneVal.length > 0 && phoneVal.length < 10) {
+          this.showToast('Please enter a valid 10-digit mobile number', 'warning');
+          phoneInput?.focus();
+          return;
+        }
+
         try {
           localStorage.setItem(storageKey, 'true');
+          if (phoneVal) {
+            localStorage.setItem(`${storageKey}_phone`, phoneVal);
+          }
         } catch (err) {}
 
+        if (phoneInputWrap) phoneInputWrap.style.display = 'none';
         if (successBox) successBox.style.display = 'flex';
         if (successText) {
-          successText.textContent = `Request registered! We will notify you as soon as ${serviceName} launches in your area.`;
+          const contactHint = phoneVal ? ` at +91 ${phoneVal}` : '';
+          successText.textContent = `Request registered! We will notify you${contactHint} via SMS/WhatsApp as soon as ${serviceName} launches in your area.`;
         }
         requestBtn.classList.add('requested');
         if (requestLabel) requestLabel.textContent = '✓ Request Registered';

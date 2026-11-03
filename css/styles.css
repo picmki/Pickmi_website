@@ -17790,6 +17790,52 @@ body.service-unavailable-active #mobile-bottom-nav {
   text-align: left;
 }
 
+.service-request-input-wrap {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.service-phone-input-field {
+  display: flex;
+  align-items: center;
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 100px;
+  padding: 4px 14px;
+  transition: all 0.2s ease;
+}
+
+.service-phone-input-field:focus-within {
+  border-color: #0056D6;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(0, 86, 214, 0.12);
+}
+
+.service-phone-prefix {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #64748B;
+  margin-right: 8px;
+  user-select: none;
+}
+
+.service-request-phone {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0F172A;
+  outline: none;
+  padding: 10px 4px;
+}
+
+.service-request-phone::placeholder {
+  color: #94A3B8;
+  font-weight: 400;
+  font-size: 0.88rem;
+}
+
 .service-unavailable-btn-group {
   width: 100%;
   display: flex;
