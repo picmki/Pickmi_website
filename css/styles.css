@@ -18014,4 +18014,266 @@ body.service-unavailable-active #mobile-bottom-nav {
   }
 }
 
+/* =========================================================================
+   MOBILE RESERVE MODE ("Choose a Trip" UI matching user screenshot)
+   ========================================================================= */
+.booking-card-fields-box {
+  display: contents;
+}
+
+#mobile-reserve-nav-container {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Hide standard search header & standard travel tabs when in reserve mode */
+  body.mobile-reserve-active #mobile-search-nav-header,
+  body.mobile-reserve-active .mobile-search-nav-header,
+  body.mobile-reserve-active #mobile-travel-tabs-bar,
+  body.mobile-reserve-active .mobile-travel-tabs-bar {
+    display: none !important;
+  }
+
+  /* Show reserve navigation container */
+  body.mobile-reserve-active #mobile-reserve-nav-container {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+  }
+
+  /* White Circular Back Arrow Button on Top Left */
+  .mobile-reserve-header-row {
+    padding: 16px 18px 6px 18px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .btn-reserve-back-circle {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    color: #0f172a !important;
+    transition: transform 0.15s ease !important;
+  }
+
+  .btn-reserve-back-circle:active {
+    transform: scale(0.92) !important;
+  }
+
+  /* Bold Main Title: "Choose a Trip" */
+  .mobile-reserve-main-title {
+    margin: 10px 18px 16px 18px !important;
+    font-size: 28px !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+    letter-spacing: -0.6px !important;
+    line-height: 1.2 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  }
+
+  /* Capsule Segmented Switcher [ Incity   Intercity   Rental ] */
+  .mobile-reserve-segmented-tabs {
+    margin: 0 18px 18px 18px !important;
+    background: #f1f3f6 !important;
+    border-radius: 9999px !important;
+    padding: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 4px !important;
+    box-sizing: border-box !important;
+  }
+
+  .reserve-segment-btn {
+    flex: 1 !important;
+    padding: 9px 0 !important;
+    border-radius: 9999px !important;
+    border: none !important;
+    background: transparent !important;
+    color: #0f172a !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    font-family: inherit !important;
+  }
+
+  .reserve-segment-btn.active {
+    background: #0066FF !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(0, 102, 255, 0.28) !important;
+  }
+
+  /* Outer Booking Card reset in Reserve mode */
+  body.mobile-reserve-active #hero-booking-card,
+  body.mobile-reserve-active .hero-booking-card {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  body.mobile-reserve-active #hero-cab-search-form {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  body.mobile-reserve-active .booking-card-inputs-grid {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    display: block !important;
+  }
+
+  /* Inner Bordered Card (Input Box with light grey border and rounded corners) */
+  body.mobile-reserve-active .booking-card-fields-box {
+    display: block !important;
+    background: #ffffff !important;
+    border: 1.5px solid #edf2f7 !important;
+    border-radius: 16px !important;
+    padding: 16px 14px 14px 14px !important;
+    margin: 0 18px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+    box-sizing: border-box !important;
+    width: calc(100% - 36px) !important;
+  }
+
+  /* Hide From and To Sublabels */
+  body.mobile-reserve-active .location-sublabel {
+    display: none !important;
+  }
+
+  /* Locations input fields inside the bordered card */
+  body.mobile-reserve-active #from-input-wrapper {
+    position: relative !important;
+    padding: 0.55rem 3.2rem 0.55rem 0 !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+  }
+
+  body.mobile-reserve-active #to-input-wrapper {
+    position: relative !important;
+    padding: 0.55rem 3.2rem 0.55rem 0 !important;
+  }
+
+  body.mobile-reserve-active .location-main-input {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    color: #0f172a !important;
+  }
+
+  body.mobile-reserve-active .location-main-input::placeholder {
+    color: #94a3b8 !important;
+    font-size: 14.5px !important;
+    font-weight: 400 !important;
+  }
+
+  /* Blue Swap Button */
+  body.mobile-reserve-active .btn-swap-locations {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 8px !important;
+    background: #0066FF !important;
+    right: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    box-shadow: 0 3px 8px rgba(0, 102, 255, 0.3) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Date & Time Headings */
+  body.mobile-reserve-active .date-section-label {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 14px 0 8px !important;
+    letter-spacing: -0.2px !important;
+  }
+
+  /* Date & Time & Cab Type Pill styling */
+  body.mobile-reserve-active .date-pill-card,
+  body.mobile-reserve-active .calendar-pill-card,
+  body.mobile-reserve-active .time-pill-card,
+  body.mobile-reserve-active .time-custom-pill-card {
+    border-radius: 8px !important;
+    border: 1.5px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    min-height: 48px !important;
+    transition: all 0.15s ease !important;
+  }
+
+  body.mobile-reserve-active .date-pill-card.active,
+  body.mobile-reserve-active .calendar-pill-card.active,
+  body.mobile-reserve-active .time-pill-card.active,
+  body.mobile-reserve-active .time-custom-pill-card.active {
+    background: #f0f7ff !important;
+    border: 2px solid #0066FF !important;
+  }
+
+  body.mobile-reserve-active .date-pill-card.active .date-pill-day,
+  body.mobile-reserve-active .date-pill-card.active .date-pill-sub,
+  body.mobile-reserve-active .time-pill-card.active .time-pill-hour,
+  body.mobile-reserve-active .time-pill-card.active .time-pill-sub {
+    color: #0066FF !important;
+    font-weight: 700 !important;
+  }
+
+  body.mobile-reserve-active .calendar-pill-card {
+    color: #0066FF !important;
+  }
+
+  body.mobile-reserve-active .cab-type-pill {
+    border-radius: 8px !important;
+    border: 1.5px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    min-height: 44px !important;
+  }
+
+  body.mobile-reserve-active .cab-type-pill.active {
+    background: #f0f7ff !important;
+    border: 2px solid #0066FF !important;
+    color: #0066FF !important;
+  }
+
+  /* Full Width Blue Search Button placed outside the card */
+  body.mobile-reserve-active .btn-hero-search-cabs {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+    background: #0066FF !important;
+    color: #ffffff !important;
+    font-size: 1.08rem !important;
+    font-weight: 700 !important;
+    padding: 14px 20px !important;
+    height: 50px !important;
+    box-shadow: 0 6px 20px rgba(0, 102, 255, 0.35) !important;
+    margin: 22px 18px 28px 18px !important;
+    width: calc(100% - 36px) !important;
+    box-sizing: border-box !important;
+    border: none !important;
+  }
+}
+
+
 

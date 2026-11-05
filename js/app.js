@@ -1235,7 +1235,13 @@ export class PickMiApp {
       this.showView('home');
       if (window.innerWidth <= 768) {
         document.body.classList.add('mobile-search-active');
+        document.body.classList.remove('mobile-reserve-active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else if (view === 'reserve') {
+      this.showView('home');
+      if (window.innerWidth <= 768) {
+        this.openMobileReserve();
       }
     } else if (view === 'login') {
       this.showView('home');
@@ -1256,9 +1262,9 @@ export class PickMiApp {
   }
 
   showView(viewName, param = null) {
-    // When leaving search view, remove mobile search state
-    if (viewName !== 'search') {
-      document.body.classList.remove('mobile-search-active');
+    // When leaving search/reserve view, remove mobile search/reserve state
+    if (viewName !== 'search' && viewName !== 'reserve') {
+      document.body.classList.remove('mobile-search-active', 'mobile-reserve-active');
     }
     // Guard protected user views
     if (['checkout', 'trips', 'account'].includes(viewName) && (!store.user.isLoggedIn || !store.user.isProfileComplete)) {
@@ -1910,7 +1916,11 @@ export class PickMiApp {
         if (svc === 'rental') {
           this.openMobileSearch('rental');
         } else if (svc === 'reserve') {
-          this.openMobileSearch('round');
+          if (window.innerWidth <= 768) {
+            this.openMobileReserve('incity');
+          } else {
+            this.openMobileSearch('round');
+          }
         } else if (svc === 'airport') {
           this.openMobileSearch('oneway', null, 'airport');
         } else if (svc === 'parcel') {
@@ -1948,9 +1958,117 @@ export class PickMiApp {
         this.closeMobileSearch();
       });
     }
+
+    // 6. Back Button on Mobile Reserve Dedicated Page
+    const reserveBackBtn = document.getElementById('btn-reserve-back');
+    if (reserveBackBtn) {
+      reserveBackBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.closeMobileSearch();
+      });
+    }
+
+    // 7. Mobile Reserve Segmented Tabs (Incity, Intercity, Rental)
+    const reserveTabs = document.querySelectorAll('.reserve-segment-btn');
+    reserveTabs.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tab = btn.dataset.reserveTab;
+        this.activateReserveTab(tab);
+      });
+    });
+  }
+
+  openMobileReserve(tab = 'incity') {
+    this.isAirportTransfer = false;
+    this.isRentalMode = false;
+    document.body.classList.add('mobile-search-active', 'mobile-reserve-active');
+    this.activateReserveTab(tab);
+
+    const dropInput = document.getElementById('input-drop');
+    const pickupInput = document.getElementById('input-pickup');
+    if (pickupInput && !pickupInput.value) {
+      pickupInput.placeholder = 'Enter pickup city or area';
+    }
+    if (dropInput && !dropInput.value) {
+      dropInput.placeholder = 'Enter destination city or ...';
+    }
+
+    const dockEl = document.getElementById('mobile-dock-wrapper');
+    if (dockEl) dockEl.style.setProperty('display', 'none', 'important');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (window.location.hash !== '#reserve') {
+      try {
+        history.pushState({ view: 'reserve' }, '', '#reserve');
+      } catch (e) {
+        window.location.hash = '#reserve';
+      }
+    }
+  }
+
+  activateReserveTab(tabName = 'incity') {
+    const tabs = document.querySelectorAll('.reserve-segment-btn');
+    tabs.forEach(t => {
+      const match = t.dataset.reserveTab === tabName;
+      t.classList.toggle('active', match);
+      t.setAttribute('aria-selected', match ? 'true' : 'false');
+    });
+
+    const toWrapper = document.getElementById('to-input-wrapper');
+    const swapBtn = document.getElementById('swap-locations-btn');
+    const rentalPkgBlock = document.getElementById('rental-package-block');
+    const inputsGrid = document.querySelector('.booking-card-inputs-grid');
+    const dropInput = document.getElementById('input-drop');
+    const pickupInput = document.getElementById('input-pickup');
+
+    if (tabName === 'rental') {
+      this.isRentalMode = true;
+      store.setSearchParams({ serviceType: 'rental', tripType: 'rental' });
+      if (rentalPkgBlock) {
+        rentalPkgBlock.classList.add('active-rental');
+        rentalPkgBlock.style.setProperty('display', 'block', 'important');
+      }
+      if (toWrapper) toWrapper.style.setProperty('display', 'none', 'important');
+      if (swapBtn) swapBtn.style.setProperty('display', 'none', 'important');
+      if (inputsGrid) {
+        inputsGrid.classList.add('has-rental');
+      }
+      if (pickupInput && !pickupInput.value) {
+        pickupInput.placeholder = 'Enter pickup city or local area';
+      }
+    } else {
+      this.isRentalMode = false;
+      if (rentalPkgBlock) {
+        rentalPkgBlock.classList.remove('active-rental');
+        rentalPkgBlock.style.setProperty('display', 'none', 'important');
+      }
+      if (toWrapper) toWrapper.style.removeProperty('display');
+      if (swapBtn) swapBtn.style.removeProperty('display');
+      if (inputsGrid) {
+        inputsGrid.classList.remove('has-rental');
+      }
+
+      if (tabName === 'intercity') {
+        store.setSearchParams({ serviceType: 'intercity', tripType: 'oneway' });
+        if (dropInput && !dropInput.value) {
+          dropInput.placeholder = 'Enter destination city or area';
+        }
+      } else {
+        // incity (point-to-point within city)
+        store.setSearchParams({ serviceType: 'intercity', tripType: 'oneway' });
+        if (dropInput && !dropInput.value) {
+          dropInput.placeholder = 'Enter destination city or ...';
+        }
+      }
+      if (pickupInput && !pickupInput.value) {
+        pickupInput.placeholder = 'Enter pickup city or area';
+      }
+    }
   }
 
   openMobileSearch(tripMode = 'oneway', destination = null, preset = null) {
+    document.body.classList.remove('mobile-reserve-active');
     if (preset === 'airport') {
       this.isAirportTransfer = true;
       this.isRentalMode = false;
@@ -2028,10 +2146,10 @@ export class PickMiApp {
       pickupInput.placeholder = 'Enter pickup city or area';
     }
 
-    document.body.classList.remove('mobile-search-active');
+    document.body.classList.remove('mobile-search-active', 'mobile-reserve-active');
     const dockEl = document.getElementById('mobile-dock-wrapper');
     if (dockEl) dockEl.style.removeProperty('display');
-    if (window.location.hash === '#search') {
+    if (window.location.hash === '#search' || window.location.hash === '#reserve') {
       try {
         history.pushState({ view: 'home' }, '', '#home');
       } catch (e) {
